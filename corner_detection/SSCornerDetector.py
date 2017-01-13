@@ -17,9 +17,11 @@ class SSCornerDetector:
 
 	def get_corners(self):
         pass
-		# line_filter = PolyLineFilter(self.line)
-		# points = line_filter.resample_filter()
+		line_filter = PolyLineFilter(self.line)
+		points = line_filter.resample_filter()
 
 		# for debug
 		# new_line = PolyLine(points)
 		# new_line.draw(True)
+
+		
