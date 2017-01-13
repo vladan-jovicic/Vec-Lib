@@ -1,0 +1,4 @@
+Folder for cd team.
+edgedetection2 is for tests
+contourDetection.cpp is the main file.
+bash compile_opencv file to compile
