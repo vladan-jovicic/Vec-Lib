@@ -15,8 +15,14 @@ class PolyLine():
     def draw(self, show=False):
         """Draw the polyline in the current matplotlib figure.
         If show is set to True, show the graph."""
-        p = plt.plot(self.x, self.y, marker='o')
+        p = plt.plot(self.x, self.y)
         plt.axis('equal')
+        if show:
+            plt.show(block=True)
+
+    def draw_with_corners(self, corners, show = True):
+        self.draw()
+        plt.plot([c[0] for c in corners], [c[1] for c in corners], 'ro', marker='*')
         if show:
             plt.show(block=True)
 
