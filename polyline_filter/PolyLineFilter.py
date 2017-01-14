@@ -33,7 +33,6 @@ class PolyLineFilter:
 				break
 			p1, p2 = np.array(points[i-1]), np.array(points[i])
 			dist_p12 = np.linalg.norm(p1 - p2)
-			print("Distance %f" % distnace)
 			if distnace + dist_p12 >= int_space_distance:
 				new_point = (p1[0] + ((int_space_distance - distnace)/dist_p12) * (p2[0] - p1[0]),
 							p1[1] + ((int_space_distance - distnace)/dist_p12) * (p2[1] - p1[1]))

@@ -27,7 +27,7 @@ def main():
     #b_curves = curve_fit.fit_curve()
     #for idx, curve in enumerate(b_curves):
     #    curve.draw_by_vladan(False if idx != len(b_curves)-1 else True)
-    file_name = '../curve_fitting/test_data/contour1.txt'
+    file_name = sys.argv[1]
     test = Test(file_name)
     test.run_corner_detector_test()
 

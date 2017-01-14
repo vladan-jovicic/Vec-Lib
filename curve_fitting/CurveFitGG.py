@@ -28,7 +28,6 @@ class CurveFitGG:
         self._error = error
         self._reparam_max_iter = 4
         self._debug = True
-        pass
 
     def fit_curve(self):
         """This method is called to fit curve after an initialization

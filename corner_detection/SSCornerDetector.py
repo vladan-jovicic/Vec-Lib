@@ -113,7 +113,7 @@ class SSCornerDetector:
 		quarter = (corner2 - corner1) // 4
 		mini_value, min_idx = float('Inf'), 0
 		for i in range(corner1 + quarter, corner2 - quarter):
-			if i - self.straw_window - 1 >= straws.size:
+			if i - self.straw_window - 1 >= straws.size or i - self.straw_window - 1 < 0:
 				break
 			straw = straws[i - self.straw_window - 1]
 			if straw < mini_value:
