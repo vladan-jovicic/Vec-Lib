@@ -23,7 +23,7 @@ class SSCornerDetector:
 		# filtering the polylin
 		line_filter = PolyLineFilter(self.line)
 		points = line_filter.resample_filter()
-
+		# points = self.line.get_points()
 		# for debug
 		# new_line = PolyLine(points)
 		# new_line.draw(True)
@@ -44,12 +44,9 @@ class SSCornerDetector:
 
 		# compute median of straws
 		median = np.median(straws) * self.median_treshold
-		print(median)
 		# detect corners
 		for i in range(self.straw_window, len(points) - self.straw_window):
 			straw = straws[i - self.straw_window]
-			
-			#print("straw length: %f" % straw)
 
 			if straw >= median: # not interesting case for me
 				continue
@@ -73,13 +70,12 @@ class SSCornerDetector:
 		while not iterate:
 			counter += 1
 			iterate = True
-			print("Iteration %d" % counter)
 			for i in range(1, len(corners)):
 				corner1 = corners[i-1]
 				corner2 = corners[i]
 
 				# determine if the stroke segment between points form a line
-				print(self.is_line(points, corner1, corner2))
+				# print(self.is_line(points, corner1, corner2))
 				if self.is_line(points, corner1, corner2):
 					continue
 
@@ -89,8 +85,8 @@ class SSCornerDetector:
 					iterate = False
 
 		idx = 1
+		# so ugly
 		while True:
-			print("idx, len(corners) = %d, %d" % (idx, len(corners)))
 			if idx >= len(corners) - 1 or idx < 1:
 				break
 			corner1, corner2 = corners[idx-1], corners[idx+1]
@@ -117,6 +113,8 @@ class SSCornerDetector:
 		quarter = (corner2 - corner1) // 4
 		mini_value, min_idx = float('Inf'), 0
 		for i in range(corner1 + quarter, corner2 - quarter):
+			if i - self.straw_window - 1 >= straws.size:
+				break
 			straw = straws[i - self.straw_window - 1]
 			if straw < mini_value:
 				mini_value = straw

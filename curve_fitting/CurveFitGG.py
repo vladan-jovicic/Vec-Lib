@@ -37,9 +37,6 @@ class CurveFitGG:
         t_hat1 = self.compute_left_tangent(0)
 
         t_hat2 = self.compute_right_tangent(n_pts-1)
-        print("thats at start")
-        print(t_hat1.tolist())
-        print(t_hat2.tolist())
         b_curve = self.fit_cubic(0, len(self._dpoints)-1, t_hat1, t_hat2)
         return b_curve
 

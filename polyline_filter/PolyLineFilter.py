@@ -4,7 +4,7 @@ import numpy as np
 #import other packages
 sys.path.insert(0, '../common')
 
-from common.PolyLine import *
+from PolyLine import *
 
 
 class PolyLineFilter:
@@ -19,27 +19,31 @@ class PolyLineFilter:
 			mini_x, mini_y = min(mini_x, p[0]), min(mini_y, p[1])
 			maxi_x, maxi_y = max(maxi_x, p[1]), max(maxi_y, p[1])
 
-		diag_dist = np.linalg.norm((maxi_x, maxi_y) - (mini_x, mini_y))
+		diag_dist = np.linalg.norm(np.array([maxi_x, maxi_y]) - np.array([mini_x, mini_y]))
 		int_space_distance = diag_dist / self.int_space_const
 
 		# resample
 
 		distnace, resampled_pts = 0, [points[0]]
+		first, last = len(points), 0
 
-		for i in range(1,len(points)):
-			p1, p2 = points[i-1], points[i]
+		i = 1
+		while True:
+			if i >= len(points):
+				break
+			p1, p2 = np.array(points[i-1]), np.array(points[i])
 			dist_p12 = np.linalg.norm(p1 - p2)
-
+			print("Distance %f" % distnace)
 			if distnace + dist_p12 >= int_space_distance:
 				new_point = (p1[0] + ((int_space_distance - distnace)/dist_p12) * (p2[0] - p1[0]),
 							p1[1] + ((int_space_distance - distnace)/dist_p12) * (p2[1] - p1[1]))
 
 				resampled_pts.append(new_point)
-				points.insert(new_point, i)
+				points.insert(i, new_point)
 				distnace = 0
 			else:
 				distnace += dist_p12
-
+			i += 1
 		return resampled_pts
 
 
