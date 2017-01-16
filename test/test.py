@@ -52,17 +52,18 @@ class Test:
 		# new_poly.draw(show=True)
 
 
-	def run_corner_detector_test(self):
+	def run_corner_detector_test(self, disp_original_cont, disp_filtered_cont, disp_corners):
 		points, sep_idx, separators = self.read_points()
 		print("Num of contours: %d" % separators)
+		input_pols = []
 		all_filtered_points, all_corners, all_curves, all_pols = [], [], [], []
 		for i in range(separators):
 			print("Working on contour %d" % i)
 			curr_points = points[sep_idx[i]:sep_idx[i+1]]
 			# print("Number of points %d" % len(curr_points))
 			poly = PolyLine(curr_points)
+			input_pols.append(curr_points)
 			# poly.draw(show=True)
-			filtered_points, corners = [], []
 			if len(curr_points) <= 1:
 				continue
 
@@ -74,13 +75,8 @@ class Test:
 				filtered_points, corners = corner_detector.get_corners()
 			
 			new_poly = PolyLine(filtered_points)
-			all_pols.append(new_poly)
+			all_pols.append(filtered_points)
 			all_corners.append(corners)
-			# new_poly.draw_with_corners([filtered_points[c] for c in corners])
-			# new_poly = PolyLine(filtered_points)
-			# new_poly.draw(show=True)
-			# all_filtered_points.append(filtered_points)
-			# all_corners.append(corners)
 
 			curves = []
 			for j in range(1, len(corners)):
@@ -95,35 +91,43 @@ class Test:
 				tmp_curves = tmp_curves + b_curves
 				all_curves = all_curves + b_curves
 
-			# for b_curve in tmp_curves:
-			# 	points_to_draw = b_curve.get_points_to_draw()
-			# 	x_axis, y_axis = [], []
-			# 	for p in points_to_draw:
-			# 		x_axis.append(p[0])
-			# 		y_axis.append(p[1])
-			# 	plt.plot(x_axis, y_axis)
+		if disp_original_cont:
+			for points in input_pols:
+				x_axis, y_axis = [], []
+				for p in points:
+					x_axis.append(p[0])
+					y_axis.append(p[1])
+				plt.plot(x_axis, y_axis)
+			plt.show(block=True)
 
-			# plt.show(block = True)
+		if disp_filtered_cont:
+			for f_points in all_pols:
+				x_axis, y_axis = [], []
+				for p in f_points:
+					x_axis.append(p[0])
+					y_axis.append(p[1])
+				plt.plot(x_axis, y_axis)
+			plt.show(block=True)
 
-		# for f_points, c_corners in zip(all_filtered_points, all_corners):
-		# 	x_axis, y_axis = [], []
-		# 	for p in f_points:
-		# 		x_axis.append(p[0])
-		# 		y_axis.append(p[1])
 
-		# 	plt.plot(x_axis, y_axis)
+		if disp_corners:
+			for pts, corns in zip(all_pols, all_corners):
+				x_axis, y_axis = [], []
+				x_pts_corns, y_pts_corns = [], []
+				for p in pts:
+					x_axis.append(p[0])
+					y_axis.append(p[1])
 
-		# 	x_axis, y_axis = [], []
-		# 	for idx in c_corners:
-		# 		x_axis.append(f_points[idx][0])
-		# 		y_axis.append(f_points[idx][1])
+				for c in corns:
+					x_pts_corns.append(pts[c][0])
+					y_pts_corns.append(pts[c][1])
 
-		# 	plt.plot(x_axis, y_axis, 'ro', marker='*')
+				plt.plot(x_axis, y_axis)
+				plt.plot(x_pts_corns, y_pts_corns, 'ro', marker='*')
 
-		# plt.show(block = True)
-		# for pol, corner in zip(all_pols, all_corners):
-		# 	pts = pol.get_points()
-		# 	pol.draw_with_corners([pts[c] for c in corner])
+			plt.show(block=True)
+
+
 		print("Starting to draw bezier " + str(len(all_curves)))
 		for idx, b_curve in enumerate(all_curves):
 			print("Drawing curve " + str(idx))
@@ -137,15 +141,6 @@ class Test:
 
 		plt.show(block = True)
 
-
-	def run_test(self):
-		points, sep_idx, separators = self.read_points()
-		for i in range(separators):
-			curr_points = points[sep_idx[i]:sep_idx[i+1]]
-			poly = PolyLine(curr_points)
-			poly.draw(show=True)
-			#fit_curve_alg = CurveFitGG(curr_points, 0.1)
-			#b_curves = fit_curve_alg.fit_curve()
 
 	def run_test_geogebra_xml(self, file_name=None):
 		points = []
