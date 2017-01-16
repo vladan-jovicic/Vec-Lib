@@ -68,15 +68,19 @@ class BezierCurve():
         if show:
             plt.show()
 
-    def draw_by_vladan(self, block=True):
+    def get_points_to_draw(self):
         points_to_draw = []
         for t in np.arange(0.0, 1.0, 0.01):
             points_to_draw.append(self.get_point_cubic(t))
+        return points_to_draw
+
+    def draw_by_vladan(self, block=True):
+        points_to_draw = self.get_points_to_draw()
 
         x = [pt[0] for pt in points_to_draw]
         y = [pt[1] for pt in points_to_draw]
         p = plt.plot(x, y, color="red")
-        p = plt.plot(self.controlPoints_x, self.controlPoints_y, ls=' ')
+        # p = plt.plot(self.controlPoints_x, self.controlPoints_y, ls=' ')
         plt.axis('equal')
         plt.show(block=block)
 
