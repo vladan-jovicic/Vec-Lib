@@ -14,29 +14,29 @@ The following is required in order to compile the code:
 ## Installing Dependencies
 
 1. To install OpenCV, download <a href='https://drive.google.com/file/d/0B9EaSh0VvlsQOEN5bE5LU1U3b2s/view?usp=sharing'>script</a> and run the following commands:
-'''bash
+'''
 chmod +x install_opencv.sh
 ./install_opencv.sh
 '''
 
 2. To install python modules, run the following:
-'''bash
+'''
 pip install -r requirements.txt
 '''
 
 3. You might prefer to install matplotlib using package manager. To do so:
-'''bash
+'''
 apt-get install python-matplotlib
 '''
 Otherwise, you can install it using the pip:
-'''bash
+'''
 pip install matplotlib
 '''
 
 ## Compilation
 
 1. Navigate to contour_detection folder and type:
-'''bash
+'''
 make
 '''
 
@@ -47,12 +47,12 @@ make
 Currently, you will have to run two programs to obtain a result: contour detection algorithm and curve detection algorithm.
 
 1. To obtain contours run the following:
-'''bash
+'''
 ./contourDetection -f image.jpg > contours.txt
 '''
 
 2. To fit contours with Bezier curves, navigate to <i>test</i>:
-'''bash
+'''
 python main.py -f contours.txt
 '''
 
@@ -68,17 +68,17 @@ For the curve fitting package, the following is optional:
 ### Examples
 
 To set the lower threshold to 0 and use dilatation:
-'''bash
+'''
 ./contourDetection -f image.jpg 0 -d > contours.txt
 '''
 
 To run the curve fitting package and to display only the final result, type:
-'''bash
+'''
 python main.py -f contours.txt
 '''
 
 If you want to see the immediate results, for example corners of contours:
-'''bash
+'''
 python main.py -f contours.txt --corners True
 '''
 
