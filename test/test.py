@@ -1,4 +1,3 @@
-import xml.etree.ElementTree
 import sys
 import matplotlib.pyplot as plt
 
@@ -138,14 +137,3 @@ class Test:
             plt.plot(x_axis, y_axis)
 
         plt.show(block=True)
-
-    def run_test_geogebra_xml(self, file_name=None):
-        points = []
-        if file_name != None:
-            self.set_file_name(file_name)
-        etree = xml.etree.ElementTree.parse(self._file_name).getroot()
-        if etree == None:
-            print
-            "jebaiga"
-        for element in etree.findall('element'):
-            print(element.get("coords"))
