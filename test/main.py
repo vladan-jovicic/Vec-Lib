@@ -1,7 +1,7 @@
 import sys
 import argparse
 
-#import other packages
+# import other packages
 sys.path.insert(0, '../common')
 sys.path.insert(0, '../curve_fitting')
 
@@ -9,6 +9,7 @@ from PolyLine import *
 from BezierCurve import *
 from CurveFitGG import *
 from test import *
+
 
 def main():
     print("Start of the project")
@@ -24,9 +25,9 @@ def main():
     # test = Test(None)
     # test.run_corner_detector_basic(d)
 
-    #curve_fit = CurveFitGG(d, error)
-    #b_curves = curve_fit.fit_curve()
-    #for idx, curve in enumerate(b_curves):
+    # curve_fit = CurveFitGG(d, error)
+    # b_curves = curve_fit.fit_curve()
+    # for idx, curve in enumerate(b_curves):
     #    curve.draw_by_vladan(False if idx != len(b_curves)-1 else True)
     parser = argparse.ArgumentParser(description="Arguments ..")
     parser.add_argument('-f', '--file', help='input contour')
@@ -50,6 +51,7 @@ def main():
 
     # test.run_test()
     # print "finished"
+
 
 if __name__ == "__main__":
     main()

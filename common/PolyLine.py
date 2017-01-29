@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 
+
 class PolyLine():
     def __init__(self, points):
         # List of points, coded as tuples (x,y)
@@ -20,7 +21,7 @@ class PolyLine():
         if show:
             plt.show(block=True)
 
-    def draw_with_corners(self, corners, show = True):
+    def draw_with_corners(self, corners, show=True):
         self.draw()
         plt.plot([c[0] for c in corners], [c[1] for c in corners], 'ro', marker='*')
         if show:
@@ -29,10 +30,11 @@ class PolyLine():
     def get_points(self):
         return self.points
 
+
 if __name__ == "__main__":
     print("This is class PolyLine.")
-    p1 = PolyLine([(0,4), (3,2), (2,-2), (-1,-3)])
-    p2 = PolyLine([(-3,1), (1,7), (6,0)])
+    p1 = PolyLine([(0, 4), (3, 2), (2, -2), (-1, -3)])
+    p2 = PolyLine([(-3, 1), (1, 7), (6, 0)])
     print("Example with polylines {} and {}...".format(p1.points, p2.points))
     p1.draw()
     p2.draw()

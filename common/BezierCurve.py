@@ -6,7 +6,7 @@ import numpy as np
 
 
 class BezierCurve():
-    def __init__(self, control_points = []):
+    def __init__(self, control_points=[]):
         # List of the control points
         self.controlPoints = control_points
         # Lists of the x coordinates (resp. y coordinates) of the control points
@@ -15,15 +15,17 @@ class BezierCurve():
 
     def sample(self, N=100):
         """Compute N points of the Bezier curve. Returns two lists, containing the x and y coordinates."""
+
         def p(t, coord):
             n = len(coord)
             res = 0
             for k in range(n):
-                res += coord[k] * binom(n-1,k) * t**k * (1-t)**(n-1-k)
-            return(res)
-        x = [p(t/N, self.controlPoints_x) for t in range(N)]
-        y = [p(t/N, self.controlPoints_y) for t in range(N)]
-        return(x, y)
+                res += coord[k] * binom(n - 1, k) * t ** k * (1 - t) ** (n - 1 - k)
+            return (res)
+
+        x = [p(t / N, self.controlPoints_x) for t in range(N)]
+        y = [p(t / N, self.controlPoints_y) for t in range(N)]
+        return (x, y)
 
     def get_num_of_cpts(self):
         return len(self.controlPoints)
@@ -36,13 +38,13 @@ class BezierCurve():
         """Evaluates a Bezier curve at parameter t"""
         c_pts_temp = self.controlPoints[:]
 
-        degree = len(self.controlPoints)-1
+        degree = len(self.controlPoints) - 1
 
-        for i in range(1,degree+1):
-            for j in range(degree-i+1):
+        for i in range(1, degree + 1):
+            for j in range(degree - i + 1):
                 c_pts_temp[j] = [
-                    (1.0 - t) * c_pts_temp[j][0] + t * c_pts_temp[j+1][0],
-                    (1.0 - t) * c_pts_temp[j][1] + t * c_pts_temp[j+1][1]
+                    (1.0 - t) * c_pts_temp[j][0] + t * c_pts_temp[j + 1][0],
+                    (1.0 - t) * c_pts_temp[j][1] + t * c_pts_temp[j + 1][1]
                 ]
 
         return c_pts_temp[0]
@@ -51,8 +53,8 @@ class BezierCurve():
 
         pt = [0.0, 0.0]
         for i, c_pt in enumerate(self.controlPoints):
-            tmp_pt = [self.bezier_multiplier(t, 3-i)*c_pt[0], self.bezier_multiplier(t, 3-i)*c_pt[1]]
-            pt = [pt[0]+tmp_pt[0], pt[1] + tmp_pt[1]]
+            tmp_pt = [self.bezier_multiplier(t, 3 - i) * c_pt[0], self.bezier_multiplier(t, 3 - i) * c_pt[1]]
+            pt = [pt[0] + tmp_pt[0], pt[1] + tmp_pt[1]]
         return pt
 
     def draw(self, N=100, showControlPoints=True, show=False):
@@ -84,7 +86,6 @@ class BezierCurve():
         plt.axis('equal')
         plt.show(block=block)
 
-
     def bezier_multiplier(self, t, deg):
         temp = 1.0 - t
         if deg == 0:
@@ -103,10 +104,11 @@ class BezierCurve():
         else:
             raise KeyError("No such control point")
 
+
 if __name__ == "__main__":
     print("This is class BezierCurve.")
-    bc1 = BezierCurve([(0,4), (3,2), (2,-2), (-1,-3)])
-    bc2 = BezierCurve([(-3,1), (1,7), (6,0)])
+    bc1 = BezierCurve([(0, 4), (3, 2), (2, -2), (-1, -3)])
+    bc2 = BezierCurve([(-3, 1), (1, 7), (6, 0)])
     print("Example with control points {} and {}...".format(bc1.controlPoints, bc2.controlPoints))
     bc1.draw()
     bc2.draw()
