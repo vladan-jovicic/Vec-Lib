@@ -29,21 +29,22 @@ def main():
     # b_curves = curve_fit.fit_curve()
     # for idx, curve in enumerate(b_curves):
     #    curve.draw_by_vladan(False if idx != len(b_curves)-1 else True)
-    parser = argparse.ArgumentParser(description="Arguments ..")
+    parser = argparse.ArgumentParser(description="Arguments that can be specified")
     parser.add_argument('-f', '--file', help='input contour')
     parser.add_argument('--input_poly', help="true if you want to see the original contour")
     parser.add_argument('--filtered_poly', help="true if you want to see the resampled contour")
     parser.add_argument('--corners', help="true if you want to see detected corners")
 
     args = parser.parse_args()
-    if len(sys.argv) < 9 or len(sys.argv) > 9:
-        parser.print_usage()
-        return
 
+    disp_original_cont, disp_filtered_poly, disp_corners = False, False, False
     file_name = args.file
-    disp_original_cont = args.input_poly
-    disp_filtered_poly = args.filtered_poly
-    disp_corners = args.corners
+    if args.input_poly:
+        disp_original_cont = True
+    if args.filtered_poly:
+        disp_filtered_poly = True
+    if args.corners:
+        disp_corners = True
 
     test = Test(file_name)
     test.run_corner_detector_test(disp_original_cont, disp_filtered_poly, disp_corners)
