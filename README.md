@@ -48,7 +48,7 @@ Currently, you will have to run two programs to obtain a result: contour detecti
 
 1. To obtain contours run the following:
 ```
-./contourDetection -f image.jpg > contours.txt
+./contourDetection image.jpg > contours.txt
 ```
 
 2. To fit contours with Bezier curves, navigate to <i>test</i>:
@@ -69,7 +69,7 @@ For the curve fitting package, the following is optional:
 
 To set the lower threshold to 0 and use dilatation:
 ```
-./contourDetection -f image.jpg 0 -d > contours.txt
+./contourDetection image.jpg 0 -d > contours.txt
 ```
 
 To run the curve fitting package and to display only the final result, type:

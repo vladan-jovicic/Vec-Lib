@@ -27,7 +27,7 @@ Hierarchy is a vector of vectors of 4 integers each.
  	hierarchy[i][1] is the previous contour in the same hierarchy level of i
  	hierarchy[i][2] is the first child contour of i
  	hierarchy[i][3] is the parent contour of i
-    
+
 The contours are finally printed on the standard output as a list of points separated by the character '#', one contour per line.
 
 

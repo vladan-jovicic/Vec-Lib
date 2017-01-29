@@ -39,11 +39,14 @@ def main():
 
     disp_original_cont, disp_filtered_poly, disp_corners = False, False, False
     file_name = args.file
-    if args.input_poly:
+    if args.input_poly is not None:
+        print(disp_original_cont)
         disp_original_cont = True
-    if args.filtered_poly:
+    if args.filtered_poly is not None:
+        print(disp_filtered_poly)
         disp_filtered_poly = True
-    if args.corners:
+    if args.corners is not None:
+        print(disp_corners)
         disp_corners = True
 
     test = Test(file_name)
