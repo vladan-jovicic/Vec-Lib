@@ -93,5 +93,3 @@ ENV/
 #.o files and images
 *.o
 *.out
-*.png
-*.jpg

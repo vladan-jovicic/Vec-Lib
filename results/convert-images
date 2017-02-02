@@ -1,6 +1,6 @@
 #!/bin/sh
 
 for i in "$@"; do
-	../contour_detection/contourDetection test-images/$i > img.txt
-	python ../test/main.py -f img.txt
+	../contour_detection/contourDetection test-images/$i ${2:-50} ${3:-""} | python ../test/main.py
+	echo $test
 done
