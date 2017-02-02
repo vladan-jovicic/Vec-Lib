@@ -13,18 +13,24 @@ The following is required in order to compile the code:
 
 ## Installing Dependencies
 
-1. To install OpenCV, download <a href='https://drive.google.com/file/d/0B9EaSh0VvlsQOEN5bE5LU1U3b2s/view?usp=sharing'>script</a> and run the following commands:
+- To install OpenCV, download <a href='https://drive.google.com/file/d/0B9EaSh0VvlsQOEN5bE5LU1U3b2s/view?usp=sharing'>script</a> and run the following commands:
 ```
 chmod +x install_opencv.sh
 ./install_opencv.sh
 ```
+<b>Remarks:</b>
+- in the case that you get an error <i>Found unsuitable Qt version</i> run the following:
+```
+sudo apt-get install libqt4-dev pkg-config
+```
+and run the script again.
 
-2. To install python modules, run the following:
+- To install python modules, run the following:
 ```
 pip install -r requirements.txt
 ```
 
-3. You might prefer to install matplotlib using package manager. To do so:
+- You might prefer to install matplotlib using the package manager. To do so:
 ```
 apt-get install python-matplotlib
 ```
@@ -40,18 +46,24 @@ pip install matplotlib
 make
 ```
 
-2. Everything is ready!
+if you get the error saying <i>'Package opencv was not found in the pkg-config search path'</i> install the package 'libopencv-dev'
+```
+sudo apt-get install libopencv-dev
+```
+and try to compile again.
+
+Everything is ready!
 
 ## Usage
 
 Currently, you will have to run two programs to obtain a result: contour detection algorithm and curve detection algorithm.
 
-1. To obtain contours run the following:
+- To obtain contours run the following:
 ```
 ./contourDetection image.jpg > contours.txt
 ```
 
-2. To fit contours with Bezier curves, navigate to <i>test</i>:
+- To fit contours with Bezier curves, navigate to <i>test</i>:
 ```
 python main.py -f contours.txt
 ```
@@ -61,6 +73,7 @@ For the contour detection algorithm, you can specify additional arguments:
 - dilatation: to use it, set -d
 
 For the curve fitting package, the following is optional:
+- --file: read contours from the file, otherwise from the stdin
 - --input_poly: the contours from the input will be displayed
 - --filtered_poly: the filtered contours will be displayed
 - --corners: the corners of the contours will be displayed
@@ -80,6 +93,11 @@ python main.py -f contours.txt
 If you want to see the immediate results, for example corners of contours:
 ```
 python main.py -f contours.txt --corners True
+```
+
+Run contour detection and curve fitting without writing the contours to file:
+```
+./contourDetection image.jpg 0 -d | python main.py --filtered_poly True --corners True
 ```
 
 ## History

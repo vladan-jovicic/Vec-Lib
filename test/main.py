@@ -38,7 +38,11 @@ def main():
     args = parser.parse_args()
 
     disp_original_cont, disp_filtered_poly, disp_corners = False, False, False
-    file_name = args.file
+    if args.file:
+        file_name = args.file
+    else:
+        file_name = None
+
     if args.input_poly is not None:
         print(disp_original_cont)
         disp_original_cont = True
