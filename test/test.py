@@ -23,7 +23,10 @@ class Test:
         points, sep_idx = [], []
         separators, curr_idx = 0, 0
         try:
-            f = open(self._file_name)
+            if self._file_name is not None:
+                f = open(self._file_name)
+            else:
+                f = sys.stdin
             for line in f.readlines():
                 if '#' in line:
                     separators += 1
