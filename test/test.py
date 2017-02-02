@@ -124,6 +124,7 @@ class Test:
                 plt.plot(x_pts_corns, y_pts_corns, 'ro', marker='*')
 
             plt.show(block=True)
+	    plt.savefig("test.png")
 
         print("Starting to draw bezier " + str(len(all_curves)))
         for idx, b_curve in enumerate(all_curves):
