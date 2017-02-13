@@ -86,13 +86,16 @@ void printContours()
  */
 int main( int argc, char** argv )
 {
+	
+  if(argc == 1) cout << "You must enter a file as input "; return 1;
+	
   /// Loads the image
   src = imread( argv[1] );
 
   if( !src.data )
   { return -1; }
   
-  if(argv[2] == NULL) {
+  if(argc == 2) {
 	  lowThreshold = 0;
   } else {
 	  lowThreshold = atoi(argv[2]);
@@ -102,7 +105,7 @@ int main( int argc, char** argv )
 	  }
   }
   
-  if(argv[3] != NULL && strcmp(argv[3], "-d") != 0) {
+  if(argc == 3 || && argv[3] != NULL && strcmp(argv[3], "-d") != 0) {
 	  use_dilate = false;
   }
 
