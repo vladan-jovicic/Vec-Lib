@@ -1,13 +1,9 @@
 <section class="page-header">
   <h1 class="project-name">{{ site.title }}</h1>
-  <img src="{{ site.baseurl }}/data/vectrabool.png">
+  <img src="data/vectrabool.png">
   <h2 class="project-tagline">{{ site.tagline }}</h2>
-  <a href="{{ site.baseurl }}/" class="btn">Home</a>
-
-  {% for page in site.pages %} {% if page.title %}
-  <a href="{{ page.url | prepend: site.baseurl }}" class="btn">{{ page.title }}</a>
-  {% endif %} {% endfor %}
-
+  <a href="{{ site.baseurl }}" class="btn">Home</a>
+  <a href="{{ /about | prepend: site.baseurl }}" class="btn">About</a>
   <a href="https://github.com/vladan-jovicic/Vec-Lib" class="btn">View on GitHub</a>
   <!-- <a href="#" class="btn">Download .zip</a>
   <a href="#" class="btn">Download .tar.gz</a> -->

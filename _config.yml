@@ -8,7 +8,7 @@ description: >
 baseurl: "/Vec-Lib" # subpath
 url: ""
 
-#include: ['_pages']
+include: ['_pages']
 kramdown:
   input: GFM
 
