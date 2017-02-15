@@ -4,7 +4,7 @@
   <h2 class="project-tagline">{{ site.tagline }}</h2>
   <a href="{{ site.baseurl }}/" class="btn">Home</a>
 
-  {% for page in site.pages %} {% if page.title and page.title != {{ site.title }} %}
+  {% for page in site.pages %} {% if page.title and page.title != 'Home' %}
   <a href="{{ page.url | prepend: site.baseurl }}" class="btn">{{ page.title }}</a>
   {% endif %} {% endfor %}
 
