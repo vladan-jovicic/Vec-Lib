@@ -17,7 +17,7 @@ A [Vector image](https://en.wikipedia.org/wiki/Vector_graphics) is made up of va
 
 The comparison of bitmap and vector graphic images can be observed in this figure :
 
-![Raster image vs vector image](raster_vector.png)
+![Raster image vs vector image](data/raster_vector.png)
 
 ## General Framework
 
