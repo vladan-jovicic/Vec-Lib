@@ -1,12 +1,12 @@
-theme: jekyll-theme-cayman
+#theme: jekyll-theme-cayman
 
 title: Vectrabool
 
 description: > 
-  This is the page for Vectrabool, an image vectorization library done for Integrated Project at ENS Lyon.
-  The website aims to be a mean for our group to have a spotlight and a way to present our project easier.
-baseurl: "" # the subpath of the site
-url: ""
+  This is the page for Vectrabool, an image vectorization library done for Integrated Project at ENS Lyon. The website aims to be a mean for our group to have a spotlight and a way to present our project easier.
+
+baseurl: "/Vec-Lib" # subpath
+url: "http://localhost:4000"
 
 #include: ['_pages']
 kramdown:
@@ -14,9 +14,10 @@ kramdown:
 
 
 markdown: kramdown
-theme: minima
+
 gems:
   - jekyll-feed
 exclude:
   - Gemfile
-- Gemfile.lock
+  - Gemfile.lock
+
