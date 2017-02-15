@@ -2,7 +2,6 @@
 title: {{ site.title }}
 layout: default
 --
-
 # Vectrabool Project
 
 ## Project orientation
