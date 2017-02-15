@@ -24,14 +24,44 @@
 
     <section class="main-content">
       
-      <div id="home">
-  <h1>Blog Posts</h1>
-  <ul class="posts">
-    
-      <li><span>12 Feb 2016</span> &raquo; <a href="/Vec-Lib/main/2016/02/12/sample-content.html">Welcome to Jekyll!</a></li>
-    
-  </ul>
-</div>
+      <h1 id="vectrabool-project">Vectrabool Project</h1>
+
+<h2 id="project-orientation">Project orientation</h2>
+<p>This project aims to figuring out the algorithms that are used to transform a bitmap image into vector image and trying to optimize the methods.
+<strong>What makes our project different from the other existing softwares ?</strong></p>
+
+<h2 id="bitmap-raster-images">Bitmap (Raster) Images</h2>
+
+<p>Bitmap images are static. They are comprised of hundreds, and more often thousands, of tiny coloured dots called pixels. Each pixel has a fixed position within the makeup of the bitmap, and when these pixels are displayed together on a computer screen, they form an image. Bitmap images are, with a few exceptions, the standard for internet graphics, as well as Windows icons and backgrounds. Bitmaps are also the standard format for images captured by scanners and digital cameras. But, for some kind of purposes, people want to have a kind of images which dynamic, in the sense that we can enlarge the image without destruct it.</p>
+
+<h2 id="vector-images">Vector images</h2>
+
+<p>A <a href="https://en.wikipedia.org/wiki/Vector_graphics">Vector image</a> is made up of various “objects” such as lines and shapes. These objects are defined mathematically by a set of algorithms or formulas, which allow them to be redrawn over and over. Whereas the bitmap is static, the vector image is dynamic. It is not restricted by size or shape. It can easily be shrunk or enlarged, widened or compressed.</p>
+
+<p>The comparison of bitmap and vector graphic images can be observed in this figure :</p>
+
+<p><img src="data/raster_vector.png" alt="Raster image vs vector image" /></p>
+
+<h2 id="general-framework">General Framework</h2>
+
+<p>The software takes a bitmap image as an input, and will result a vector graphic image (in SVG format). In general, the algorithms used in the image convertion coverts “contour detection”, “color transition”, “polygonalization”, and “corner detection”. For further details, kindly check below.</p>
+
+<h1 id="work-packages">Work Packages</h1>
+
+<h2 id="contour-detection">Contour Detection</h2>
+
+<p>The contour detection package was in charge of finding a way to find contours in an image and output them as a list of list of points. To do this we used <a href="http://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/canny_detector/canny_detector.html">OpenCV Canny algorithm</a> which is based on the Canny contour detection algorithm, known as one of the most efficient one not using machine learning.</p>
+
+<p><strong>INSERT IMAGE HERE ?</strong></p>
+
+<h2 id="corner-detection">Corner detection</h2>
+
+<h2 id="curve-fitting">Curve fitting</h2>
+
+<h2 id="color-detection">Color detection</h2>
+
+<h2 id="gimp-plug-in">Gimp plug-in</h2>
+
 
       <footer class="site-footer">
   <span class="site-footer-description"><p>This is the page for Vectrabool, an image vectorization library done for Integrated Project at ENS Lyon. The website aims to be a mean for our group to have a spotlight and a way to present our project easier.
