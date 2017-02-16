@@ -77,6 +77,7 @@ For the curve fitting package, the following is optional:
 - --input_poly: the contours from the input will be displayed
 - --filtered_poly: the filtered contours will be displayed
 - --corners: the corners of the contours will be displayed
+- --output: output on stderr (to not mess up with the actual output, even if it is ugly)
 
 ### Examples
 
@@ -93,6 +94,11 @@ python main.py -f contours.txt
 If you want to see the immediate results, for example corners of contours:
 ```
 python main.py -f contours.txt --corners True
+```
+
+Create a svg file:
+```
+python main.py -f contours.txt --output True 2> image.svg
 ```
 
 Run contour detection and curve fitting without writing the contours to file:

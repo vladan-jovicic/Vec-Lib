@@ -1,12 +1,13 @@
 #ifndef CNT_DET_H
 #define CNT_DET_H
 
+#include <vector>
 
 // constants and globals
 Mat src, dst, dst1, detected_edges, contours_img, blurred, grad;
 
-vector<Vec4i> hierarchy;
-vector<vector<Point> > contours, contours1;
+std::vector<Vec4i> hierarchy;
+std::vector<std::vector<Point> > contours, contours1;
 
 int edgeThresh = 1;
 int lowThreshold;

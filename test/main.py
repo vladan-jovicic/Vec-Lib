@@ -34,10 +34,11 @@ def main():
     parser.add_argument('--input_poly', help="true if you want to see the original contour")
     parser.add_argument('--filtered_poly', help="true if you want to see the resampled contour")
     parser.add_argument('--corners', help="true if you want to see detected corners")
+    parser.add_argument('--output', help="true if you want to have an svg output on stderr")
 
     args = parser.parse_args()
 
-    disp_original_cont, disp_filtered_poly, disp_corners = False, False, False
+    disp_original_cont, disp_filtered_poly, disp_corners, output = False, False, False, False
     if args.file:
         file_name = args.file
     else:
@@ -52,9 +53,12 @@ def main():
     if args.corners is not None:
         print(disp_corners)
         disp_corners = True
+    if args.output is not None:
+        print(output)
+        output = True
 
     test = Test(file_name)
-    test.run_corner_detector_test(disp_original_cont, disp_filtered_poly, disp_corners)
+    test.run_corner_detector_test(disp_original_cont, disp_filtered_poly, disp_corners, output)
 
 
     # test.run_test()

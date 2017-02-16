@@ -86,9 +86,7 @@ void printContours()
  */
 int main( int argc, char** argv )
 {
-	
-  if(argc == 1) cout << "You must enter a file as input "; return 1;
-	
+  if(argc == 1) {std::cout << "You must enter a file as input "; return 1;}
   /// Loads the image
   src = imread( argv[1] );
 
@@ -105,7 +103,7 @@ int main( int argc, char** argv )
 	  }
   }
   
-  if(argc == 3 || && argv[3] != NULL && strcmp(argv[3], "-d") != 0) {
+  if(argc == 3 || (argv[3] != NULL && strcmp(argv[3], "-d") != 0)) {
 	  use_dilate = false;
   }
 

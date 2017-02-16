@@ -54,7 +54,7 @@ class Test:
     # new_poly.draw(show=True)
 
 
-    def run_corner_detector_test(self, disp_original_cont, disp_filtered_cont, disp_corners):
+    def run_corner_detector_test(self, disp_original_cont, disp_filtered_cont, disp_corners, output):
         points, sep_idx, separators = self.read_points()
         print("Num of contours: %d" % separators)
         input_pols = []
@@ -140,3 +140,11 @@ class Test:
             plt.plot(x_axis, y_axis)
 
         plt.show(block=True)
+
+        if output:
+            sys.stdout = sys.stderr
+            svg = '<?xml version="1.0" encoding="utf-8"?>\n'+'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1000" height="1000">\n'
+            for idx, b_curve in enumerate(all_curves):
+                svg = svg + '<path d="M'+str(b_curve.controlPoints[0][0])+','+str(b_curve.controlPoints[0][1])+' C'+str(b_curve.controlPoints[1][0])+','+str(b_curve.controlPoints[1][1])+' '+str(b_curve.controlPoints[2][0])+','+str(b_curve.controlPoints[2][1])+' '+str(b_curve.controlPoints[3][0])+','+str(b_curve.controlPoints[3][1])+'" stroke="black" fill-opacity="0.0" stroke-width="0.1"/>\n'
+            svg = svg + "</svg>"
+            print svg
