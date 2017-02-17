@@ -143,8 +143,15 @@ class Test:
 
         if output:
             sys.stdout = sys.stderr
-            svg = '<?xml version="1.0" encoding="utf-8"?>\n'+'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1000" height="1000">\n'
+            height = 0
+            width = 0
+            svg = ""
             for idx, b_curve in enumerate(all_curves):
                 svg = svg + '<path d="M'+str(b_curve.controlPoints[0][0])+','+str(b_curve.controlPoints[0][1])+' C'+str(b_curve.controlPoints[1][0])+','+str(b_curve.controlPoints[1][1])+' '+str(b_curve.controlPoints[2][0])+','+str(b_curve.controlPoints[2][1])+' '+str(b_curve.controlPoints[3][0])+','+str(b_curve.controlPoints[3][1])+'" stroke="black" fill-opacity="0.0" stroke-width="0.1"/>\n'
-            svg = svg + "</svg>"
+                width = max(width, b_curve.controlPoints[0][0], b_curve.controlPoints[1][0], b_curve.controlPoints[2][0], b_curve.controlPoints[3][0])
+                height = max(height, b_curve.controlPoints[0][1], b_curve.controlPoints[1][1], b_curve.controlPoints[2][1], b_curve.controlPoints[3][1])
+
+            height = height + 10
+            width = width + 10
+            svg = '<?xml version="1.0" encoding="utf-8"?>\n'+'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="'+str(width)+'" height="'+str(height)+'1000">\n' + svg + "</svg>"
             print svg
