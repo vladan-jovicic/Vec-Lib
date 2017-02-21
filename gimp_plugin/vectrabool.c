@@ -1,4 +1,17 @@
 #include <libgimp/gimp.h>
+#include "contdet.h"
+
+typedef struct
+{
+	gint radius;
+} GaussBlurValues;
+
+
+/* Set up default values for options */
+static GaussBlurValues bvals =
+{
+	3  /* radius */
+};
 
 
 /* Declare local functions.
@@ -67,93 +80,31 @@ static void
           const GimpParam*  param,
           gint*             nreturn_vals,
           GimpParam**       return_vals)
-     {
-       static GimpParam  values[1];
-       GimpPDBStatusType status = GIMP_PDB_SUCCESS;
-       GimpRunMode       run_mode;
+{
+	static GimpParam  values[1];
+	GimpPDBStatusType status = GIMP_PDB_SUCCESS;
+	GimpRunMode       run_mode;
 
-       /* Setting mandatory output values */
-       *nreturn_vals = 1;
-       *return_vals  = values;
+   /* Setting mandatory output values */
+	*nreturn_vals = 1;
+	*return_vals  = values;
 
-       values[0].type = GIMP_PDB_STATUS;
-       values[0].data.d_status = status;
+	values[0].type = GIMP_PDB_STATUS;
+	values[0].data.d_status = status;
 
-       /* Getting run_mode - we won't display a dialog if 
-        * we are in NONINTERACTIVE mode */
-       run_mode = param[0].data.d_int32;
+   /* Getting run_mode - we won't display a dialog if 
+	* we are in NONINTERACTIVE mode */
+	run_mode = param[0].data.d_int32;
 
-       if (run_mode != GIMP_RUN_NONINTERACTIVE)
-         g_message("Hello, world!\n");
-     }
+   /*  Get the specified drawable  */
+	GimpDrawable* drawable = gimp_drawable_get(param[2].data.d_drawable);
 
+	double r = 3;
+	
+	gaussian_blur(drawable, r);
+	
+	g_message("end of blur\n");
 
-//static void
-//stripes_demo (GimpDrawable *drawable)
-//{
-  //GimpPixelRgn src_rgn, dest_rgn;
-  //guchar *src, *s;
-  //guchar *dest, *d;
-  //gint    progress, max_progress;
-  //gint    has_alpha, red, green, blue, alpha;
-  //gint    x1, y1, x2, y2;
-  //gint    x, y;
-  //gpointer pr;
-
-  ///* Get selection area */
-  //gimp_drawable_mask_bounds (drawable->id, &x1, &y1, &x2, &y2);
-  //has_alpha = gimp_drawable_has_alpha (drawable->id);
-
-  //red = 0; green = 1; blue = 2;
-
-  //alpha = (has_alpha) ? drawable->bpp - 1 : drawable->bpp;
-
-  ///* Initialize progress */
-  //progress = 0;
-  //max_progress = (x2 - x1) * (y2 - y1);
-
-  ///* substitute pixel vales */
-  //gimp_pixel_rgn_init (&src_rgn, drawable,
-                       //x1, y1, (x2 - x1), (y2 - y1), FALSE, FALSE);
-  //gimp_pixel_rgn_init (&dest_rgn, drawable,
-                       //x1, y1, (x2 - x1), (y2 - y1), TRUE, TRUE);
-
-  //for (pr = gimp_pixel_rgns_register (2, &src_rgn, &dest_rgn);
-       //pr != NULL;
-       //pr = gimp_pixel_rgns_process (pr))
-    //{
-      //src = src_rgn.data;
-      //dest = dest_rgn.data;
-
-      //for (y = 0; y < src_rgn.h; y++)
-        //{
-          //s = src;
-          //d = dest;
-
-          //for (x = 0; x < src_rgn.w; x++)
-            //{
-              //d[0] = (src_rgn.x + x + src_rgn.y + y) % 256;
-              //d[1] = s[1];
-              //d[2] = (- src_rgn.x - x + src_rgn.y + y) % 256;
-              //if (has_alpha)
-                //d[alpha] = s[alpha];
-
-              //s += src_rgn.bpp;
-              //d += dest_rgn.bpp;
-            //}
-
-          //src += src_rgn.rowstride;
-          //dest += dest_rgn.rowstride;
-        //}
-
-      ///* Update progress */
-      //progress += src_rgn.w * src_rgn.h;
-
-      //gimp_progress_update ((double) progress / (double) max_progress);
-    //}
-
-  ///*  update the region  */
-  //gimp_drawable_flush (drawable);
-  //gimp_drawable_merge_shadow (drawable->id, TRUE);
-  //gimp_drawable_update (drawable->id, x1, y1, (x2 - x1), (y2 - y1));
-//}
+	gimp_displays_flush();
+	gimp_drawable_detach (drawable);
+}

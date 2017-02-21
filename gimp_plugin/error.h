@@ -1,0 +1,3 @@
+enum ERROR_CODES {
+	NULL_ARGUMENT = 1
+};
