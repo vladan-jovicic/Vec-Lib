@@ -32,7 +32,7 @@
 	* README: minor update.
 
 	* help/en/Makefile.am
-	* help/en/gimp-plugin-template.html: removed this file
+	* help/en/vectrabool.html: removed this file
 
 	* help/en/index.html: and moved the content here. One help page
 	should be enough to explain the concept.
@@ -46,13 +46,13 @@
 	* help/gimp-help.xml
 	* help/C/.cvsignore
 	* help/C/Makefile.am
-	* help/C/gimp-plugin-template.html
+	* help/C/vectrabool.html
 	* help/C/index.html: removed.
 
 	* help/en/.cvsignore
 	* help/en/Makefile.am
 	* help/en/gimp-help.xml
-	* help/en/gimp-plugin-template.html
+	* help/en/vectrabool.html
 	* help/en/index.html: added.
 
 	* help/Makefile.am: changed accordingly.
@@ -329,7 +329,7 @@
 
 2000-05-24  Michael Natterer  <mitch@gimp.org>
 
-	* HACKING: s/gfm/gimp-plugin-template/
+	* HACKING: s/gfm/vectrabool/
 
 2000-05-24  Michael Natterer  <mitch@gimp.org>
 

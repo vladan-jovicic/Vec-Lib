@@ -1,4 +1,4 @@
-2#!/bin/sh
+#!/bin/sh
 
 # This script does all the magic calls to automake/autoconf and
 # friends that are needed to configure a cvs checkout.  You need a
@@ -24,7 +24,7 @@ cd $srcdir
 
 check_version ()
 {
-    if expr $1 \>= $2 > /dev/null; then
+    if expr $1 \>= $2 | bc > /dev/null; then
 	echo "yes (version $1)"
     else
 	echo "Too old (found version $1)!"
@@ -56,6 +56,9 @@ echo -n "checking for automake >= $AUTOMAKE_REQUIRED_VERSION ... "
 if (automake-1.7 --version) < /dev/null > /dev/null 2>&1; then
    AUTOMAKE=automake-1.7
    ACLOCAL=aclocal-1.7
+elif (automake-1.15 --version) < /dev/null > /dev/null 2>&1; then
+   AUTOMAKE=automake-1.15
+   ACLOCAL=aclocal-1.15 
 elif (automake-1.8 --version) < /dev/null > /dev/null 2>&1; then
    AUTOMAKE=automake-1.8
    ACLOCAL=aclocal-1.8

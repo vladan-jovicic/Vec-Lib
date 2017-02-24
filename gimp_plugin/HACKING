@@ -1,4 +1,4 @@
-If you want to hack a gimp plugin based on the gimp-plugin-template package,
+If you want to hack a gimp plugin based on the vectrabool package,
 it will make you life easier to have the following packages installed:
 
 	- GNU autoconf >= 2.54
@@ -7,7 +7,7 @@ it will make you life easier to have the following packages installed:
 These should be available by ftp from prep.ai.mit.edu or any of the
 fine GNU mirrors.  Beta software can be found at alpha.gnu.org.
 
-If you are accessing gimp-plugin-template via CVS, then you will need
+If you are accessing vectrabool via CVS, then you will need
 to take several steps to get it to compile.  You can do all these steps
 at once by running:
 

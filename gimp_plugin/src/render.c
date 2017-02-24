@@ -31,8 +31,10 @@
 
 #include <libgimp/gimp.h>
 
+#include "contdet.h"
 #include "main.h"
 #include "render.h"
+
 
 #include "plugin-intl.h"
 
@@ -46,6 +48,8 @@ render (gint32              image_ID,
 	PlugInImageVals    *image_vals,
 	PlugInDrawableVals *drawable_vals)
 {
-  g_message (_("This plug-in is just a dummy. "
-               "It has now finished doing nothing."));
+  //g_message (_("This plug-in is just a dummy. "
+  //             "It has now finished doing nothing."));
+  
+  gaussian_blur(drawable, 3);
 }

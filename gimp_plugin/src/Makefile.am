@@ -1,17 +1,19 @@
 ## Process this file with automake to produce Makefile.in
 
-bin_PROGRAMS = gimp-plugin-template
+bin_PROGRAMS = vectrabool
 
 bindir = $(GIMP_LIBDIR)/plug-ins
 
-gimp_plugin_template_SOURCES = \
+vectrabool_SOURCES = \
 	plugin-intl.h	\
 	interface.c	\
 	interface.h	\
 	main.c		\
 	main.h		\
 	render.c	\
-	render.h
+	render.h	\
+	contdet.c	\
+	contdet.h
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\
@@ -22,5 +24,5 @@ INCLUDES =\
 	@GIMP_CFLAGS@		\
 	-I$(includedir)
 
-LDADD = $(GIMP_LIBS)
+LDADD = $(GIMP_LIBS) -lm
 
