@@ -47,3 +47,8 @@ and then
 make
 sudo make install
 ```
+
+To tar the whole project :
+```
+make dist-gzip
+```

@@ -43,10 +43,10 @@
 
 #define PROCEDURE_NAME   "vectrabool"
 
-#define DATA_KEY_VALS    "plug_in_template"
-#define DATA_KEY_UI_VALS "plug_in_template_ui"
+#define DATA_KEY_VALS    "vectrabool"//"plug_in_template"
+#define DATA_KEY_UI_VALS "vectrabool_ui"//"plug_in_template_ui"
 
-#define PARASITE_KEY     "plug-in-template-options"
+#define PARASITE_KEY     "vectrabool-options"//"plug-in-template-options"
 
 
 /*  Local function prototypes  */
@@ -125,22 +125,22 @@ query (void)
   help_uri = g_filename_to_uri (help_path, NULL, NULL);
   g_free (help_path);
 
-  gimp_plugin_help_register ("http://developer.gimp.org/plug-in-template/help",
-                             help_uri);
+  //gimp_plugin_help_register ("http://developer.gimp.org/plug-in-template/help",
+  //                           help_uri);
 
   gimp_install_procedure (PROCEDURE_NAME,
-			  "Blurb",
+			  "This plugin aims to permit bitmap to svg image transformation",
 			  "Help",
-			  "Michael Natterer <mitch@gimp.org>",
-			  "Michael Natterer <mitch@gimp.org>",
-			  "2000-2004",
-			  N_("Plug-In Template...TEST2"),
+			  "The Vectrabool team",
+			  "The Vectrabool Team",
+			  "2016-2017",
+			  N_("Vectrabool"),
 			  "RGB*, GRAY*, INDEXED*",
 			  GIMP_PLUGIN,
 			  G_N_ELEMENTS (args), 0,
 			  args, NULL);
 
-  gimp_plugin_menu_register (PROCEDURE_NAME, "<Image>/Filters/Misc/");
+  gimp_plugin_menu_register (PROCEDURE_NAME, "<Image>/Filters/");
 }
 
 static void
