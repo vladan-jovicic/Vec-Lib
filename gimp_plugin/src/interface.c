@@ -131,7 +131,7 @@ dialog (gint32              image_ID,
 			      _("Dummy 3:"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
 			      vals->dummy3, -100, 100, 1, 10, 0,
 			      TRUE, 0, 0,
-			      _("Dummy scale entry 3"), NULL);
+			      _("Dummy scale entry 3DVREAWAV"), NULL);
   g_signal_connect (adj, "value_changed",
                     G_CALLBACK (gimp_int_adjustment_update),
                     &vals->dummy3);

@@ -56,7 +56,7 @@
 #define PACKAGE_NAME "vectrabool"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "vectrabool 2.2.0"
+#define PACKAGE_STRING "vectrabool 1.0.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "vectrabool"
@@ -65,16 +65,16 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.2.0"
+#define PACKAGE_VERSION "1.0.0"
 
 /* Plug-In major version */
-#define PLUGIN_MAJOR_VERSION 2
+#define PLUGIN_MAJOR_VERSION 1
 
 /* Plug-In micro version */
 #define PLUGIN_MICRO_VERSION 0
 
 /* Plug-In minor version */
-#define PLUGIN_MINOR_VERSION 2
+#define PLUGIN_MINOR_VERSION 0
 
 /* Plug-In name */
 #define PLUGIN_NAME PACKAGE_NAME

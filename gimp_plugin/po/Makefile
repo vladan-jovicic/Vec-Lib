@@ -19,7 +19,7 @@
 
 GETTEXT_PACKAGE = gimp20-plugin-template
 PACKAGE = vectrabool
-VERSION = 2.2.0
+VERSION = 1.0.0
 
 SHELL = /bin/bash
 
