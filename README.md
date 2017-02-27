@@ -116,4 +116,10 @@ The project is developed as a school project by a group of students from the ENS
 
 ## License
 
-TODO: Write license
+This library is under the CeCILL v2 license
+
+CeCILL FREE SOFTWARE LICENSE AGREEMENT
+http://www.cecill.info/licences/Licence_CeCILL_V2-en.txt
+
+
+
