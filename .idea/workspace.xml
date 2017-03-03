@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4415d228-9c29-4bbb-a8df-c7b8fc0d0817" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_data/car.png" afterPath="$PROJECT_DIR$/test_data/car.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/corner_detection/HarrisCornerDetector.py" afterPath="$PROJECT_DIR$/corner_detection/HarrisCornerDetector.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/curve_fitting/CurveFitGG.py" afterPath="$PROJECT_DIR$/curve_fitting/CurveFitGG.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/polyline_filter/PolyLineFilter.py" afterPath="$PROJECT_DIR$/polyline_filter/PolyLineFilter.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/main.py" afterPath="$PROJECT_DIR$/test/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test.py" afterPath="$PROJECT_DIR$/test/test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_data/car_contours.txt" afterPath="$PROJECT_DIR$/test_data/car_contours.txt" />
     </list>
     <ignored path="Vec-lib.iws" />
     <ignored path=".idea/workspace.xml" />
