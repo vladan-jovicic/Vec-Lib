@@ -97,7 +97,6 @@ class Test:
 		plt.show(block=True)
 
 	def write_svg(self, all_curves):
-		sys.stdout = sys.stderr
 		height, width, svg = 0, 0, ""
 		for idx, b_curve in enumerate(all_curves):
 			svg = svg + '<path d="M' + str(b_curve.controlPoints[0][0]) + ',' + str(
