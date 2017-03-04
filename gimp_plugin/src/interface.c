@@ -32,6 +32,7 @@
 
 #include "main.h"
 #include "interface.h"
+#include "render.h"
 
 #include "plugin-intl.h"
 
@@ -59,13 +60,11 @@ static PlugInUIVals *ui_state = NULL;
 gboolean
 dialog (gint32              image_ID,
 	GimpDrawable       *drawable,
-	PlugInVals         *vals,
-	PlugInImageVals    *image_vals,
-	PlugInDrawableVals *drawable_vals,
-	PlugInUIVals       *ui_vals)
+	arg* data)
 {
   GtkWidget *dlg;
   GtkWidget *main_vbox;
+  GtkWidget *preview;
   GtkWidget *frame;
   GtkWidget *table;
   GtkWidget *hbox;
@@ -78,13 +77,13 @@ dialog (gint32              image_ID,
   GimpUnit   unit;
   gdouble    xres, yres;
 
-  ui_state = ui_vals;
+  ui_state = data -> ui_vals;
 
-  gimp_ui_init (PLUGIN_NAME, TRUE);
+  gimp_ui_init (PLUGIN_NAME, FALSE);
 
-  dlg = gimp_dialog_new (_("GIMP Plug-In Template"), PLUGIN_NAME,
+  dlg = gimp_dialog_new (_("Vectrabool"), PLUGIN_NAME,
                          NULL, 0,
-			 gimp_standard_help_func, "plug-in-template",
+			 gimp_standard_help_func, "vectrabool",
 
 			 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			 GTK_STOCK_OK,     GTK_RESPONSE_OK,
@@ -94,12 +93,17 @@ dialog (gint32              image_ID,
   main_vbox = gtk_vbox_new (FALSE, 12);
   gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 12);
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dlg)->vbox), main_vbox);
+  gtk_widget_show(main_vbox);
+  
+  preview = gimp_drawable_preview_new (drawable, &data -> vals -> preview);
+  gtk_box_pack_start (GTK_BOX (main_vbox), preview, TRUE, TRUE, 0);
+  gtk_widget_show (preview);
 
   /*  gimp_scale_entry_new() examples  */
 
-  frame = gimp_frame_new (_("ScaleEntry Examples"));
-  gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, FALSE, 0);
-  gtk_widget_show (frame);
+  frame = gimp_frame_new (_("contour detection parameters"));
+  gtk_widget_show (frame);  
+  gtk_box_pack_start (GTK_BOX (main_vbox), frame, TRUE, TRUE, 0);
 
   table = gtk_table_new (3, 3, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 6);
@@ -110,33 +114,15 @@ dialog (gint32              image_ID,
   row = 0;
 
   adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
-			      _("Dummy 1:"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
-			      vals->dummy1, 0, 100, 1, 10, 0,
+			      _("low threshold :"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
+			      data -> vals->low_threshold, 0, 255, 1, 10, 0,
 			      TRUE, 0, 0,
-			      _("Dummy scale entry 1"), NULL);
-  g_signal_connect (adj, "value_changed",
-                    G_CALLBACK (gimp_int_adjustment_update),
-                    &vals->dummy1);
+			      _("low threshold"), NULL);
+			      
+  gtk_box_pack_start (GTK_BOX (main_vbox), adj, FALSE, FALSE, 0);
+  gtk_widget_show (adj);
 
-  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
-			      _("Dummy 2:"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
-			      vals->dummy2, 0, 200, 1, 10, 0,
-			      TRUE, 0, 0,
-			      _("Dummy scale entry 2"), NULL);
-  g_signal_connect (adj, "value_changed",
-                    G_CALLBACK (gimp_int_adjustment_update),
-                    &vals->dummy2);
-
-  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
-			      _("Dummy 3:"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
-			      vals->dummy3, -100, 100, 1, 10, 0,
-			      TRUE, 0, 0,
-			      _("Dummy scale entry 3DVREAWAV"), NULL);
-  g_signal_connect (adj, "value_changed",
-                    G_CALLBACK (gimp_int_adjustment_update),
-                    &vals->dummy3);
-
-  /*  gimp_random_seed_new() example  */
+  /*  gimp_random_seed_new() example  
 
   frame = gimp_frame_new (_("A Random Seed Entry"));
   gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, FALSE, 0);
@@ -151,37 +137,7 @@ dialog (gint32              image_ID,
   gtk_box_pack_start (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
   gtk_widget_show (hbox2);
 
-  /*  gimp_coordinates_new() example  */
-
-  frame = gimp_frame_new (_("A GimpCoordinates Widget\n"
-			   "Initialized with the Drawable's Size"));
-  gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, FALSE, 0);
-  gtk_widget_show (frame);
-
-  hbox = gtk_hbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
-  gtk_container_add (GTK_CONTAINER (frame), hbox);
-  gtk_widget_show (hbox);
-
-  unit = gimp_image_get_unit (image_ID);
-  gimp_image_get_resolution (image_ID, &xres, &yres);
-
-  coordinates = gimp_coordinates_new (unit, "%p", TRUE, TRUE, SPIN_BUTTON_WIDTH,
-				      GIMP_SIZE_ENTRY_UPDATE_SIZE,
-
-				      ui_vals->chain_active, TRUE,
-
-				      _("Width:"), drawable->width, xres,
-				      1, GIMP_MAX_IMAGE_SIZE,
-				      0, drawable->width,
-
-				      _("Height:"), drawable->height, yres,
-				      1, GIMP_MAX_IMAGE_SIZE,
-				      0, drawable->height);
-  gtk_box_pack_start (GTK_BOX (hbox), coordinates, FALSE, FALSE, 0);
-  gtk_widget_show (coordinates);
-
-  /*  Image and drawable menus  */
+  /*  Image and drawable menus  
 
   frame = gimp_frame_new (_("Image and Drawable Menu Examples"));
   gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, FALSE, 0);
@@ -210,14 +166,33 @@ dialog (gint32              image_ID,
                               &image_vals->image_id);
 
   gimp_table_attach_aligned (GTK_TABLE (table), 0, row++,
-			     _("RGB Images:"), 0.0, 0.5, combo, 1, FALSE);
+			     _("RGB Images:"), 0.0, 0.5, combo, 1, FALSE); */
 
   /*  Show the main containers  */
+  
 
-  gtk_widget_show (main_vbox);
+  g_signal_connect (preview, "invalidated",
+                            G_CALLBACK (handle_invalidate),
+                            data);
+                            
+  g_signal_connect_swapped (adj, "value_changed",
+                            G_CALLBACK (gimp_preview_invalidate),
+                            preview);
+                            
+  g_signal_connect (adj, "value_changed",
+                    G_CALLBACK (gimp_int_adjustment_update),
+                    &(data -> vals -> low_threshold));
+                            
+  render(data);
+    
+
+  //gtk_widget_show (main_vbox);
   gtk_widget_show (dlg);
 
   run = (gimp_dialog_run (GIMP_DIALOG (dlg)) == GTK_RESPONSE_OK);
+  
+  data -> preview = NULL;
+ 
 
   if (run)
     {
@@ -229,6 +204,12 @@ dialog (gint32              image_ID,
   gtk_widget_destroy (dlg);
 
   return run;
+}
+
+void handle_invalidate(GtkWidget* preview, arg* data)
+{
+	data -> preview = GIMP_PREVIEW(preview);
+	render(data);
 }
 
 

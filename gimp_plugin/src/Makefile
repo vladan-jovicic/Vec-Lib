@@ -86,10 +86,13 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+build_triplet = x86_64-pc-linux-gnu
+host_triplet = x86_64-pc-linux-gnu
+target_triplet = x86_64-pc-linux-gnu
 bin_PROGRAMS = vectrabool$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
@@ -100,11 +103,12 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_vectrabool_OBJECTS = interface.$(OBJEXT) main.$(OBJEXT) \
-	render.$(OBJEXT) contdet.$(OBJEXT)
+	render.$(OBJEXT) adaptOpenCV.$(OBJEXT) \
+	contourDetection.$(OBJEXT)
 vectrabool_OBJECTS = $(am_vectrabool_OBJECTS)
 vectrabool_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
-vectrabool_DEPENDENCIES = $(am__DEPENDENCIES_1)
+vectrabool_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -133,6 +137,19 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+AM_V_CXX = $(am__v_CXX_$(V))
+am__v_CXX_ = $(am__v_CXX_$(AM_DEFAULT_VERBOSITY))
+am__v_CXX_0 = @echo "  CXX     " $@;
+am__v_CXX_1 = 
+CXXLD = $(CXX)
+CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
+AM_V_CXXLD = $(am__v_CXXLD_$(V))
+am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CXXLD_0 = @echo "  CXXLD   " $@;
+am__v_CXXLD_1 = 
 SOURCES = $(vectrabool_SOURCES)
 DIST_SOURCES = $(vectrabool_SOURCES)
 am__can_run_installinfo = \
@@ -177,6 +194,9 @@ CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2 -Wall
 CPP = gcc -E
 CPPFLAGS = 
+CXX = g++
+CXXDEPMODE = depmode=gcc3
+CXXFLAGS = -g -O2
 CYGPATH_W = echo
 DATADIR = ${datadir}/vectrabool
 DATADIRNAME = share
@@ -222,6 +242,8 @@ MSGFMT = /usr/bin/msgfmt
 MSGFMT_OPTS = -c
 MSGMERGE = /usr/bin/msgmerge
 OBJEXT = o
+OPENCV_CFLAGS = -I/usr/local/include/opencv -I/usr/local/include
+OPENCV_LIBS = -L/usr/local/lib -lopencv_calib3d -lopencv_contrib -lopencv_core -lopencv_features2d -lopencv_flann -lopencv_gpu -lopencv_highgui -lopencv_imgproc -lopencv_legacy -lopencv_ml -lopencv_nonfree -lopencv_objdetect -lopencv_ocl -lopencv_photo -lopencv_stitching -lopencv_superres -lopencv_ts -lopencv_video -lopencv_videostab -lrt -lpthread -lm -ldl
 PACKAGE = vectrabool
 PACKAGE_BUGREPORT = 
 PACKAGE_NAME = vectrabool
@@ -248,20 +270,29 @@ abs_srcdir = /home/remi/ENS/Integrated_project/Vec-Lib/gimp_plugin/src
 abs_top_builddir = /home/remi/ENS/Integrated_project/Vec-Lib/gimp_plugin
 abs_top_srcdir = /home/remi/ENS/Integrated_project/Vec-Lib/gimp_plugin
 ac_ct_CC = gcc
+ac_ct_CXX = g++
 am__include = include
 am__leading_dot = .
 am__quote = 
 am__tar = $${TAR-tar} chof - "$$tardir"
 am__untar = $${TAR-tar} xf -
 bindir = $(GIMP_LIBDIR)/plug-ins
+build = x86_64-pc-linux-gnu
 build_alias = 
+build_cpu = x86_64
+build_os = linux-gnu
+build_vendor = pc
 builddir = .
 datadir = ${datarootdir}
 datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
+host = x86_64-pc-linux-gnu
 host_alias = 
+host_cpu = x86_64
+host_os = linux-gnu
+host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
@@ -284,7 +315,11 @@ sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
 sysconfdir = ${prefix}/etc
+target = x86_64-pc-linux-gnu
 target_alias = 
+target_cpu = x86_64
+target_os = linux-gnu
+target_vendor = pc
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
@@ -296,23 +331,23 @@ vectrabool_SOURCES = \
 	main.h		\
 	render.c	\
 	render.h	\
-	contdet.c	\
-	contdet.h
+	adaptOpenCV.cpp	\
+	adaptOpenCV.h   \
+	contourDetection.cpp \
+	contourDetection.hpp
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\
-	-DDATADIR=\""$(DATADIR)"\"
-
-INCLUDES = \
-	-I$(top_srcdir)		\
-	-pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libpng12 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng12 -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/freetype2 -I/usr/include/gimp-2.0		\
+	-DDATADIR=\""$(DATADIR)"\"              \
+	-I$(top_srcdir)				\
+	-pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libpng12 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng12 -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/freetype2 -I/usr/include/gimp-2.0				\
 	-I$(includedir)
 
-LDADD = $(GIMP_LIBS) -lm
+LDADD = $(GIMP_LIBS) $(OPENCV_LIBS) -lm
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .o .obj
+.SUFFIXES: .c .cpp .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -387,7 +422,7 @@ clean-binPROGRAMS:
 
 vectrabool$(EXEEXT): $(vectrabool_OBJECTS) $(vectrabool_DEPENDENCIES) $(EXTRA_vectrabool_DEPENDENCIES) 
 	@rm -f vectrabool$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(vectrabool_OBJECTS) $(vectrabool_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(CXXLINK) $(vectrabool_OBJECTS) $(vectrabool_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -395,7 +430,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/contdet.Po
+include ./$(DEPDIR)/adaptOpenCV.Po
+include ./$(DEPDIR)/contourDetection.Po
 include ./$(DEPDIR)/interface.Po
 include ./$(DEPDIR)/main.Po
 include ./$(DEPDIR)/render.Po
@@ -413,6 +449,20 @@ include ./$(DEPDIR)/render.Po
 #	$(AM_V_CC)source='$<' object='$@' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+.cpp.o:
+	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+#	$(AM_V_CXX)source='$<' object='$@' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ $<
+
+.cpp.obj:
+	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+#	$(AM_V_CXX)source='$<' object='$@' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

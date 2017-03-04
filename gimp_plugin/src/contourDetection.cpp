@@ -3,11 +3,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include "contourDetection.hpp"
+
 
 using namespace cv;
-
-
-#include "contourDetection.h"
 
 
 /**
@@ -35,19 +34,56 @@ using namespace cv;
  * 
  * 
  **/
-
-
-
-/**
- * First applies a blur, then Canny algorithm and a dilatation of the image.
- */
-void contourDetection(int threshold)
+ 
+void printContours(std::vector<std::vector<Point> >& contours)
 {
+	for(size_t i = 0; i < contours.size(); i++) {
+		std::cout << "#" << "\n";
+		for(size_t j = 0; j < contours[i].size(); j++) {
+			Point p = contours[i][j];
+			std::cout << p.x << "," << p.y << "\n";
+		}
+	}
+}
+
+
+/** function main
+ * src is the image to handle
+ */
+Mat innerRender(Mat& img, int low_threshold, int use_dilate)
+{
+
+	Mat contours_img, grad, blurred, detected_edges, dst, dst1;
+
+
+	std::vector<Vec4i> hierarchy;
+	std::vector<std::vector<Point> > contours, contours1;
+ 
+	//int edgeThresh = 1;
+	//int lowThreshold = vals -> low_threshold;
+	//int const max_lowThreshold = 100;
+	int ratio = 3;
+	int kernel_size = 3;
+	double sigma = 1.4;
+	
+	//int scale = 1;
+	//int delta = 0;
+	//int ddepth = CV_32F;
+	//int upThreshold;
+	
+	//bool use_dilate = vals -> dilate; 
+
+	/// Create a matrix of the same type and size as img (for dst)
+	dst.create( img.size(), img.type() );
+	//contours_img.create(img.size(), img.type());
+
+	/// Computation of the contours
+	
 	/// Reduce noise with a kernel 3x3
-	GaussianBlur(src, blurred, Size(5,5), sigma);
+	GaussianBlur(img, blurred, Size(5,5), sigma);
 
 	/// Canny detector
-	Canny(src, detected_edges, lowThreshold, lowThreshold * ratio, kernel_size);
+	Canny(blurred, detected_edges, low_threshold, low_threshold * ratio, kernel_size);
 	
 	if(use_dilate) {
 		Mat element = getStructuringElement(MORPH_RECT,
@@ -60,64 +96,21 @@ void contourDetection(int threshold)
 	/// Using Canny's output as a mask, we display our result
 	dst = Scalar::all(0);
 
-	src.copyTo( dst, detected_edges);
+	img.copyTo( dst, detected_edges);
+	
+	//imshow("test", dst );
+	
+	return dst;
+	/*
      
-	cvtColor( dst, dst1, CV_BGR2GRAY );
-  
+	cvtColor(dst, dst1, CV_BGR2GRAY );
+	
 	findContours(dst1, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
+	
+
+	//printContours(contours);
+	*/
   
- }
- 
-void printContours()
-{
-	for(size_t i = 0; i < contours.size(); i++) {
-		std::cout << "#" << "\n";
-		for(size_t j = 0; j < contours[i].size(); j++) {
-			Point p = contours[i][j];
-			std::cout << p.x << "," << p.y << "\n";
-		}
-	}
 }
-
-
-/** @function main
- * First argument is the image 
- * Second argument is the low threshold
- */
-int innerRender(Mat src)
-{
-  //if(argc == 1) {std::cout << "You must enter a file as input "; return 1;}
-  ///// Loads the image
-  //src = imread( argv[1] );
-
-  //if( !src.data )
-  //{ return -1; }
-  
-  //if(argc == 2) {
-	  //lowThreshold = 0;
-  //} else {
-	  //lowThreshold = atoi(argv[2]);
-	  //if(lowThreshold < 0 || lowThreshold >= 100) {
-		  //std::cout << "The threshold must be between 0 and 100." << std::endl;
-		  //return 1;
-	  //}
-  //}
-  
-  //if(argc == 3 || (argv[3] != NULL && strcmp(argv[3], "-d") != 0)) {
-	  //use_dilate = false;
-  //}
-
-  /// Create a matrix of the same type and size as src (for dst)
-  dst.create( src.size(), src.type() );
-  contours_img.create(src.size(), src.type());
-  
-  /// Computation of the contours
-  contourDetection(lowThreshold);  
- 
-  printContours();
-
-  return 0;
-  
-  }
 
 

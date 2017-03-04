@@ -31,11 +31,9 @@
 
 typedef struct
 {
-  gint      dummy1;
-  gint      dummy2;
-  gint      dummy3;
-  guint     seed;
-  gboolean  random_seed;
+  gint32      low_threshold;
+  gboolean  dilate;
+  gint32		preview;
 } PlugInVals;
 
 typedef struct
@@ -52,6 +50,17 @@ typedef struct
 {
   gboolean  chain_active;
 } PlugInUIVals;
+
+typedef struct
+{
+	GimpDrawable* drawable;
+	GimpDrawable* initial_drawable;
+	GimpPreview* preview;
+	PlugInVals* vals;
+	PlugInImageVals* image_vals;
+	PlugInDrawableVals* drawable_vals;
+	PlugInUIVals* ui_vals;
+} arg;
 
 
 /*  Default values  */
