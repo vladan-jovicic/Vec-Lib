@@ -11,7 +11,7 @@
 ## Dependencies 
 
 Obviously you'll need [gimp](https://www.gimp.org/).
-Make sure you have Gimp installed and install the following libraries :
+Make sure you have it installed and install the following libraries :
 
 ```
 sudo apt-get install libgimp2.0
