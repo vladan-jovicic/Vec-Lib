@@ -33,10 +33,9 @@
 
 gboolean   dialog (gint32              image_ID,
 		   GimpDrawable       *drawable,
-		   PlugInVals         *vals,
-		   PlugInImageVals    *image_vals,
-		   PlugInDrawableVals *drawable_vals,
-		   PlugInUIVals       *ui_vals);
+		   arg* data);
+		   
+void handle_invalidate(GtkWidget* preview, arg* data);
 
 
 #endif /* __INTERFACE_H__ */

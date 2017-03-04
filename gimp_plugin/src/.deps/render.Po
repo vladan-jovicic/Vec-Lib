@@ -688,8 +688,89 @@ render.o: render.c /usr/include/stdc-predef.h ../config.h \
  /usr/include/gimp-2.0/libgimp/gimptransformtools_pdb.h \
  /usr/include/gimp-2.0/libgimp/gimpundo_pdb.h \
  /usr/include/gimp-2.0/libgimp/gimpunit_pdb.h \
- /usr/include/gimp-2.0/libgimp/gimpvectors_pdb.h contdet.h main.h \
- render.h plugin-intl.h /usr/include/libintl.h /usr/include/locale.h \
+ /usr/include/gimp-2.0/libgimp/gimpvectors_pdb.h \
+ /usr/include/gimp-2.0/libgimp/gimpui.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpwidgets.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpwidgetstypes.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpwidgetsenums.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpbrowser.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpbutton.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcairo-utils.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcellrenderercolor.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcellrenderertoggle.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpchainbutton.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolorarea.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolorbutton.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolordisplay.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolordisplaystack.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolorhexentry.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolornotebook.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolorselector.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolorprofilecombobox.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolorprofilestore.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolorscale.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolorscales.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolorselect.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpcolorselection.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpdialog.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpenumcombobox.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpintcombobox.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpenumlabel.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpenumstore.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpintstore.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpenumwidgets.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpfileentry.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpframe.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimphelpui.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimphintbox.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpmemsizeentry.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpnumberpairentry.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpoffsetarea.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimppageselector.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimppatheditor.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimppickbutton.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimppixmap.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimppreview.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimppreviewarea.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimppropwidgets.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpquerybox.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpruler.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpscaleentry.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpscrolledpreview.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimppreview.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpsizeentry.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpstock.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpstringcombobox.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpunitcombobox.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpunitmenu.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpunitstore.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpwidgets-error.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpzoommodel.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimp3migration.h \
+ /usr/include/gimp-2.0/libgimpwidgets/gimpoldwidgets.h \
+ /usr/include/gimp-2.0/libgimp/gimpuitypes.h \
+ /usr/include/gimp-2.0/libgimp/gimpexport.h \
+ /usr/include/gimp-2.0/libgimp/gimpmenu.h \
+ /usr/include/gimp-2.0/libgimp/gimpaspectpreview.h \
+ /usr/include/gimp-2.0/libgimp/gimpdrawablepreview.h \
+ /usr/include/gimp-2.0/libgimp/gimpbrushmenu.h \
+ /usr/include/gimp-2.0/libgimp/gimpfontmenu.h \
+ /usr/include/gimp-2.0/libgimp/gimpgradientmenu.h \
+ /usr/include/gimp-2.0/libgimp/gimppalettemenu.h \
+ /usr/include/gimp-2.0/libgimp/gimppatternmenu.h \
+ /usr/include/gimp-2.0/libgimp/gimpprocbrowserdialog.h \
+ /usr/include/gimp-2.0/libgimp/gimpprocview.h \
+ /usr/include/gimp-2.0/libgimp/gimpprogressbar.h \
+ /usr/include/gimp-2.0/libgimp/gimpitemcombobox.h \
+ /usr/include/gimp-2.0/libgimp/gimpimagecombobox.h \
+ /usr/include/gimp-2.0/libgimp/gimpselectbutton.h \
+ /usr/include/gimp-2.0/libgimp/gimpbrushselectbutton.h \
+ /usr/include/gimp-2.0/libgimp/gimpfontselectbutton.h \
+ /usr/include/gimp-2.0/libgimp/gimpgradientselectbutton.h \
+ /usr/include/gimp-2.0/libgimp/gimppaletteselectbutton.h \
+ /usr/include/gimp-2.0/libgimp/gimppatternselectbutton.h \
+ /usr/include/gimp-2.0/libgimp/gimpzoompreview.h main.h render.h \
+ plugin-intl.h /usr/include/libintl.h /usr/include/locale.h \
  /usr/include/x86_64-linux-gnu/bits/locale.h
 
 /usr/include/stdc-predef.h:
@@ -2206,7 +2287,167 @@ render.o: render.c /usr/include/stdc-predef.h ../config.h \
 
 /usr/include/gimp-2.0/libgimp/gimpvectors_pdb.h:
 
-contdet.h:
+/usr/include/gimp-2.0/libgimp/gimpui.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpwidgets.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpwidgetstypes.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpwidgetsenums.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpbrowser.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpbutton.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcairo-utils.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcellrenderercolor.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcellrenderertoggle.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpchainbutton.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolorarea.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolorbutton.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolordisplay.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolordisplaystack.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolorhexentry.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolornotebook.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolorselector.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolorprofilecombobox.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolorprofilestore.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolorscale.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolorscales.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolorselect.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpcolorselection.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpdialog.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpenumcombobox.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpintcombobox.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpenumlabel.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpenumstore.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpintstore.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpenumwidgets.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpfileentry.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpframe.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimphelpui.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimphintbox.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpmemsizeentry.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpnumberpairentry.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpoffsetarea.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimppageselector.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimppatheditor.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimppickbutton.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimppixmap.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimppreview.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimppreviewarea.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimppropwidgets.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpquerybox.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpruler.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpscaleentry.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpscrolledpreview.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimppreview.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpsizeentry.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpstock.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpstringcombobox.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpunitcombobox.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpunitmenu.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpunitstore.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpwidgets-error.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpzoommodel.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimp3migration.h:
+
+/usr/include/gimp-2.0/libgimpwidgets/gimpoldwidgets.h:
+
+/usr/include/gimp-2.0/libgimp/gimpuitypes.h:
+
+/usr/include/gimp-2.0/libgimp/gimpexport.h:
+
+/usr/include/gimp-2.0/libgimp/gimpmenu.h:
+
+/usr/include/gimp-2.0/libgimp/gimpaspectpreview.h:
+
+/usr/include/gimp-2.0/libgimp/gimpdrawablepreview.h:
+
+/usr/include/gimp-2.0/libgimp/gimpbrushmenu.h:
+
+/usr/include/gimp-2.0/libgimp/gimpfontmenu.h:
+
+/usr/include/gimp-2.0/libgimp/gimpgradientmenu.h:
+
+/usr/include/gimp-2.0/libgimp/gimppalettemenu.h:
+
+/usr/include/gimp-2.0/libgimp/gimppatternmenu.h:
+
+/usr/include/gimp-2.0/libgimp/gimpprocbrowserdialog.h:
+
+/usr/include/gimp-2.0/libgimp/gimpprocview.h:
+
+/usr/include/gimp-2.0/libgimp/gimpprogressbar.h:
+
+/usr/include/gimp-2.0/libgimp/gimpitemcombobox.h:
+
+/usr/include/gimp-2.0/libgimp/gimpimagecombobox.h:
+
+/usr/include/gimp-2.0/libgimp/gimpselectbutton.h:
+
+/usr/include/gimp-2.0/libgimp/gimpbrushselectbutton.h:
+
+/usr/include/gimp-2.0/libgimp/gimpfontselectbutton.h:
+
+/usr/include/gimp-2.0/libgimp/gimpgradientselectbutton.h:
+
+/usr/include/gimp-2.0/libgimp/gimppaletteselectbutton.h:
+
+/usr/include/gimp-2.0/libgimp/gimppatternselectbutton.h:
+
+/usr/include/gimp-2.0/libgimp/gimpzoompreview.h:
 
 main.h:
 

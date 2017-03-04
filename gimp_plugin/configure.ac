@@ -25,6 +25,10 @@ AC_DEFINE(PLUGIN_MICRO_VERSION, plugin_micro_version, [Plug-In micro version])
 AC_CONFIG_SRCDIR([src/main.c])
 AM_CONFIG_HEADER(config.h)
 
+dnl C++
+AC_PROG_CXX
+
+AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE(no-define)
 
 AC_ISC_POSIX
@@ -59,6 +63,19 @@ AC_SUBST(GIMP_LIBS)
 
 GIMP_LIBDIR=`$PKG_CONFIG --variable=gimplibdir gimp-2.0`
 AC_SUBST(GIMP_LIBDIR)
+
+dnl OpenCV
+PKG_CHECK_MODULES(OPENCV,
+		  opencv,
+		  HAVE_OPENCV=yes, HAVE_OPENCV=no)
+
+AC_SUBST(OPENCV_CFLAGS)
+AC_SUBST(OPENCV_LIBS)
+
+if test "x$HAVE_OPENCV"= "xno"; then
+	AC_MSG_ERROR(OpenCV libraries could not be found)
+fi
+dnl end of OpenCV
 
 
 dnl i18n stuff

@@ -43,10 +43,10 @@
 
 #define PROCEDURE_NAME   "vectrabool"
 
-#define DATA_KEY_VALS    "vectrabool"//"plug_in_template"
-#define DATA_KEY_UI_VALS "vectrabool_ui"//"plug_in_template_ui"
+#define DATA_KEY_VALS    "vectrabool"
+#define DATA_KEY_UI_VALS "vectrabool_ui"
 
-#define PARASITE_KEY     "vectrabool-options"//"plug-in-template-options"
+#define PARASITE_KEY     "vectrabool-options"
 
 
 /*  Local function prototypes  */
@@ -64,10 +64,8 @@ static void   run   (const gchar      *name,
 const PlugInVals default_vals =
 {
   0,
-  1,
-  2,
-  0,
-  FALSE
+  FALSE,
+  1
 };
 
 const PlugInImageVals default_image_vals =
@@ -91,6 +89,18 @@ static PlugInDrawableVals drawable_vals;
 static PlugInUIVals       ui_vals;
 
 
+static arg data =
+{
+	NULL,
+	NULL,
+	NULL,
+	&vals,
+	&image_vals,
+	&drawable_vals,
+	&ui_vals
+};
+
+
 GimpPlugInInfo PLUG_IN_INFO =
 {
   NULL,  /* init_proc  */
@@ -109,14 +119,11 @@ query (void)
 
   static GimpParamDef args[] =
   {
-    { GIMP_PDB_INT32,    "run_mode",   "Interactive, non-interactive"    },
-    { GIMP_PDB_IMAGE,    "image",      "Input image"                     },
-    { GIMP_PDB_DRAWABLE, "drawable",   "Input drawable"                  },
-    { GIMP_PDB_INT32,    "dummy",      "dummy1"                          },
-    { GIMP_PDB_INT32,    "dummy",      "dummy2"                          },
-    { GIMP_PDB_INT32,    "dummy",      "dummy3"                          },
-    { GIMP_PDB_INT32,    "seed",       "Seed value (used only if randomize is FALSE)" },
-    { GIMP_PDB_INT32,    "randomize",  "Use a random seed (TRUE, FALSE)" }
+    { GIMP_PDB_INT32,    "run_mode",   			"Interactive, non-interactive"    					},
+    { GIMP_PDB_IMAGE,    "image",      			"Input image"                     					},
+    { GIMP_PDB_DRAWABLE, "drawable",   			"Input drawable"                  					},
+    { GIMP_PDB_INT32,    "low_threshold",      	"Threshold value to use for the contour detection" 	},
+    { GIMP_PDB_INT32,	 "dilate",				"boolean for dilatation"							}
   };
 
   gimp_plugin_domain_register (PLUGIN_NAME, LOCALEDIR);
@@ -151,13 +158,19 @@ run (const gchar      *name,
      GimpParam       **return_vals)
 {
   static GimpParam   values[1];
-  GimpDrawable      *drawable;
+  GimpDrawable      *drawable, *drawable_copy;
+  //
+  GimpPreview		*preview;
+  //
   gint32             image_ID;
   GimpRunMode        run_mode;
   GimpPDBStatusType  status = GIMP_PDB_SUCCESS;
 
   *nreturn_vals = 1;
   *return_vals  = values;
+  
+  values[0].type = GIMP_PDB_STATUS;
+  values[0].data.d_status = status;
 
   /*  Initialize i18n support  */
   bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
@@ -169,6 +182,10 @@ run (const gchar      *name,
   run_mode = param[0].data.d_int32;
   image_ID = param[1].data.d_int32;
   drawable = gimp_drawable_get (param[2].data.d_drawable);
+  drawable_copy = gimp_drawable_get (param[2].data.d_drawable);
+  
+  data.drawable = drawable;
+  data.initial_drawable = drawable_copy;
 
   /*  Initialize with default values  */
   vals          = default_vals;
@@ -181,20 +198,15 @@ run (const gchar      *name,
       switch (run_mode)
 	{
 	case GIMP_RUN_NONINTERACTIVE:
-	  if (n_params != 8)
+	  if (n_params != 5)
 	    {
 	      status = GIMP_PDB_CALLING_ERROR;
 	    }
 	  else
 	    {
-	      vals.dummy1      = param[3].data.d_int32;
-	      vals.dummy2      = param[4].data.d_int32;
-	      vals.dummy3      = param[5].data.d_int32;
-	      vals.seed        = param[6].data.d_int32;
-	      vals.random_seed = param[7].data.d_int32;
-
-              if (vals.random_seed)
-                vals.seed = g_random_int ();
+	      vals.low_threshold = param[3].data.d_int32;
+	      vals.dilate        = param[4].data.d_int32;
+	      
 	    }
 	  break;
 
@@ -204,9 +216,10 @@ run (const gchar      *name,
 	  gimp_get_data (DATA_KEY_UI_VALS, &ui_vals);
 
 	  if (! dialog (image_ID, drawable,
-			&vals, &image_vals, &drawable_vals, &ui_vals))
+			&data))
 	    {
-	      status = GIMP_PDB_CANCEL;
+	      //status = GIMP_PDB_CANCEL;
+	      return;
 	    }
 	  break;
 
@@ -214,8 +227,6 @@ run (const gchar      *name,
 	  /*  Possibly retrieve data  */
 	  gimp_get_data (DATA_KEY_VALS, &vals);
 
-          if (vals.random_seed)
-            vals.seed = g_random_int ();
 	  break;
 
 	default:
@@ -229,10 +240,11 @@ run (const gchar      *name,
 
   if (status == GIMP_PDB_SUCCESS)
     {
-      render (image_ID, drawable, &vals, &image_vals, &drawable_vals);
+      render (&data);
 
-      if (run_mode != GIMP_RUN_NONINTERACTIVE)
-	gimp_displays_flush ();
+      if (run_mode != GIMP_RUN_NONINTERACTIVE) {
+		gimp_displays_flush ();
+	  }
 
       if (run_mode == GIMP_RUN_INTERACTIVE)
 	{
@@ -243,6 +255,4 @@ run (const gchar      *name,
       gimp_drawable_detach (drawable);
     }
 
-  values[0].type = GIMP_PDB_STATUS;
-  values[0].data.d_status = status;
 }

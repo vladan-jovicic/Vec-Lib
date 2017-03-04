@@ -30,26 +30,31 @@
 #include <gtk/gtk.h>
 
 #include <libgimp/gimp.h>
+#include <libgimp/gimpui.h>
 
-#include "contdet.h"
+//#include "adaptOpenCV.hpp"
 #include "main.h"
 #include "render.h"
 
 
 #include "plugin-intl.h"
 
+void renderUsingOpenCV (GimpDrawable*, GimpPreview*, gint32, gint32);
+
 
 /*  Public functions  */
 
 void
-render (gint32              image_ID,
-	GimpDrawable       *drawable,
-	PlugInVals         *vals,
-	PlugInImageVals    *image_vals,
-	PlugInDrawableVals *drawable_vals)
+render (arg *data)
 {
   //g_message (_("This plug-in is just a dummy. "
   //             "It has now finished doing nothing."));
   
-  gaussian_blur(drawable, 3);
-}
+  //gaussian_blur(drawable, 3);
+  PlugInVals *vals = data -> vals;
+  GimpPreview* preview = data -> preview;
+  
+  
+  renderUsingOpenCV (preview == NULL ? data -> initial_drawable : data -> drawable, preview, vals -> low_threshold, vals -> dilate);
+  
+ }
