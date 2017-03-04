@@ -68,6 +68,8 @@ cv::Mat drawableToMat(GimpDrawable* drawable, GimpPreview* preview)
 								  &x1, &y1,
 								  &x2, &y2);
 								  
+								  	
+								  
 		width = x2 - x1;
 		height = y2 - y1;
 		
@@ -116,7 +118,7 @@ void setMatToDrawable(cv::Mat& mat, GimpDrawable* drawable, GimpPreview* preview
 								  &x2, &y2);
 								  
 		width = x2 - x1;
-		height = y2 - y2;
+		height = y2 - y1;
 		
 	} else {
 		gimp_preview_get_position (preview, &x1, &y1);

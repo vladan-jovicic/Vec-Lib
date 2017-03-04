@@ -183,7 +183,7 @@ dialog (gint32              image_ID,
                     G_CALLBACK (gimp_int_adjustment_update),
                     &(data -> vals -> low_threshold));
                             
-  render(data);
+  //render(data);
     
 
   //gtk_widget_show (main_vbox);
