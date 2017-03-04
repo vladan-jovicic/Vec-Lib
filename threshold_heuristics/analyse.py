@@ -65,7 +65,7 @@ for file_name in sys.argv[1:]:
 	print_norm_plot(nb_points,test_cases,"nb_points")
 	print_norm_plot(sum_n1,test_cases,"sum_n1")
 	print_norm_plot(sum_n2,test_cases,"sum_n2")
-
+	#print nb_points,nb_curves
 	plt.legend()
 	plt.axis([-1,101,-0.1,1.1])
 	plt.show()

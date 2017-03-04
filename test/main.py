@@ -58,7 +58,7 @@ def main():
 	test = Test(file_name)
 	# test.run_corner_detector_test(disp_original_cont, disp_filtered_poly, disp_corners, output)
 	# test.run_without_corners(disp_original_cont, output)
-	test.run_harris_corner_detector(disp_original_cont, disp_filtered_poly, disp_corners, output)
+	test.run_harris_corner_detector(disp_original_cont, disp_corners, output)
 	# test.run_test()
 	# print "finished"
 
