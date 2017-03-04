@@ -8,7 +8,7 @@ sys.path.insert(0, '../common')
 class HarrisCornerDetector:
 	def __init__(self, points):
 		self.points = points
-		self.cluster_threshold = 2
+		self.cluster_threshold = 1.5
 
 	def get_corners(self):
 		"""
@@ -68,17 +68,20 @@ class HarrisCornerDetector:
 		# each corresponding cluster represents one corner
 		# pick the best one
 		corners = []
+		# maybe to try one that is surrounded with
+		# the one that have the most
 		for cluster in corresponding_clusters:
 			if len(cluster) == 0:
 				continue
-			if 1 <= len(cluster) <= 2:
+			if 1 <= len(cluster) <= 2:  # improve also this
 				corners.append(cluster[0])
-
-			# the size of cluster is at least three
-			best_idx, best_dist = -1, 10  # the distance should be less than 4 actually
+			best_idx, best_dist = -1, 0
 			for i in range(1, len(cluster)-1):
-				dist = np.linalg.norm(np.array(self.points[i-1]) - np.array(self.points[i+1]))
-				best_idx, best_dist = (i, dist) if dist < best_dist else (best_idx, best_dist)
+				pt1 = np.array(self.points[i-1])
+				pt2 = np.array(self.points[i+1])
+				pt3 = np.array(self.points[i])
+				dist = np.linalg.norm(np.cross(pt2 - pt1, pt1 - pt3))/np.linalg.norm(pt2 - pt1)
+				best_idx, best_dist = (i, dist) if dist > best_dist else (best_idx, best_dist)
 			corners.append(cluster[best_idx])
 
 		tmp_corners = sorted(corners)
@@ -86,6 +89,6 @@ class HarrisCornerDetector:
 			return corners
 		corners = [tmp_corners[0]]
 		for i in range(1, len(tmp_corners)):
-			if tmp_corners[i]-corners[-1] > 3:
+			if tmp_corners[i]-corners[-1] > 2:
 				corners.append(tmp_corners[i])
 		return tmp_corners

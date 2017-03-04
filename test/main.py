@@ -47,22 +47,18 @@ def main():
 		file_name = None
 
 	if args.input_poly is not None:
-		print(disp_original_cont)
 		disp_original_cont = True
 	if args.filtered_poly is not None:
-		print(disp_filtered_poly)
 		disp_filtered_poly = True
 	if args.corners is not None:
-		print(disp_corners)
 		disp_corners = True
 	if args.output is not None:
-		print(output)
 		output = True
 
 	test = Test(file_name)
 	# test.run_corner_detector_test(disp_original_cont, disp_filtered_poly, disp_corners, output)
 	# test.run_without_corners(disp_original_cont, output)
-	test.run_harris_corner_detector(disp_original_cont, disp_corners, output)
+	test.run_harris_corner_detector(disp_original_cont, disp_filtered_poly, disp_corners, output)
 	# test.run_test()
 	# print "finished"
 
