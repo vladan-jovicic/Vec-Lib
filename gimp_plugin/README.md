@@ -10,7 +10,7 @@
 
 ## Dependencies 
 
-Obviously you'll need [gimp](https://www.gimp.org/).
+Obviously you'll need [gimp](https://www.gimp.org/).  
 Make sure you have it installed and install the following libraries :
 
 ```
@@ -38,8 +38,8 @@ sudo make install
 ## Run
 
 Now the plugin should be available in Gimp under *Filter -> Vectrabool* (for now)
-You can preview the output of the contour detection algorithm and tune the threshold. 
-`<= threshold <= 255`
+You can preview the output of the contour detection algorithm and tune the threshold.   
+`0 <= threshold <= 255`
 
 ## Clean
 ```
