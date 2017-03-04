@@ -215,7 +215,7 @@ class CurveFitGG:
 
         return t_hat_center
 
-    def compute_max_error(self, first, last, b_curve, u):
+    def compute_max_error(self, first, last, b_curve, u):  # use different error, this one is bullshit
         """Given a set of digitalized points and its parametrization,
         compute the maximum distance over the points"""
         max_err, max_dist = 0.0, 0.0
