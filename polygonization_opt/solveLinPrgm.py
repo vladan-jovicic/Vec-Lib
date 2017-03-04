@@ -33,7 +33,7 @@ def computeLigne(e,liste,delta):
 	res = []
 	for f1 in liste:
 		for f2 in liste:
-			res.append(coef(e,f1,f2,delta))
+			res.append(-coef(e,f1,f2,delta))#we put a "-" because in the linPrgm you have >0 and we want the inequality in the other direction to use cvxopt
 	return res
 
 def computeAPdelta(convexList,delta):
@@ -62,6 +62,10 @@ def generateConstraintsZ(n):
 
 def solvePdelta(convexList,delta):
 	#function to use when you know what distance you want, at most, between each pixel and an edge (the closest one). It compute the better number of point you can use (the min).	 
+
+	n=len(convexList)
+	epsilon=minReal()
+
 	#first create the matrix
 	#we have |convexList|(|convexList|+1) variables all the x_e and z_{f,f'} that must stand for z_{f,f'}=x_f,x_f'.
 	coefs=computeAPdelta(convexList,delta) #all th coef of the form a_{e,f,f'}
@@ -71,12 +75,17 @@ def solvePdelta(convexList,delta):
 	coefs = concat(nulConvexList,coefs)
 
 	#now we have to add the constraints for z_f,f' <= x_f and x_f'
-	nulProductVar = [0 for i in range(len(convexList)**2)]
-	constraintZ = generateConstraintsZ(len(convexList))
+	nulProductVar = [0 for i in range(n**2)]
+	constraintZ = generateConstraintsZ(n)
 
 	A=matrix(coefs+constraitZ)
 
-	epsilon=minReal()
+	#now get vectors b and c
+	c=matrix([1 for e in convexList]+[-1 for i in range(n**2)]) #objective function
+	b=matrix([epsilon for i in range(n)]+[0 for i in range(2*(n**2))])
+
+	sol=solvers.lp(c,A,b)
+	return sol['x']
 	
 
 def solvePnum(convexList,num):
