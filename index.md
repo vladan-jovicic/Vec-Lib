@@ -7,6 +7,7 @@ title: Home
 ## Project orientation
 This project aims to figuring out the algorithms that are used to transform a bitmap image into vector image and trying to optimize the methods.
 **What makes our project different from the other existing softwares ?**
+We are aiming to develop an open-source library which is easy to use.
 
 ## Bitmap (Raster) Images
 
