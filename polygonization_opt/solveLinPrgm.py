@@ -64,6 +64,11 @@ def generateConstraintsZ(n):
 			zero_n2[f1*n+f2]= 0
 	return res
 
+def transpose(M):
+	n=len(M)
+	m=len(M[0])
+	return [[M[i][j] for i in range(n)] for j in range(m)]
+
 def solvePdelta(convexList,delta):
 	#function to use when you know what distance you want, at most, between each pixel and an edge (the closest one). It compute the better number of point you can use (the min).	 
 
@@ -82,7 +87,7 @@ def solvePdelta(convexList,delta):
 	nulProductVar = [0 for i in range(n**2)]
 	constraintZ = generateConstraintsZ(n)
 
-	A=matrix(coefs+constraintZ)
+	A=matrix(transpose(coefs+constraintZ))
 
 	#now get vectors b and c
 	c=matrix([1. for e in convexList]+[(-1.) for i in range(n**2)]) #objective function
