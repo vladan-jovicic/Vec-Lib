@@ -2,6 +2,7 @@
 # it consists of basic elements: Circles, LineSegments and Bezier curves
 # if it is region, it also contains a definition of coloring
 import sys
+import matplotlib.pyplot as plt
 from BezierCurve import *
 from Circle import *
 from LineSegment import *
@@ -23,9 +24,13 @@ class SVGElement:
 		self._line_segments, self._circles, self._bezier_curves = [], [], []
 		self._raw_data = raw_data
 		self._transformed = True
+		self._line_threshold, self._circle_threshold, self._b_threshold = 2, 0, 4
 		if self._raw_data is not None:
 			# in this case run the transforming
 			self._transformed = False
+
+		# debuging part
+		self.filtered_points, self.corners = [], []
 
 	def add_line_segment(self, l_seg):
 		self._line_segments.append(l_seg)
@@ -39,23 +44,80 @@ class SVGElement:
 	def export_to_svg(self):
 		raise Exception("Not implemented")
 
+	def draw_elements(self):
+		"""This method draws all basic shapes"""
+		# draw lines
+		for line in self._line_segments:
+			line.plot()
+		for circle in self._circles:
+			circle.plot()
+		for b_curve in self._bezier_curves:
+			b_curve.draw_by_vladan()
+
+	def plot_corners(self, corners=False):
+		"""Plot corners
+		This also includes plotting lines
+		"""
+		x_axis, y_axis = [], []
+		for point in self._raw_data:
+			x_axis.append(point[0])
+			y_axis.append(point[1])
+		plt.plot(x_axis, y_axis)
+		if not corners:
+			return
+		for corner in self.corners:
+			plt.plot(corner[0], corner[1], 'ro', marker='*')
+
+	def plot_filtered_points(self):
+		x_axis, y_axis = [], []
+		for point in self.filtered_points:
+			x_axis.append(point[0])
+			y_axis.append(point[1])
+		plt.plot(x_axis, y_axis)
+
 	def transform_from_raw_data(self):
 		if self._transformed:
 			return self._transformed
 
 		# firstly we filter points
-		curr_points = filtered_points = SimplePolyFilter(self._raw_data).remove_same()
+		curr_points = self.filtered_points = SimplePolyFilter(self._raw_data).remove_same()
 
-		if len(filtered_points) < 2:
+		if len(curr_points) < 2:
 			raise Exception("Contour is not valid")
 
-		corr_poly = PolyLine(filtered_points)
+		# corr_poly = PolyLine(filtered_points)
 
-		# firstly detect corners
-		corners = HarrisCornerDetector(curr_points).get_corners()
+		# firstly detect corners and say that the first and last points are corners
+		corners = [0] + HarrisCornerDetector(curr_points).get_corners() + [len(curr_points)-1]
 
 		# split current points based on corners
-		raise Exception("Not Implemented yet")
+		# we have at least two points
+		for i in range(1, len(corners)):
+			if corners[i] == corners[i-1]:  # to avoid errors
+				continue
+
+			# debuging part
+			self.corners.append(curr_points[corners[i-1]])
+
+			temp_points = curr_points[corners[i-1]:corners[i]+1]
+			# fit with line
+			line, error = LineFit(temp_points).fit_line()
+			if error <= self._line_threshold:
+				self._line_segments.append(line)
+				continue
+
+			# fit with circle
+			circle, error = CircleFit(temp_points).fit_circle()
+			print("Error when fitting %d points with circle %d" % (error, len(temp_points)))
+			if error <= self._circle_threshold:
+				# here we should check if it is just an arc
+				self._circles.append(circle)
+				continue
+
+			# fit with bezier
+			self._bezier_curves += CurveFitGG(temp_points, self._b_threshold).fit_curve()
+
+		self._transformed = True
 
 
 

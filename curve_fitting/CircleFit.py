@@ -1,13 +1,13 @@
 # this file contains a class for fitting set of points with a circle
 import numpy as np
-import math
+import sys
 sys.path.insert(0, '../common')
 
 from Circle import *
 
 
 class CircleFit:
-	def __int__(self, points):
+	def __init__(self, points):
 		self._points = points
 		self._x, self._y = [], []
 		for point in self._points:
@@ -42,10 +42,13 @@ class CircleFit:
 
 		# Calculation of all distances from the center (xc_1, yc_1)
 		Ri_1 = np.sqrt((self._x - xc_1) ** 2 + (self._y - yc_1) ** 2)
-		R_1 = np.mean(Ri_1)
-		residu_1 = sum((Ri_1 - R_1) ** 2)
-		residu2_1 = sum((Ri_1 ** 2 - R_1 ** 2) ** 2)
+		R_1 = np.mean(Ri_1)  # average distance from center
+		# residu_1 = sum((Ri_1 - R_1) ** 2)  # variance
+		# residu2_1 = sum((Ri_1 ** 2 - R_1 ** 2) ** 2)
+		error = 0
+		for point in self._points:
+			error = max(error, np.linalg.norm(np.array([xc_1, yc_1]) - np.array(point)) - R_1)
 
 		# create the circle
 		fitted_circle = Circle([xc_1, yc_1], R_1)
-		return fitted_circle, residu2_1
+		return fitted_circle, error

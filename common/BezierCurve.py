@@ -81,10 +81,8 @@ class BezierCurve():
 
         x = [pt[0] for pt in points_to_draw]
         y = [pt[1] for pt in points_to_draw]
-        p = plt.plot(x, y, color="red")
+        plt.plot(x, y)
         # p = plt.plot(self.controlPoints_x, self.controlPoints_y, ls=' ')
-        plt.axis('equal')
-        plt.show(block=block)
 
     def bezier_multiplier(self, t, deg):
         temp = 1.0 - t

@@ -2,9 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4415d228-9c29-4bbb-a8df-c7b8fc0d0817" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/contour_detection/contourDetection.o" afterPath="$PROJECT_DIR$/contour_detection/contourDetection.o" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/polyline_filter/PolyLineFilter.py" afterPath="$PROJECT_DIR$/polyline_filter/PolyLineFilter.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test.py" afterPath="$PROJECT_DIR$/test/test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/BezierCurve.py" afterPath="$PROJECT_DIR$/common/BezierCurve.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/Circle.py" afterPath="$PROJECT_DIR$/common/Circle.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/LineSegment.py" afterPath="$PROJECT_DIR$/common/LineSegment.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/SVGElement.py" afterPath="$PROJECT_DIR$/common/SVGElement.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/curve_fitting/CircleFit.py" afterPath="$PROJECT_DIR$/curve_fitting/CircleFit.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/curve_fitting/LineFit.py" afterPath="$PROJECT_DIR$/curve_fitting/LineFit.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/main.py" afterPath="$PROJECT_DIR$/test/main.py" />
     </list>
     <ignored path="Vec-lib.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,31 +33,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="PolyLineFilter.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/polyline_filter/PolyLineFilter.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="303">
-                  <caret line="52" column="14" selection-start-line="52" selection-start-column="14" selection-end-line="52" selection-end-column="14" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="CurveFitGG.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/curve_fitting/CurveFitGG.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1062">
-                  <caret line="60" column="28" selection-start-line="60" selection-start-column="28" selection-end-line="60" selection-end-column="28" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SVGElement.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="SVGElement.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/common/SVGElement.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="577">
-                  <caret line="57" column="44" selection-start-line="57" selection-start-column="44" selection-end-line="57" selection-end-column="44" />
+                <state relative-caret-position="414">
+                  <caret line="59" column="11" selection-start-line="59" selection-start-column="11" selection-end-line="59" selection-end-column="11" />
                   <folding>
                     <element signature="e#228#238#0" expanded="true" />
                   </folding>
@@ -59,33 +45,23 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="solveLinPrgm.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/polygonization_opt/solveLinPrgm.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="756">
-                  <caret line="42" column="16" selection-start-line="42" selection-start-column="16" selection-end-line="42" selection-end-column="16" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="LineFit.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/curve_fitting/LineFit.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="18">
-                  <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="31" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="CircleFit.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/curve_fitting/CircleFit.py">
+          <file leaf-file-name="CurveFitGG.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/curve_fitting/CurveFitGG.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="882">
-                  <caret line="49" column="49" selection-start-line="49" selection-start-column="49" selection-end-line="49" selection-end-column="49" />
+                  <caret line="60" column="28" selection-start-line="60" selection-start-column="28" selection-end-line="60" selection-end-column="28" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="output_test.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/test/output_test.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="450">
+                  <caret line="49" column="32" selection-start-line="49" selection-start-column="32" selection-end-line="49" selection-end-column="32" />
                   <folding>
-                    <element signature="e#69#87#0" expanded="true" />
+                    <element signature="e#0#10#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -94,21 +70,19 @@
           <file leaf-file-name="Circle.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/common/Circle.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="180">
-                  <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+                <state relative-caret-position="216">
+                  <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="LineSegment.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/common/LineSegment.py">
+          <file leaf-file-name="LineFit.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/curve_fitting/LineFit.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="306">
-                  <caret line="17" column="80" selection-start-line="17" selection-start-column="80" selection-end-line="17" selection-end-column="80" />
-                  <folding>
-                    <element signature="e#54#72#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="0">
+                  <caret line="0" column="10" selection-start-line="0" selection-start-column="10" selection-end-line="0" selection-end-column="10" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -116,14 +90,22 @@
           <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/test/main.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1044">
-                  <caret line="58" column="32" selection-start-line="58" selection-start-column="32" selection-end-line="58" selection-end-column="32" />
+                <state relative-caret-position="531">
+                  <caret line="51" column="35" selection-start-line="51" selection-start-column="35" selection-end-line="51" selection-end-column="35" />
                   <folding>
                     <element signature="e#0#10#0" expanded="true" />
-                    <marker date="1488659805139" expanded="true" signature="307:2032" ph="..." />
-                    <marker date="1488659805139" expanded="true" signature="340:875" ph="..." />
-                    <marker date="1488659805139" expanded="true" signature="1808:1957" ph="..." />
-                    <marker date="1488659805139" expanded="true" signature="2034:2071" ph="..." />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="CircleFit.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/curve_fitting/CircleFit.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="603">
+                  <caret line="53" column="35" selection-start-line="53" selection-start-column="35" selection-end-line="53" selection-end-column="35" />
+                  <folding>
+                    <element signature="e#69#87#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -132,15 +114,13 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/test/test.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="126">
-                  <caret line="172" column="62" selection-start-line="172" selection-start-column="62" selection-end-line="172" selection-end-column="62" />
-                  <folding>
-                    <element signature="e#0#10#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="-1926">
+                  <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="31" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -162,7 +142,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/common/BezierCurve.py" />
         <option value="$PROJECT_DIR$/common/PolyLine.py" />
         <option value="$PROJECT_DIR$/corner_detection/SSCornerDetector.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
@@ -170,15 +149,17 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/contour_detection/hheuristic_cd.py" />
         <option value="$PROJECT_DIR$/corner_detection/HarrisCornerDetector.py" />
-        <option value="$PROJECT_DIR$/test/main.py" />
         <option value="$PROJECT_DIR$/curve_fitting/CurveFitGG.py" />
+        <option value="$PROJECT_DIR$/polyline_filter/PolyLineFilter.py" />
+        <option value="$PROJECT_DIR$/test/test.py" />
         <option value="$PROJECT_DIR$/common/LineSegment.py" />
+        <option value="$PROJECT_DIR$/common/BezierCurve.py" />
+        <option value="$PROJECT_DIR$/test/main.py" />
         <option value="$PROJECT_DIR$/curve_fitting/LineFit.py" />
         <option value="$PROJECT_DIR$/common/Circle.py" />
         <option value="$PROJECT_DIR$/curve_fitting/CircleFit.py" />
-        <option value="$PROJECT_DIR$/polyline_filter/PolyLineFilter.py" />
-        <option value="$PROJECT_DIR$/test/test.py" />
         <option value="$PROJECT_DIR$/common/SVGElement.py" />
+        <option value="$PROJECT_DIR$/test/output_test.py" />
       </list>
     </option>
   </component>
@@ -189,10 +170,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="65" />
+    <option name="x" value="1665" />
     <option name="y" value="24" />
-    <option name="width" value="1535" />
-    <option name="height" value="876" />
+    <option name="width" value="1615" />
+    <option name="height" value="1026" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -235,7 +216,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -252,6 +232,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Vec-lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Vec-lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Vec-lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -341,6 +335,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -573,27 +568,27 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="24" width="1535" height="876" extended-state="6" />
-    <editor active="true" />
+    <frame x="1665" y="24" width="1615" height="1026" extended-state="6" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17263843" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16408668" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26716605" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2250263" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -632,14 +627,11 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/common/PolyLine.py" />
     <entry file="file://$PROJECT_DIR$/test/test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2790">
           <caret line="156" column="21" selection-start-line="156" selection-start-column="21" selection-end-line="156" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -650,10 +642,6 @@
           <caret line="51" column="33" selection-start-line="51" selection-start-column="33" selection-end-line="51" selection-end-column="33" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1488659805139" expanded="true" signature="307:2032" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="340:875" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="1808:1957" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="2034:2071" ph="..." />
           </folding>
         </state>
       </provider>
@@ -664,9 +652,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2790">
           <caret line="156" column="21" selection-start-line="156" selection-start-column="21" selection-end-line="156" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -677,10 +663,6 @@
           <caret line="51" column="33" selection-start-line="51" selection-start-column="33" selection-end-line="51" selection-end-column="33" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1488659805139" expanded="true" signature="307:2032" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="340:875" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="1808:1957" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="2034:2071" ph="..." />
           </folding>
         </state>
       </provider>
@@ -691,9 +673,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2466">
           <caret line="138" column="28" selection-start-line="138" selection-start-column="28" selection-end-line="138" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -704,10 +684,6 @@
           <caret line="43" column="33" selection-start-line="43" selection-start-column="33" selection-end-line="43" selection-end-column="33" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1488659805139" expanded="true" signature="307:2032" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="340:875" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="1808:1957" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="2034:2071" ph="..." />
           </folding>
         </state>
       </provider>
@@ -727,9 +703,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2466">
           <caret line="138" column="28" selection-start-line="138" selection-start-column="28" selection-end-line="138" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -740,10 +714,6 @@
           <caret line="43" column="33" selection-start-line="43" selection-start-column="33" selection-end-line="43" selection-end-column="33" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1488659805139" expanded="true" signature="307:2032" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="340:875" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="1808:1957" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="2034:2071" ph="..." />
           </folding>
         </state>
       </provider>
@@ -763,9 +733,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -776,16 +744,11 @@
           <caret line="44" column="24" selection-start-line="44" selection-start-column="24" selection-end-line="44" selection-end-column="24" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1488659805139" expanded="true" signature="307:2032" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="340:875" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="1808:1957" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="2034:2071" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/common/PolyLine.py" />
-    <entry file="file://$PROJECT_DIR$/common/BezierCurve.py" />
     <entry file="file://$PROJECT_DIR$/contour_detection/contourDetection.h" />
     <entry file="file://$PROJECT_DIR$/contour_detection/contourDetection.cpp" />
     <entry file="file://$PROJECT_DIR$/contour_detection/README" />
@@ -804,100 +767,110 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1044">
-          <caret line="58" column="32" selection-start-line="58" selection-start-column="32" selection-end-line="58" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <marker date="1488659805139" expanded="true" signature="307:2032" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="340:875" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="1808:1957" ph="..." />
-            <marker date="1488659805139" expanded="true" signature="2034:2071" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/LineSegment.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="17" column="80" selection-start-line="17" selection-start-column="80" selection-end-line="17" selection-end-column="80" />
-          <folding>
-            <element signature="e#54#72#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/Circle.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/curve_fitting/CircleFit.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="882">
-          <caret line="49" column="49" selection-start-line="49" selection-start-column="49" selection-end-line="49" selection-end-column="49" />
-          <folding>
-            <element signature="e#69#87#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/curve_fitting/LineFit.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/polygonization_opt/solveLinPrgm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="756">
-          <caret line="42" column="16" selection-start-line="42" selection-start-column="16" selection-end-line="42" selection-end-column="16" />
+        <state relative-caret-position="828">
+          <caret line="46" column="16" selection-start-line="46" selection-start-column="16" selection-end-line="46" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1926">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="31" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/polyline_filter/PolyLineFilter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
+        <state relative-caret-position="225">
           <caret line="52" column="14" selection-start-line="52" selection-start-column="14" selection-end-line="52" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/test.py">
+    <entry file="file://$PROJECT_DIR$/common/BezierCurve.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="172" column="62" selection-start-line="172" selection-start-column="62" selection-end-line="172" selection-end-column="62" />
+        <state relative-caret-position="432">
+          <caret line="83" column="9" selection-start-line="83" selection-start-column="9" selection-end-line="83" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/LineSegment.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="23" column="32" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
+          <folding>
+            <element signature="e#54#72#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/curve_fitting/LineFit.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="10" selection-start-line="0" selection-start-column="10" selection-end-line="0" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/curve_fitting/CurveFitGG.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="882">
+          <caret line="60" column="28" selection-start-line="60" selection-start-column="28" selection-end-line="60" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="531">
+          <caret line="51" column="35" selection-start-line="51" selection-start-column="35" selection-end-line="51" selection-end-column="35" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/curve_fitting/CurveFitGG.py">
+    <entry file="file://$PROJECT_DIR$/common/Circle.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1062">
-          <caret line="60" column="28" selection-start-line="60" selection-start-column="28" selection-end-line="60" selection-end-column="28" />
+        <state relative-caret-position="216">
+          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/curve_fitting/CircleFit.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="603">
+          <caret line="53" column="35" selection-start-line="53" selection-start-column="35" selection-end-line="53" selection-end-column="35" />
+          <folding>
+            <element signature="e#69#87#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/common/SVGElement.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="577">
-          <caret line="57" column="44" selection-start-line="57" selection-start-column="44" selection-end-line="57" selection-end-column="44" />
+        <state relative-caret-position="414">
+          <caret line="59" column="11" selection-start-line="59" selection-start-column="11" selection-end-line="59" selection-end-column="11" />
           <folding>
             <element signature="e#228#238#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/output_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="49" column="32" selection-start-line="49" selection-start-column="32" selection-end-line="49" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
