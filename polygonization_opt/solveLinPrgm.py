@@ -85,7 +85,7 @@ def solvePdelta(convexList,delta):
 	A=matrix(coefs+constraintZ)
 
 	#now get vectors b and c
-	c=matrix([1 for e in convexList]+[-1 for i in range(n**2)]) #objective function
+	c=matrix([1. for e in convexList]+[(-1.) for i in range(n**2)]) #objective function
 	b=matrix([epsilon for i in range(n)]+[0 for i in range(2*(n**2))])
 
 	sol=solvers.lp(c,A,b)
