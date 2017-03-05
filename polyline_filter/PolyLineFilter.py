@@ -50,7 +50,7 @@ class SimplePolyFilter:
 	def __init__(self, points):
 		self._points = points
 
-	def remove_the_same(self):
+	def remove_same(self):
 		"""removes the same points"""
 		filtered_points = []
 

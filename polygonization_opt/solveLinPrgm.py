@@ -4,7 +4,10 @@
 from cvxopt import matrix, solvers
 
 
-#basic stuff
+##Tests constants
+squareList = [(0,j) for j in range(3)]+[(1,0),(1,2)]+[(2,j) for j in range(3)]
+
+##basic stuff
 def scalProd(v1,v2):
 	#scalar products in R^2
 	return v1[0]*v2[0] + v1[1]*v2[1]
@@ -22,10 +25,11 @@ def coef(e,f1,f2,delta):
 
 #compute the min real postive and representable
 def minReal():
-	x,y=0,1,2
+	x=1
+	y=2
 	while x!=0:
 		y=x
-		x=x/2
+		x=x/2.
 	return y
 
 #main
@@ -40,7 +44,7 @@ def computeAPdelta(convexList,delta):
 	#the result res is such that res[e][f1*|convexList|+f2] contains A_{e,f1,f2}
 	return [computeLigne(e,convexList,delta) for e in convexList]
 	
-def concat(l,m);
+def concat(l,m):
 	#takes list l and matrix m and return m' which the matrix where l has been added at the beginning of each line of m
 	return [l+lm for lm in m]
 
@@ -78,10 +82,10 @@ def solvePdelta(convexList,delta):
 	nulProductVar = [0 for i in range(n**2)]
 	constraintZ = generateConstraintsZ(n)
 
-	A=matrix(coefs+constraitZ)
+	A=matrix(coefs+constraintZ)
 
 	#now get vectors b and c
-	c=matrix([1 for e in convexList]+[-1 for i in range(n**2)]) #objective function
+	c=matrix([1. for e in convexList]+[(-1.) for i in range(n**2)]) #objective function
 	b=matrix([epsilon for i in range(n)]+[0 for i in range(2*(n**2))])
 
 	sol=solvers.lp(c,A,b)
@@ -89,5 +93,5 @@ def solvePdelta(convexList,delta):
 	
 
 def solvePnum(convexList,num):
-	
+	return 0
 	#first create the matrix

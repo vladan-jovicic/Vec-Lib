@@ -170,7 +170,7 @@ class Test:
 			print("Working on contour %d" % i)
 			# filter it
 			print("Len before " + str(len(curr_points)))
-			curr_points = SimplePolyFilter(curr_points).remove_the_same()
+			curr_points = SimplePolyFilter(curr_points).remove_same()
 			filtered_contours.append(curr_points)
 			poly = PolyLine(curr_points)
 			print("Len later " + str(len(curr_points)))
