@@ -22,20 +22,4 @@ The comparison of bitmap and vector graphic images can be observed in this figur
 
 ## General Framework
 
-The software takes a bitmap image as an input, and will result a vector graphic image (in SVG format). In general, the algorithms used in the image convertion coverts “contour detection”, “color transition”, “polygonalization”, and “corner detection”. For further details, kindly check below.
-
-# Work Packages
-
-## Contour Detection
-
-The contour detection package was in charge of finding a way to find contours in an image and output them as a list of list of points. To do this we used [OpenCV Canny algorithm](http://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/canny_detector/canny_detector.html) which is based on the Canny contour detection algorithm, known as one of the most efficient one not using machine learning.
-
-**INSERT IMAGE HERE ?**
-
-## Corner detection
-
-## Curve fitting
-
-## Color detection
-
-## Gimp plug-in
+The software takes a bitmap image as an input, and will result a vector graphic image (in SVG format). In general, the algorithms used in the image convertion coverts “contour detection”, “color transition”, “polygonalization”, and “corner detection”. For further details, kindly check the page "About" and "How To"
