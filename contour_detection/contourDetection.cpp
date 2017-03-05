@@ -47,7 +47,7 @@ void contourDetection(int threshold)
 	GaussianBlur(src, blurred, Size(5,5), sigma);
 
 	/// Canny detector
-	Canny(src, detected_edges, lowThreshold, lowThreshold * ratio, kernel_size);
+	Canny(src, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size);
 	
 	if(use_dilate) {
 		Mat element = getStructuringElement(MORPH_RECT,
@@ -84,28 +84,28 @@ void printContours()
  * First argument is the image 
  * Second argument is the low threshold
  */
-int innerRender(Mat src)
+int main( int argc, char** argv )
 {
-  //if(argc == 1) {std::cout << "You must enter a file as input "; return 1;}
-  ///// Loads the image
-  //src = imread( argv[1] );
+  if(argc == 1) {std::cout << "You must enter a file as input "; return 1;}
+  /// Loads the image
+  src = imread( argv[1] );
 
-  //if( !src.data )
-  //{ return -1; }
+  if( !src.data )
+  { return -1; }
   
-  //if(argc == 2) {
-	  //lowThreshold = 0;
-  //} else {
-	  //lowThreshold = atoi(argv[2]);
-	  //if(lowThreshold < 0 || lowThreshold >= 100) {
-		  //std::cout << "The threshold must be between 0 and 100." << std::endl;
-		  //return 1;
-	  //}
-  //}
+  if(argc == 2) {
+	  lowThreshold = 0;
+  } else {
+	  lowThreshold = atoi(argv[2]);
+	  if(lowThreshold < 0 || lowThreshold >= 100) {
+		  std::cout << "The threshold must be between 0 and 100." << std::endl;
+		  return 1;
+	  }
+  }
   
-  //if(argc == 3 || (argv[3] != NULL && strcmp(argv[3], "-d") != 0)) {
-	  //use_dilate = false;
-  //}
+  if(argc == 3 || (argv[3] != NULL && strcmp(argv[3], "-d") != 0)) {
+	  use_dilate = false;
+  }
 
   /// Create a matrix of the same type and size as src (for dst)
   dst.create( src.size(), src.type() );
@@ -119,5 +119,6 @@ int innerRender(Mat src)
   return 0;
   
   }
+
 
 
