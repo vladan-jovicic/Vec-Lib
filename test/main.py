@@ -37,7 +37,7 @@ def main():
 	parser.add_argument('--input_poly', help="true if you want to see the original contour")
 	parser.add_argument('--filtered_poly', help="true if you want to see the resampled contour")
 	parser.add_argument('--corners', help="true if you want to see detected corners")
-	parser.add_argument('--output', help="true if you want to have an svg output on stderr")
+	parser.add_argument('--output', help="true if you want to have an svg output in the result folder")
 
 	args = parser.parse_args()
 
@@ -60,7 +60,7 @@ def main():
 	test.run_test(disp_original_cont, disp_filtered_poly, disp_corners, output)
 	# test.run_corner_detector_test(disp_original_cont, disp_filtered_poly, disp_corners, output)
 	# test.run_without_corners(disp_original_cont, output)
-	# test.run_harris_corner_detector(disp_original_cont, disp_corners, output)
+	# test.run_harris_corner_detector(disp_original_cont, disp_filtered_poly, disp_corners, output)
 	# test.run_test()
 	# print "finished"
 

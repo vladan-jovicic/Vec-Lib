@@ -141,7 +141,7 @@ class Test:
 		svg = '<?xml version="1.0" encoding="utf-8"?>\n' + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + str(
 			width) + '" height="' + str(height) + '1000">\n' + svg + "</svg>"
 		# print svg
-		f = open("../results/" + self._file_name.split('.')[0] + "svg", "w")
+		f = open("../results/" + self._file_name.split('.')[0] + ".svg", "w")
 		f.write(svg)
 
 	def draw_all_input_linea(self, all_lines, all_corners = None):

@@ -78,6 +78,47 @@ class OutputTest:
 
 		plt.show(block=True)
 
+		if output:
+			height, width, svg = 0, 0, ""
+			for svg_element in svg_image:
+				#Output Bezier curves
+				for idx, b_curve in enumerate(svg_element._bezier_curves):
+					svg = svg + '<path d="M' + str(b_curve.controlPoints[0][0]) + ',' + str(
+						b_curve.controlPoints[0][1]) + ' C' + str(b_curve.controlPoints[1][0]) + ',' + str(
+						b_curve.controlPoints[1][1]) + ' ' + str(b_curve.controlPoints[2][0]) + ',' + str(
+						b_curve.controlPoints[2][1]) + ' ' + str(b_curve.controlPoints[3][0]) + ',' + str(
+						b_curve.controlPoints[3][1]) + '" stroke="black" fill-opacity="0.0" stroke-width="0.1"/>\n'
+					width = max(width, b_curve.controlPoints[0][0], b_curve.controlPoints[1][0],
+								b_curve.controlPoints[2][0], b_curve.controlPoints[3][0])
+					height = max(height, b_curve.controlPoints[0][1], b_curve.controlPoints[1][1],
+								 b_curve.controlPoints[2][1], b_curve.controlPoints[3][1])
+
+				#Output circles
+				for circle in svg_element._circles:
+					center = circle.center
+					radius = circle.radius
+					svg = svg + '<circle cx="' + str(center[0]) + '" cy="' + str(
+						center[1]) + '" r="' + str(
+						radius) + '" stroke="black" fill-opacity="0.0" stroke-width="0.1"/>\n'
+					width = max(width,center[0]+radius)
+					height = max(height,center[1]+radius)
+
+				#Output lines
+				for line in svg_element._line_segments:
+					svg = svg + '<line x1="' + str(line._start_point[0]) + '" y1="' + str(
+						line._start_point[1]) + '" x2="' + str(
+						line._end_point[0]) + '" y2="' + str(
+						line._end_point[1]) + '" stroke="black" stroke-width="0.1" />\n'
+					height = max(height,line._start_point[1],line._end_point[1])
+					width = max(width,line._start_point[0],line._end_point[0])
+			height += 10
+			width += 10
+			svg = '<?xml version="1.0" encoding="utf-8"?>\n' + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + str(
+				width) + '" height="' + str(height) + '1000">\n' + svg + "</svg>"
+			# print svg
+			f = open("../results/" + self._file_name.split('.')[0] + ".svg", "w")
+			f.write(svg)
+
 
 
 
