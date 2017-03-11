@@ -2,10 +2,12 @@
 
 ##Importation of the solver
 from cvxopt import matrix, solvers
+import numpy as np
 
 
 ##Tests constants
 squareList = [(0,j) for j in range(3)]+[(1,0),(1,2)]+[(2,j) for j in range(3)]
+lineList = [(0,i) for i in range(3)]
 
 ##basic stuff
 def scalProd(v1,v2):
@@ -78,7 +80,11 @@ def in01constraints(n):
 		else:
 			return 0
 
-	return [[indic(i,j) for j in range(n*(n+1))] for i in range(n*(n+1))]+[[-indic(i,j) for j in range(n*(n+1))] for i in range(n*(n+1))]
+	res = [[indic(i,j) for j in range(n*(n+1))] for i in range(n*(n+1))]+[[-indic(i,j) for j in range(n*(n+1))] for i in range(n*(n+1))]
+	
+	#print(res)
+
+	return res
 
 def solvePdelta(convexList,delta):
 	#function to use when you know what distance you want, at most, between each pixel and an edge (the closest one). It compute the better number of point you can use (the min).	 
@@ -99,16 +105,22 @@ def solvePdelta(convexList,delta):
 	constraintZ = generateConstraintsZ(n)
 
 	coefsA = coefsA+constraintZ
-	coefsB = [epsilon for i in range(n)]+[0 for i in range(2*(n**2))]
-	coefsC = [1. for e in convexList]+[(-1.) for i in range(n**2)]
+	coefsB = [-epsilon for i in range(n)]+[0 for i in range(2*(n**2))]
+	coefsC = [1. for e in convexList]+[0 for i in range(n**2)]
 
 	#now add the constraint that each variable is in [0;1]
 	coefsA = coefsA+in01constraints(n)
 	coefsB = coefsB+[1 for i in range(n*(n+1))]+[0 for i in range(n*(n+1))]
 
 	#create matrice A
-	A=matrix(transpose(coefsA))
 
+	print(coefsA)
+	print(coefsB)
+	print(coefsC)
+
+
+	A=matrix(transpose(coefsA))
+	print(A)
 	#now get vectors b and c
 	c=matrix(coefsC) #objective function
 	b=matrix(coefsB)
@@ -116,7 +128,7 @@ def solvePdelta(convexList,delta):
 	
 
 	sol=solvers.lp(c,A,b)
-	return sol
+	return sol,A
 	
 
 def solvePnum(convexList,num):
