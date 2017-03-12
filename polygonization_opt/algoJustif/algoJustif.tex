@@ -90,7 +90,31 @@
 \section{Introduction}
 The polygonization step aims to build a polygon given a set of point ad an input. It has to approximate the set by such a polygon in order to do the computation of the curves. If we have less point, the computation will be easier but may be it will be make some mistakes. The aim of this part is to compute the best set of point that minimize the cardinality and that satisfies a small distance to the convex hull of the point.
 
+\underline{Warning:} This  latex file do not provide (yet) any formal proof. For the moment we will just give "by hand" justifications. 
 \section{Working on convex sets}
+\subsection{The need of convex sets}
+One important thing we have to notice is that we might have to work only on convex sets $S$. Basically if we don't it is possible that we create a polygon that have edges that are far away from the original shape. Suppose we have such a shape:
+
+\begin{center}
+\begin{tikzpicture}[>=latex]
+\draw (-1,0) arc (270:360:1);
+\draw (0,-1) arc (0:90:1);
+\draw (0,1) arc (180:270:1);
+\draw (1,0) arc (90:180:1);
+
+\draw [red] (1,0) node {$\bullet$};
+\draw [red] (-1,0) node {$\bullet$};
+\draw [red] (0,1) node {$\bullet$};
+\draw [red] (0,-1) node {$\bullet$};
+
+\draw [green,-] (0,1) -- (0,-1);
+\draw [green,-] (1,0) -- (-1,0);
+\end{tikzpicture}
+\end{center}
+
+The green edges may one of the best approximations possible. However we cannot know given a set of point that we must do such a thing, we mean that there is a lot of particular cases that won't work. In fact we decide to say that the polygon we need is the border of the convex hull of the return set of point. Then we need to work on convex sets. Moreover one can notice that the green solution is not a polygon. 
+
+\subsection{How to get convex sets}
 
 \section{Integer programming}
 \subsection{Minimizing the number of vertices of the polygon.}
