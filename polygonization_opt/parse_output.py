@@ -6,7 +6,7 @@ def parse(file_name): #add pixels to have continuous contours
 	lines = f.read().split('\n')
 	curves = []
 	for line in lines:
-		if(len(line) == 0):
+		if(len(line) == 0 or (len(line) >= 2 and line[:2] == "##"):
 			break
 		if(line[0] == "#"):
 			curves.append([])
