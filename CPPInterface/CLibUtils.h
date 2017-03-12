@@ -11,6 +11,6 @@
 
 std::vector<int> convert_1Dint_pyarray(PyObject *list);
 
-std::vector<std::vector<int>> convert_2Dint_pyarray(PyObject *list);
+std::vector<std::vector<int> > convert_2Dint_pyarray(PyObject *list);
 
 #endif //CPPINTERFACE_CLIBUTILS_H

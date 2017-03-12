@@ -8,7 +8,7 @@
 std::vector<int> convert_1Dint_pyarray(PyObject *list) {
 	std::vector<int> ret_list;
 	if (!PyList_Check(list))
-		return NULL;
+		return ret_list;
 
 	int length = PyList_GET_SIZE(list);
 	for (int i = 0; i < length; i++) {
@@ -17,10 +17,10 @@ std::vector<int> convert_1Dint_pyarray(PyObject *list) {
 	return ret_list;
 }
 
-std::vector<std::vector<int>> convert_2Dint_pyarray(PyObject *list) {
-	std::vector<std::vector<int>> ret_list;
+std::vector<std::vector<int> > convert_2Dint_pyarray(PyObject *list) {
+	std::vector<std::vector<int> > ret_list;
 	if (!PyList_Check(list))
-		return NULL;
+		return ret_list;
 
 	int length = PyList_GET_SIZE(list);
 	for (int i = 0; i < length; i++) {

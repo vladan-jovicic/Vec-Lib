@@ -17,11 +17,10 @@ from PolyLineFilter import *
 
 all_lines = []
 svg_image = []  # an array that contains all elements
-input_image_name = ""
 filtered_contours = []
 all_corners = []  # an array of arrays containing corners of each curve
 all_bezier_curves = []  # an array containing bezier curves after fitting
-
+input_image_name = '../CPPInterface/flower_contour.txt'
 
 def read_image(image_name):
 	input_image_name = image_name
@@ -85,6 +84,7 @@ def read_points_int(filename):
 		to indices of corresponding pixels
 	"""
 	try:
+		print(filename)
 		f = open(filename)
 		current_line = []
 		for line in f.readlines():
