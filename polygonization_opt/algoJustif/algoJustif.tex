@@ -114,6 +114,28 @@ We now introduce the integer program corresponding to this problem, we call it $
 &\forall e\in S, x_e\in\{0,1\}
 \end{array}\]
 
+The major problem is that we have products of variables in the constraint that must not exist. That is way we introduce $z_{f,f'}=x_fx_{f'}$. To do that we just have to put some new constraints, $\forall f,f'\in S, z_{f,f'}\leq x_f \wedge z_{f,f'}\leq x_{f'}\wedge z_{f,f'}\geq \frac{x_f+x_{f'}}{2}-\frac{1}{2} \wedge z_{f,f'}\in\{0,1\}$.
+
+\begin{itemize}
+\item if $x_f=x_{f'}=0$, then $z_{f,f'}=0\geq-\frac{1}{2}$.
+\item if $x_f=1$ and $x_{f'}=0$ then $z_{f,f'}=0\geq\frac{1}{2}-\frac{1}{2}$.
+\item if $x_f=0$ and $x_{f'}=1$ then $z_{f,f'}=0\geq\frac{1}{2}-\frac{1}{2}$.
+\item if $x_f=1$ and $x_{f'}=1$ then $z_{f,f'}=1\geq1-\frac{1}{2}$.
+\end{itemize}
+
+We now introduce the modified integer program corresponding to this problem, we call it $(P_\delta)$.
+\[\begin{array}{r l}
+&\min\sum_{e\in S} x_e\\
+\text{respect to}&\forall e\in S, \sum_{f,f'\in S}a_{e,f,f'}z_{f,f'}>0\\
+&\forall f,f'\in S, z_{f,f'}\leq x_f\\
+&\forall f,f'\in S, z_{f,f'}\leq x_{f'}\\
+&\forall f,f'\in S, z_{f,f'}\geq \frac{x_f+x_{f'}}{2}-\frac{1}{2}\\
+&\forall e\in S, x_e\in\{0,1\}\\
+&\forall f,f'\in S, z_{f,f'}\in\{0,1\}
+\end{array}\]
+
+This program return a set of point that minimizes the number of points and such that the maximum distance between an element of $S$ and the convex hull of the returned set is at most $\delta$. Then if $S$ represents a convex set, it will be approximated by a polygon which will be included in and the that the border have maximum distance $\delta$. 
 \subsection{Minimizing the distance to the polygon for each initial pixel}
+We now introduce another program. One can notice that in the previous chapter we can't know many points we will get and depending on $\delta$ it can tends to $|S|$. If one needs to have at most $m$ points, one can consider the new program $(P_m)$:
 
 \end{document}
