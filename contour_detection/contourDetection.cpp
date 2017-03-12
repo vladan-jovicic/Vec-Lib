@@ -71,11 +71,22 @@ void contourDetection(int threshold)
 void printContours()
 {
 	for(size_t i = 0; i < contours.size(); i++) {
-		std::cout << "#" << "\n";
+		std::cout << "#" << std::endl;
 		for(size_t j = 0; j < contours[i].size(); j++) {
 			Point p = contours[i][j];
-			std::cout << p.x << "," << p.y << "\n";
+			std::cout << p.x << "," << p.y << std::endl;
 		}
+	}
+	
+	std::cout << "##" << std::endl;
+	
+	for(size_t i = 0; i < hierarchy.size(); ++i) {
+		std::cout << "#" << std::endl;
+		std::cout << hierarchy[i][0];
+		for(size_t j = 1; j < 4; ++j) {
+			std::cout << "," << hierarchy[i][j];
+		}
+		std::cout << std::endl;
 	}
 }
 
