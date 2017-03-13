@@ -4,6 +4,7 @@
 
 #include <Python.h>
 #include <vector>
+#include <iostream>
 #include "CLibUtils.h"
 
 using namespace std;

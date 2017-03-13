@@ -4,6 +4,7 @@ sys.path.insert(0, '../common')
 sys.path.insert(0, '../curve_fitting')
 sys.path.insert(0, '../corner_detection')
 sys.path.insert(0, '../polyline_filter')
+sys.path.insert(0, '../contour_detection')
 
 from BezierCurve import *
 from Circle import *
@@ -14,6 +15,7 @@ from SSCornerDetector import *
 from HarrisCornerDetector import *
 from PolyLineFilter import *
 from SVGElement import *
+from py_contour_detection import *
 
 
 all_lines = []
@@ -30,9 +32,15 @@ def read_image(image_name):
 
 
 def detect_contours():
-	read_points_int(input_image_name)
-	for line in all_lines:
-		svg_image.append(SVGElement(raw_data=line))
+	cont_det = ContourDetector(input_image_name)
+	cont_det.read_image()
+	result, contours, hierarchy = cont_det.detect_contours()
+	for contour in contours:
+		# print(contour.tolist())
+		tmp_list = []
+		for point in contour:
+			tmp_list.append(point[0].tolist())
+		svg_image.append(SVGElement(raw_data=tmp_list))
 
 # at this moment, I can assume that all_lines contains all contours
 

@@ -21,9 +21,8 @@ void VectraboolLib::call_zeroarg_func(PyObject *module, char *function_name) {
 	PyObject *args = PyTuple_New(0);
 	if (function == NULL)
 		PyErr_Print();
-
-	PyObject *ret_val = PyObject_CallObject(function, args);
-	Py_DECREF(function); Py_DECREF(ret_val); Py_DECREF(args);
+	PyObject_CallObject(function, args);
+	Py_DECREF(function); Py_DECREF(args);
 }
 
 PyObject *VectraboolLib::call_return_func(PyObject *module, char *function_name, PyObject *args) {
@@ -160,6 +159,7 @@ vector<int> VectraboolLib::get_corners_of_contour(int index) {
 	}
 
 	vector<int> idx_corners = convert_1Dint_pyarray(corners);
+	//cout << idx_corners.size() << endl;
 	return idx_corners;
 }
 
@@ -189,7 +189,7 @@ vector<vector<int> > VectraboolLib::get_lines_of_contour(int index) {
 
 	if (!PyList_Check(lines)) {
 		PyErr_Print();
-		return vector<int>();
+		return vector<vector<int>>();
 	}
 
 	return convert_2Dint_pyarray(lines);
@@ -206,7 +206,7 @@ vector<vector<int> > VectraboolLib::get_bezier_curves_of_contour(int index) {
 
 	if (!PyList_Check(b_curves)) {
 		PyErr_Print();
-		return vector<int>();
+		return vector<vector<int>>();
 	}
 
 	return convert_2Dint_pyarray(b_curves);

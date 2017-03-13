@@ -49,7 +49,7 @@ class SVGElement:
 		raise Exception("Not implemented")
 
 	def filter_points(self):
-		self._filtered_points = SimplePolyFilter(self._filtered_points).remove_same()
+		self._filtered_points = SimplePolyFilter(self._raw_data).remove_same()
 
 	def get_filtered_points(self):
 		return self._filtered_points
@@ -62,7 +62,7 @@ class SVGElement:
 
 	def fit_curves(self):
 		for i in range(1, len(self._corners)):
-			if self._corners[i] == self._corners[]:
+			if self._corners[i] == self._corners[i-1]:
 				continue
 
 			temp_points = self._filtered_points[self._corners[i-1]:self._corners[i]+1]
