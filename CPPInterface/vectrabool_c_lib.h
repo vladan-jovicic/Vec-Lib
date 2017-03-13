@@ -31,6 +31,8 @@ public:
 	void find_corners();
 	vector<int> get_corners_of_contour(int index);
 	void fit_curves();
+	vector<vector<int> > get_lines_of_contour(int);
+	vector<vector<int> > get_bezier_curves_of_contour(int);
 };
 
 #endif

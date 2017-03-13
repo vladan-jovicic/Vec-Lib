@@ -13,6 +13,7 @@ from CurveFitGG import *
 from SSCornerDetector import *
 from HarrisCornerDetector import *
 from PolyLineFilter import *
+from SVGElement import *
 
 
 all_lines = []
@@ -20,57 +21,70 @@ svg_image = []  # an array that contains all elements
 filtered_contours = []
 all_corners = []  # an array of arrays containing corners of each curve
 all_bezier_curves = []  # an array containing bezier curves after fitting
-input_image_name = '../CPPInterface/flower_contour.txt'
+input_image_name = ''
+
 
 def read_image(image_name):
+	global input_image_name
 	input_image_name = image_name
 
 
 def detect_contours():
 	read_points_int(input_image_name)
+	for line in all_lines:
+		svg_image.append(SVGElement(raw_data=line))
 
 # at this moment, I can assume that all_lines contains all contours
 
 
 def get_contours_size():
-	return len(all_lines)
+	return len(svg_image)
 
 
 def get_contour(index):
-	return all_lines[index]
+	return svg_image[index].get_raw_data()
 
 
 def filter_contours():
-	for line in all_lines:
-		filtered_contours.append(SimplePolyFilter(line).remove_same())
+	for idx in range(len(svg_image)):
+		# filtered_contours.append(SimplePolyFilter(line).remove_same())
+		svg_image[idx].filter_points()
 
 
 def get_filtered_points(index):
 	"""Given index, return filtered contour at that index"""
-	return filtered_contours[index]
+	return svg_image[index].get_filtered_points()
 
 
 def find_corners():
-	for line in filtered_contours:
-		all_corners.append([0] + HarrisCornerDetector(line).get_corners() + [len(line)-1])
+	for idx in range(len(svg_image)):
+		svg_image[idx].find_corners()
 
 
 def get_corners_of_contour(index):
-	return all_corners[index]
-
-
-def get_corners_as_2D_points(index):
-	"""Given index of contour, return all corners as points in 2D"""
-	idx_corners = all_corners[index]
-	point_corners = []
-	for corner in idx_corners:
-		point_corners.append([filtered_contours[index][corner][0],
-							 filtered_contours[index][corner][1]])
-	return point_corners
+	return svg_image[index].get_corners()
 
 
 def fit_curves():
-	pass
+	for idx in range(len(svg_image)):
+		svg_image[idx].fit_curves()
+
+
+def get_lines_of_contour(index):
+	ret_lines = []
+	for line in svg_image[index].get_lines():
+		ret_lines.append(line.get_endpoints())
+
+	return ret_lines
+
+
+def get_bezier_curves_of_contour(index):
+	ret_lines = []
+	for line in svg_image[index].get_bezier_curves():
+		ret_lines.append(line.get_control_points())
+
+	return ret_lines
+
 
 
 def detect_colors():

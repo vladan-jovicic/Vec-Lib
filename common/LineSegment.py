@@ -9,6 +9,9 @@ class LineSegment:
 		self._start_point, self._end_point = start_point, end_point
 		self.length = np.linalg.norm(np.array(start_point) - np.array(end_point))
 
+	def get_endpoints(self):
+		return self._start_point + self._end_point
+
 	def distance_from_line(self, point):
 		if self.length == 0:
 			raise Exception("The lenght of segment is 0")

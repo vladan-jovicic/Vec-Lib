@@ -15,6 +15,7 @@ VectraboolLib::VectraboolLib() {
 
 }
 
+/***************** INTERFACE PRIVATE FUNCTIONS ********************/
 void VectraboolLib::call_zeroarg_func(PyObject *module, char *function_name) {
 	PyObject *function = PyObject_GetAttrString(module, function_name);
 	PyObject *args = PyTuple_New(0);
@@ -35,6 +36,14 @@ PyObject *VectraboolLib::call_return_func(PyObject *module, char *function_name,
 	return ret_val;
 }
 
+/***************** END OF INTERFACE PRIVATE FUNCTIONS ********************/
+
+/***************** READING IMAGE FUNCTIONS ********************/
+
+/* Reads image specified by filename
+ * @param filename - absolute path to the image
+ * return: void
+ */
 void VectraboolLib::read_image(char *filename) {
 	PyObject *function = PyObject_GetAttrString(module, (char *)"read_image");
 	PyObject *args = PyTuple_New(1);
@@ -49,8 +58,12 @@ void VectraboolLib::read_image(char *filename) {
 	Py_DECREF(function); Py_DECREF(ret_val); Py_DECREF(args);
 }
 
-/* Calls function detect_contours from Python Lib
-*/
+/***************** END OF READING IMAGE FUNCTIONS ********************/
+
+/***************** CONTOUR DETECTION FUNCTIONS ********************/
+/* Uses OpenCV functions to find contours of image
+ * return: void
+ */
 void VectraboolLib::detect_contours() {
 	if (detected_contours)
 		return;
@@ -64,7 +77,11 @@ int VectraboolLib::get_contours_size() {
 
 	return PyInt_AsLong(length);
 }
-
+/* Get the contour at position index
+ * @param index - index of contour
+ * return: vector of vectors where inside vector is of size 2, representing
+ * x and y coordinate of point
+ */
 vector<vector<int> > VectraboolLib::get_contour(int index) {
 	PyObject *args = PyTuple_New(1);
 	PyTuple_SetItem(args, 0, PyInt_FromLong(index));
@@ -78,6 +95,13 @@ vector<vector<int> > VectraboolLib::get_contour(int index) {
 	return c_contour;
 }
 
+/***************** END OF CONTOUR DETECTION FUNCTIONS ********************/
+
+/***************** FILTERING CONTOURS FUNCTIONS ********************/
+
+/* Uses PolyLine filters to filter contour points
+ * return: void
+ */
 void VectraboolLib::filter_contours() {
 	if (filtered_contours)
 		return;
@@ -86,6 +110,11 @@ void VectraboolLib::filter_contours() {
 	filtered_contours = true;
 }
 
+/* Get filtered points of contour at position index
+ * @param index - index of contour
+ * return: vector of vectors where inside vector is of size 2 representing
+ * x and y coordinate of point
+ */
 vector<vector<int> > VectraboolLib::get_filtered_points(int index) {
 	// create arguments
 	PyObject *args = PyTuple_New(1);
@@ -100,6 +129,13 @@ vector<vector<int> > VectraboolLib::get_filtered_points(int index) {
 	return f_points;
 }
 
+/***************** END OF FILTERING CONTOURS FUNCTIONS ********************/
+
+/***************** FINDING CORNERS FUNCTIONS ********************/
+
+/* Detect corners of each contour
+ * return void
+ */
 void VectraboolLib::find_corners() {
 	if (found_corners)
 		return;
@@ -107,6 +143,12 @@ void VectraboolLib::find_corners() {
 	found_corners = true;
 }
 
+/* Get corners of contour at position index
+ * @param index - index of contour
+ * return: vector of indices of corners
+ * To obtain points of the ith corner, call function get_contour(index) and
+ * check the ith element
+ */
 vector<int> VectraboolLib::get_corners_of_contour(int index) {
 	PyObject *args = PyTuple_New(1);
 	PyTuple_SetItem(args, 0, PyInt_FromLong(index));
@@ -121,6 +163,13 @@ vector<int> VectraboolLib::get_corners_of_contour(int index) {
 	return idx_corners;
 }
 
+/***************** END OF FINDING CORNERS FUNCTIONS ********************/
+
+/***************** CURVE FITTING FUNCTIONS ********************/
+
+/* Fit all curves with lines, circles and
+ * return void
+ */
 void VectraboolLib::fit_curves() {
 	if (afit_curves)
 		return;
@@ -128,6 +177,42 @@ void VectraboolLib::fit_curves() {
 	afit_curves = true;
 }
 
+/* Get line all lines of contour at position index
+ * @param index - index of contour
+ * return: vector of vectors where inside vector is of size 4 representing
+ * x_0, y_0, x_1, y_1 respectively, i.e., start point and endpoint of line segment
+ */
+vector<vector<int> > VectraboolLib::get_lines_of_contour(int index) {
+	PyObject *args = PyTuple_New(1);
+	PyTuple_SetItem(args, 0, PyInt_FromLong(index));
+	PyObject *lines = call_return_func(module, (char *)"get_lines_of_contour", args);
+
+	if (!PyList_Check(lines)) {
+		PyErr_Print();
+		return vector<int>();
+	}
+
+	return convert_2Dint_pyarray(lines);
+}
+/* Get Bezier curves of contour
+ * @param index - index of contour
+ * return: vector of vectors where inside vector is of size 4 representing
+ * four control points of curve
+ */
+vector<vector<int> > VectraboolLib::get_bezier_curves_of_contour(int index) {
+	PyObject *args = PyTuple_New(1);
+	PyTuple_SetItem(args, 0, PyInt_FromLong(index));
+	PyObject *b_curves = call_return_func(module, (char *)"get_corners_of_contour", args);
+
+	if (!PyList_Check(b_curves)) {
+		PyErr_Print();
+		return vector<int>();
+	}
+
+	return convert_2Dint_pyarray(b_curves);
+}
+
+/***************** END OF CURVE FITTING FUNCTIONS ********************/
 
 VectraboolLib::~VectraboolLib() {
 	Py_DECREF(module);

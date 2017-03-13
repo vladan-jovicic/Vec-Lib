@@ -24,6 +24,7 @@ class SVGElement:
 		self._line_segments, self._circles, self._bezier_curves = [], [], []
 		self._raw_data = raw_data
 		self._transformed = True
+		self._filtered_points, self._corners = [], []
 		self._line_threshold, self._circle_threshold, self._b_threshold = 2, 0, 4
 		if self._raw_data is not None:
 			# in this case run the transforming
@@ -31,6 +32,9 @@ class SVGElement:
 
 		# debuging part
 		self.filtered_points, self.corners = [], []
+
+	def get_raw_data(self):
+		return self._raw_data
 
 	def add_line_segment(self, l_seg):
 		self._line_segments.append(l_seg)
@@ -44,6 +48,39 @@ class SVGElement:
 	def export_to_svg(self):
 		raise Exception("Not implemented")
 
+	def filter_points(self):
+		self._filtered_points = SimplePolyFilter(self._filtered_points).remove_same()
+
+	def get_filtered_points(self):
+		return self._filtered_points
+
+	def find_corners(self):
+		self._corners = [0] + HarrisCornerDetector(self._filtered_points).get_corners() + [len(self._filtered_points) - 1]
+
+	def get_corners(self):
+		return self._corners
+
+	def fit_curves(self):
+		for i in range(1, len(self._corners)):
+			if self._corners[i] == self._corners[]:
+				continue
+
+			temp_points = self._filtered_points[self._corners[i-1]:self._corners[i]+1]
+			line, error = LineFit(temp_points).fit_line()
+			if error < self._line_threshold:
+				self._line_segments.append(line)
+				continue
+
+			self._bezier_curves += CurveFitGG(temp_points, self._b_threshold).fit_curve()
+
+	def get_lines(self):
+		return self._line_segments
+
+	def get_bezier_curves(self):
+		return self._bezier_curves
+
+	# PART USED FOR DEBUGING
+	# SHOULD BE REMOVED IN FINAL REALEASE
 	def draw_elements(self):
 		"""This method draws all basic shapes"""
 		# draw lines

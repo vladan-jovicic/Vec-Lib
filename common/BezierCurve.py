@@ -25,10 +25,13 @@ class BezierCurve():
 
         x = [p(t / N, self.controlPoints_x) for t in range(N)]
         y = [p(t / N, self.controlPoints_y) for t in range(N)]
-        return (x, y)
+        return x, y
 
     def get_num_of_cpts(self):
         return len(self.controlPoints)
+
+    def get_control_points(self):
+        return self.controlPoints
 
     def print_control_points(self):
         for pt in self.controlPoints:
