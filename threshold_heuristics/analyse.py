@@ -8,20 +8,32 @@ for file_name in sys.argv[1:]:
 	curves = [[[]]]
 	test_cases = []
 	new_curve = True
-	for line in fichier.read().split('\n'):
-		if(len(line) == 0):
-			break
-		if(line[0] == "E"):
-			curves.append([[]])
-			test_cases.append(int(line.split(" ")[1]))
-			new_curve = True
-		elif(line[0] == "#"):
-			if(not new_curve):
-				curves[-1].append([])
-			new_curve = False
-		else:
-			points = line.split(',')
-			curves[-1][-1].append((int(points[0]),int(points[1])))
+	lines = fichier.read().split('\n')
+	i = 0
+	line = lines[i]
+	while(i < len(lines)):
+		while(i < len(lines) and (len(line) < 2 or line[:2] != "##"):
+			#Reading contours (first line '#' or 'END x')
+			if(line[0] == "E"):
+				curves.append([[]])
+				test_cases.append(int(line.split(" ")[1]))
+				new_curve = True
+			elif(line[0] == "#"):
+				if(not new_curve):
+					curves[-1].append([])
+				new_curve = False
+			else:
+				points = line.split(',')
+				curves[-1][-1].append((int(points[0]),int(points[1])))
+
+			i = i + 1
+			line = lines[i]
+
+		while(i < len(lines) and line[0] != "E"):
+			#Reading hierarchy (first line == "##")
+			i = i + 1
+			line = lines[i]
+
 
 	curves = curves[:-1] #The last curve is in fact between END and EOF.
 

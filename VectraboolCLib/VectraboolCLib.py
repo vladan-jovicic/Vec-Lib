@@ -17,16 +17,27 @@ from PolyLineFilter import *
 
 all_lines = []
 svg_image = []  # an array that contains all elements
-
 filtered_contours = []
 all_corners = []  # an array of arrays containing corners of each curve
 all_bezier_curves = []  # an array containing bezier curves after fitting
+input_image_name = '../CPPInterface/flower_contour.txt'
+
+def read_image(image_name):
+	input_image_name = image_name
 
 
 def detect_contours():
-	print("Vladan")
+	read_points_int(input_image_name)
 
 # at this moment, I can assume that all_lines contains all contours
+
+
+def get_contours_size():
+	return len(all_lines)
+
+
+def get_contour(index):
+	return all_lines[index]
 
 
 def filter_contours():
@@ -42,6 +53,10 @@ def get_filtered_points(index):
 def find_corners():
 	for line in filtered_contours:
 		all_corners.append([0] + HarrisCornerDetector(line).get_corners() + [len(line)-1])
+
+
+def get_corners_of_contour(index):
+	return all_corners[index]
 
 
 def get_corners_as_2D_points(index):
@@ -60,3 +75,27 @@ def fit_curves():
 
 def detect_colors():
 	pass
+
+
+################ TEMP FUNCTIONS ##################
+
+def read_points_int(filename):
+	"""Read contours from the input file and convert
+		to indices of corresponding pixels
+	"""
+	try:
+		print(filename)
+		f = open(filename)
+		current_line = []
+		for line in f.readlines():
+			if '#' in line:
+				if len(current_line) > 0:
+					all_lines.append(current_line)
+					current_line = []
+			else:
+				tmp_coords = line.rstrip('\n').split(',')
+				current_line.append([int(float(tmp_coords[0])), int(float(tmp_coords[1]))])
+
+	except Exception as e:
+		print(str(e))
+		print("Wrong input file")
