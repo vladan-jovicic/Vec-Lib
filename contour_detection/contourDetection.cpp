@@ -72,9 +72,11 @@ void printContours()
 {
 	for(size_t i = 0; i < contours.size(); i++) {
 		std::cout << "#" << std::endl;
-		for(size_t j = 0; j < contours[i].size(); j++) {
-			Point p = contours[i][j];
-			std::cout << p.x << "," << p.y << std::endl;
+		if(contours[i].size() >= 2) {
+			for(size_t j = 0; j < contours[i].size(); j++) {
+				Point p = contours[i][j];
+				std::cout << p.x << "," << p.y << std::endl;
+			}
 		}
 	}
 	
