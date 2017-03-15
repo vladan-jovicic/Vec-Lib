@@ -3,16 +3,15 @@
 # if it is region, it also contains a definition of coloring
 import sys
 import matplotlib.pyplot as plt
-from common.BezierCurve import *
-from common.Circle import *
-from common.LineSegment import *
+from vectrabool_lib.BezierCurve import *
+from vectrabool_lib.Circle import *
+from vectrabool_lib.LineSegment import *
 
-from corner_detection.HarrisCornerDetector import *
-from curve_fitting.CurveFitGG import *
-from curve_fitting.CircleFit import *
-from curve_fitting.LineFit import *
-from polyline_filter.PolyLineFilter import *
-
+from vectrabool_lib.HarrisCornerDetector import *
+from vectrabool_lib.CurveFitGG import *
+from vectrabool_lib.CircleFit import *
+from vectrabool_lib.LineFit import *
+from vectrabool_lib.PolyLineFilter import *
 
 
 class SVGElement:

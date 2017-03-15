@@ -42,4 +42,7 @@ class ContourDetector:
 		except IOError as e:
 			print(str(e))
 
+	def get_image_size(self):
+		return self.src.shape
+
 

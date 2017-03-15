@@ -1,9 +1,8 @@
 import numpy as np
-import sys
 
 # import other packages
 
-from common.BezierCurve import *
+from vectrabool_lib.BezierCurve import *
 
 """
 This is a Curve fitting algorithm. The implementation is based on the

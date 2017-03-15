@@ -1,12 +1,10 @@
-import sys
+
 import numpy as np
 
 # import other packages
-sys.path.insert(0, '../common')
-sys.path.insert(0, '../polyline_filter')
 
-from PolyLineFilter import *
-from PolyLine import *
+from vectrabool_lib.PolyLineFilter import *
+from vectrabool_lib.PolyLine import *
 
 
 class SSCornerDetector:

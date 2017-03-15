@@ -5,12 +5,11 @@ import sys
 import numpy as np
 from gimpfu import *
 
-from contour_detection.py_contour_detection import *
-# from polyline_filter.PolyLineFilter import *
-from corner_detection.HarrisCornerDetector import *
-from curve_fitting.LineFit import *
-# from curve_fitting.CurveFitGG import *
-# from common.SVGElement import *
+from vectrabool_lib.py_contour_detection import *
+from vectrabool_lib.PolyLineFilter import *
+from vectrabool_lib.SVGElement import *
+from vectrabool_lib.CurveFitGG import *
+from vectrabool_lib.SVGElement import *
 
 
 
@@ -21,51 +20,35 @@ def hello_world(image):
 
 	cont_det.read_image()
 
-	# result, contours, hierarchy = cont_det.detect_contours()
-	# for contour in contours:
-	# 	tmp_list = []
-	# 	for point in contour:
-	# 		tmp_list.append(point[0].tolist())
-	# 	svg_image.append(SVGElement(raw_data=tmp_list))
-	#
-	# for idx in range(len(svg_image)):
-	# 	svg_image[idx].filter_points()
+	result, contours, hierarchy = cont_det.detect_contours()
+	for contour in contours:
+		tmp_list = []
+		for point in contour:
+			tmp_list.append(point[0].tolist())
+		svg_image.append(SVGElement(raw_data=tmp_list))
+
+	for idx in range(len(svg_image)):
+		svg_image[idx].filter_points()
+		svg_image[idx].find_corners()
+		svg_image[idx].fit_curves()
+
+	img_size = cont_det.get_image_size()
+	img = gimp.Image(img_size[0], img_size[1], RGB)
+
+	dest_drawable = gimp.Layer(img, "Contours", img_size[0], img_size[1], RGB_IMAGE, 100, NORMAL_MODE)
+
+	dstRgn = dest_drawable.get_pixel_rgn(0, 0, img_size[0], img_size[1], True, True)
+
+	for idx in range(len(svg_image)):
+		f_points = svg_image[idx].get_filtered_points()
+		for point in f_points:
+			# dstRgn[point[0], point[1]] = 244
 
 
-	# # First do a quick sanity check on the font
-	# if font == 'Comic Sans MS' :
-	#     initstr = "Comic Sans? Are you sure?"
-	#
-	# # Make a new image. Size 10x10 for now -- we'll resize later.
-	# img = gimp.Image(1, 1, RGB)
-	#
-	# # Save the current foreground color:
-	# pdb.gimp_context_push()
-	#
-	# # Set the text color
-	# gimp.set_foreground(color)
-	#
-	# # Create a new text layer (-1 for the layer means create a new layer)
-	# layer = pdb.gimp_text_fontname(img, None, 0, 0, image, 10,
-	#                                True, size, PIXELS, font)
-	#
-	# # Resize the image to the size of the layer
-	# img.resize(layer.width, layer.height, 0, 0)
-	#
-	# # Background layer.
-	# # Can't add this first because we don't know the size of the text layer.
-	# background = gimp.Layer(img, "Background", layer.width, layer.height,
-	#                         RGB_IMAGE, 100, NORMAL_MODE)
-	# background.fill(BACKGROUND_FILL)
-	# img.add_layer(background, 1)
-	#
-	# # Create a new image window
-	# gimp.Display(img)
-	# # Show the new image window
-	# gimp.displays_flush()
-	#
-	# # Restore the old foreground color:
-	# pdb.gimp_context_pop()
+
+
+
+	# try to display only contours
 
 register(
 	"python_fu_hello_world",

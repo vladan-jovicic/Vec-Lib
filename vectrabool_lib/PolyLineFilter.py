@@ -3,7 +3,7 @@ import numpy as np
 
 # import other packages
 
-from common.PolyLine import *
+from vectrabool_lib.PolyLine import *
 
 
 class PolyLineFilter:

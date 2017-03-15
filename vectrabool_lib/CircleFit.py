@@ -1,8 +1,7 @@
 # this file contains a class for fitting set of points with a circle
 import numpy as np
-import sys
 
-from common.Circle import *
+from vectrabool_lib.Circle import *
 
 
 class CircleFit:
