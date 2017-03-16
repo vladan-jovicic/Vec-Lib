@@ -26,7 +26,6 @@ class SVGElement:
 			self._transformed = False
 
 		# debuging part
-		self.filtered_points, self.corners = [], []
 
 	def get_raw_data(self):
 		return self._raw_data
@@ -50,10 +49,13 @@ class SVGElement:
 		return self._filtered_points
 
 	def find_corners(self):
-		self._corners = [0] + HarrisCornerDetector(self._filtered_points).get_corners() + [len(self._filtered_points) - 1]
+		self._corners += [0] + HarrisCornerDetector(self._filtered_points).get_corners() + [len(self._filtered_points) - 1]
 
 	def get_corners(self):
 		return self._corners
+
+	def get_coord_of_corner(self, index):
+		return self._filtered_points[index]
 
 	def fit_curves(self):
 		for i in range(1, len(self._corners)):
