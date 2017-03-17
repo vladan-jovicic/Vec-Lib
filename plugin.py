@@ -52,6 +52,7 @@ def display_filtered_points(svg_image, img_size):
 
 
 def display_fit_curves(svg_image, img_size):
+	# img_size = [img_size[0], img_size[1]]
 	img = create_img_white_bckg(img_size)
 	layers = []
 	draw_rects = []
@@ -63,9 +64,13 @@ def display_fit_curves(svg_image, img_size):
 
 		points = svg_image[idx].get_fit_curves()
 		for point in points:
-			if point[1] >= img_size[1]:
-				raise Exception(str(point[1]) + " " + str(img_size))
-			draw_rects[idx][int(point[0]), int(point[1])] = "0000"
+			if int(point[0]) >= img_size[0]-1 or int(point[1]) >= img_size[1]-1 or point[0] < 0 or point[1] < 0:
+				continue
+			try:
+				draw_rects[idx][int(point[0]), int(point[1])] = "0000"
+			except Exception as e:
+				str_to_print = str(e) + "\n" + str(draw_rects[idx].w) + " " + str(draw_rects[idx].h) + " " + str(point[0]) + " " + str(point[1])
+				raise IndexError(str_to_print)
 
 		layers[idx].flush()
 		img.add_layer(layers[idx])
@@ -98,7 +103,7 @@ def hello_world(image, cthreshold):
 	img_size = cont_det.get_image_size()
 	img_size = [img_size[1], img_size[0]]
 	display_filtered_points(svg_image, img_size)
-	# display_fit_curves(svg_image, img_size)
+	display_fit_curves(svg_image, img_size)
 
 	# dest_drawable = gimp.Layer(img, "Contours", img_size[0], img_size[1], RGB_IMAGE, 100, NORMAL_MODE)
 	#
