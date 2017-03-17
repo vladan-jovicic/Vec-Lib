@@ -155,8 +155,9 @@ class Vectrabool(gtk.Window):
 		label.show()
 
 		# table for live preview
-		table = gtk.Table(rows=5, columns=10, homogeneous=False)
+		table = gtk.Table(rows=7, columns=10, homogeneous=False)
 		table.set_col_spacings(3)
+		table.set_row_spacings(10)
 		vbox.add(table)
 		#
 		# # start with contour detection
@@ -250,8 +251,52 @@ class Vectrabool(gtk.Window):
 
 		# some color detection parameters
 
+		# display preview
+		img_contours = gtk.Image()
+		contours_pixbf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 200, 200)
+		contours_pixbf.fill(0x00000000)
+		img_contours.set_from_pixbuf(contours_pixbf)
+		img_contours.show()
+
+		img_corners = gtk.Image()
+		img_corners.set_from_pixbuf(contours_pixbf)
+		img_corners.show()
+
+		img_curve_fit = gtk.Image()
+		img_curve_fit.set_from_pixbuf(contours_pixbf)
+		img_curve_fit.show()
+
+		img_color = gtk.Image()
+		img_color.set_from_pixbuf(contours_pixbf)
+		img_color.show()
+
+		# add images
+		table.attach(img_contours, 0, 2, 5, 6)
+		table.attach(img_corners, 2, 4, 5, 6)
+		table.attach(img_curve_fit, 4, 6, 5, 6)
+		table.attach(img_color, 6, 8, 5, 6)
+		# table.attach(img_corners, 0, 2, 5, 6)
+		# table.attach(img_curve_fit, 0, 2, 5, 6)
+		# table.attach(img_color, 0, 2, 5, 6)
+
+		# make buttons
+		hbox = gtk.HBox(spacing=20)
+
+		btn = gtk.Button("Apply")
+		hbox.add(btn)
+		btn.show()
+		btn.connect("clicked", self.update)
+
+		btn = gtk.Button("Close")
+		hbox.add(btn)
+		btn.show()
+		btn.connect("clicked", gtk.main_quit)
+
+		table.attach(hbox, 0, 10, 6, 7)
+
 		table.show()
 		vbox.show()
+		hbox.show()
 		self.show()
 		timeout_add(300, self.update, self)
 
