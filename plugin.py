@@ -5,6 +5,8 @@ import sys
 import numpy as np
 from gimpfu import *
 from array import array
+import gtk
+from gobject import timeout_add
 
 from vectrabool_lib.py_contour_detection import *
 from vectrabool_lib.PolyLineFilter import *
@@ -127,6 +129,176 @@ def hello_world(image, cthreshold):
 	# img.add_layer(dest_drawable)
 	# gimp.Display(img)
 	# gimp.displays_flush()
+
+class Vectrabool(gtk.Window):
+	def __init__(self, img, *args):
+		self.img = img
+		self.c_threshold = 50
+
+		# corner detection arguments
+		self.corn_cluster_thresh, self.corn_corner_thresh = 150, 45
+		self.corn_block_size, self.corn_kernel_size, self.corn_kfree = 2, 7, 1
+
+		# curve fitting arguments
+		self.cf_error, self.cf_line_err = 3, 2
+
+		# create dialog
+		win = gtk.Window.__init__(self, *args)
+		self.connect("destroy", gtk.main_quit)
+
+		# make user interface
+		self.set_border_width(10)
+		vbox = gtk.VBox(spacing=10, homogeneous=False)
+		self.add(vbox)
+		label = gtk.Label("Vectrabool")
+		vbox.add(label)
+		label.show()
+
+		# table for live preview
+		table = gtk.Table(rows=5, columns=10, homogeneous=False)
+		table.set_col_spacings(3)
+		vbox.add(table)
+		#
+		# # start with contour detection
+		label = gtk.Label("min threshold")
+		table.attach(label, 0, 1, 0, 1)
+		label.show()
+		adj = gtk.Adjustment(self.c_threshold, 0, 100, 1)
+		adj.connect("value_changed", self.c_threshold_changed)
+		scale = gtk.HScale(adj)
+		table.attach(scale, 1, 2, 0, 1)
+		scale.show()
+
+		# now corner detection
+		# cluster threshold
+		label = gtk.Label("Cluster threshold")
+		table.attach(label, 2, 3, 0, 1)
+		label.show()
+		adj = gtk.Adjustment(self.corn_cluster_thresh, 100, 200, 1)
+		adj.connect("value_changed", self.corn_cluster_thresh_ch)
+		scale = gtk.HScale(adj)
+		scale.set_digits(0)
+		table.attach(scale, 3, 4, 0, 1)
+		scale.show()
+
+		# corner threshold
+		label = gtk.Label("Corner threshold")
+		table.attach(label, 2, 3, 1, 2)
+		label.show()
+		adj = gtk.Adjustment(self.corn_corner_thresh, 0, 100, 1)
+		adj.connect("value_changed", self.corn_corn_thresh_ch)
+		scale = gtk.HScale(adj)
+		scale.set_digits(0)
+		table.attach(scale, 3, 4, 1, 2)
+		scale.show()
+
+		# corner block size
+		label = gtk.Label("Harris block size")
+		table.attach(label, 2, 3, 2, 3)
+		label.show()
+		adj = gtk.Adjustment(self.corn_block_size, 2, 9, 1)
+		adj.connect("value_changed", self.corn_block_size_ch)
+		scale = gtk.HScale(adj)
+		scale.set_digits(0)
+		table.attach(scale, 3, 4, 2, 3)
+		scale.show()
+
+		# corner kernel size
+		label = gtk.Label("Harris kernel size")
+		table.attach(label, 2, 3, 3, 4)
+		label.show()
+		adj = gtk.Adjustment(self.corn_kernel_size, 3, 7, 2)
+		adj.connect("value_changed", self.corn_kernel_size_ch)
+		scale = gtk.HScale(adj)
+		scale.set_digits(0)
+		table.attach(scale, 3, 4, 3, 4)
+		scale.show()
+
+		# corner kfree
+		label = gtk.Label("Harris kfree parameter")
+		table.attach(label, 2, 3, 4, 5)
+		label.show()
+		adj = gtk.Adjustment(self.corn_kfree, 1, 10, 1)
+		adj.connect("value_changed", self.corn_kfree_ch)
+		scale = gtk.HScale(adj)
+		scale.set_digits(0)
+		table.attach(scale, 3, 4, 4, 5)
+		scale.show()
+
+		# boring
+		# curve fitting
+		label = gtk.Label("Bezier curve max error")
+		table.attach(label, 4, 5, 0, 1)
+		label.show()
+		adj = gtk.Adjustment(self.cf_error, 1, 10, 1)
+		adj.connect("value_changed", self.cf_error_ch)
+		scale = gtk.HScale(adj)
+		scale.set_digits(0)
+		table.attach(scale, 5, 6, 0, 1)
+		scale.show()
+
+		# line fit
+		label = gtk.Label("Line fit max error")
+		table.attach(label, 4, 5, 1, 2)
+		label.show()
+		adj = gtk.Adjustment(self.cf_line_err, 1, 10, 1)
+		adj.connect("value_changed", self.cf_line_err_ch)
+		scale = gtk.HScale(adj)
+		scale.set_digits(0)
+		table.attach(scale, 5, 6, 1, 2)
+		scale.show()
+
+		# some color detection parameters
+
+		table.show()
+		vbox.show()
+		self.show()
+		timeout_add(300, self.update, self)
+
+	def c_threshold_changed(self, val):
+		self.c_threshold = val.value
+
+	def corn_cluster_thresh_ch(self, val):
+		self.corn_cluster_thresh = val.value
+
+	def corn_corn_thresh_ch(self, val):
+		self.corn_corner_thresh = val.value
+
+	def corn_block_size_ch(self, val):
+		self.corn_block_size = val
+
+	def corn_kernel_size_ch(self, val):
+		self.corn_kernel_size = val.value
+
+	def corn_kfree_ch(self, val):
+		self.corn_kfree = val.value
+
+	def cf_error_ch(self, val):
+		self.cf_error = val.value
+
+	def cf_line_err_ch(self, val):
+		self.cf_line_err = val.value
+
+	def update(self, *args):
+		pass
+
+
+def user_defined_parameters(image, layer):
+	vec_bool = Vectrabool(image)
+	gtk.main()
+
+register(
+		"vecbool_interactive",
+		"Draw an arrow following the selection (interactive)",
+		"Draw an arrow following the current selection, updating as the selection changes",
+		"Akkana Peck", "Akkana Peck",
+		"2010",
+		"<Image>/Filters/VUI...",
+		"*",
+		[
+		],
+		[],
+		user_defined_parameters)
 
 register(
 	"python_fu_hello_world",

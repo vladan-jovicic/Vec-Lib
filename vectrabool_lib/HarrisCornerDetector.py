@@ -5,9 +5,11 @@ import numpy as np
 
 
 class HarrisCornerDetector:
-	def __init__(self, points):
+	def __init__(self, points, cl_threshold=1.5, corner_threshold=0.45, block_size=2, kernel_size=7, kfree=0.01):
 		self.points = points
-		self.cluster_threshold = 1.5
+		self.corner_threshold = corner_threshold
+		self.cluster_threshold = cl_threshold
+		self.block_size, self.kernel_size, self.kfree = block_size, kernel_size, kfree
 
 	def get_corners(self):
 		"""
@@ -31,9 +33,9 @@ class HarrisCornerDetector:
 			end_point = (int(self.points[i][0]), int(self.points[i][1]))
 			cv2.line(image, start_point, end_point, 155, 1)  # bilo 200
 
-		dst = cv2.cornerHarris(image, 2, 7, 0.01)
+		dst = cv2.cornerHarris(image, self.block_size, self.kernel_size, self.kfree)
 		dst = cv2.dilate(dst, None)
-		corners_in_image = np.argwhere(dst > 0.45 * dst.max())  # coordinates with respect to image
+		corners_in_image = np.argwhere(dst > self.corner_threshold * dst.max())  # coordinates with respect to image
 
 		# all possible corners are in the array: extract the best ones
 		clusters = []
