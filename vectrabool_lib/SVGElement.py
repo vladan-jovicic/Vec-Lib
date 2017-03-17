@@ -70,6 +70,16 @@ class SVGElement:
 
 			self._bezier_curves += CurveFitGG(temp_points, self._b_threshold).fit_curve()
 
+	def get_fit_curves(self):
+		ret_points = []
+		for idx in range(len(self._line_segments)):
+			ret_points = ret_points + self._line_segments[idx].get_points_for_plot()
+
+		for idx in range(len(self._bezier_curves)):
+			ret_points = ret_points + self._bezier_curves[idx].get_points_to_draw()
+
+		return ret_points
+
 	def get_lines(self):
 		return self._line_segments
 

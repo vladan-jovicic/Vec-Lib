@@ -76,7 +76,8 @@ class BezierCurve():
     def get_points_to_draw(self):
         points_to_draw = []
         for t in np.arange(0.0, 1.0, 0.01):
-            points_to_draw.append(self.get_point_cubic(t))
+            t_point = self.get_point_cubic(t)
+            points_to_draw.append([t_point[1], t_point[0]])
         return points_to_draw
 
     def draw_by_vladan(self, block=True):

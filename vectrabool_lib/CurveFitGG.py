@@ -189,14 +189,14 @@ class CurveFitGG:
         """Approximate unit tangent at the left of the curve"""
         t_hat_1 = self._dpoints[end + 1] - self._dpoints[end]
         if np.linalg.norm(t_hat_1) != 0:
-            t_hat_1 /= np.linalg.norm(t_hat_1)
+            t_hat_1 = t_hat_1 / np.linalg.norm(t_hat_1)
         return t_hat_1
 
     def compute_right_tangent(self, end):
         """Aproximate unit tangent at the right of the curve"""
         t_hat_2 = self._dpoints[end - 1] - self._dpoints[end]
         if np.linalg.norm(t_hat_2) != 0:
-            t_hat_2 /= np.linalg.norm(t_hat_2)
+            t_hat_2 = t_hat_2 / np.linalg.norm(t_hat_2)
         return t_hat_2
 
     def compute_center_tangent(self, center):
