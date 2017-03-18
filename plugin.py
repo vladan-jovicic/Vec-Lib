@@ -14,6 +14,7 @@ from vectrabool_lib.SVGElement import *
 from vectrabool_lib.CurveFitGG import *
 from vectrabool_lib.SVGElement import *
 
+
 def create_img_white_bckg(img_size):
 	img = gimp.Image(img_size[0], img_size[1], RGB)
 
@@ -27,108 +28,6 @@ def create_img_white_bckg(img_size):
 	background.flush()
 	img.add_layer(background)
 	return img
-
-
-def display_filtered_points(svg_image, img_size):
-
-	img = create_img_white_bckg(img_size)
-	layers = []
-	draw_rects = []
-	for idx in range(len(svg_image)):
-		layers.append(gimp.Layer(img, "Points " + str(idx), img_size[0], img_size[1], RGB_IMAGE, 100, NORMAL_MODE))
-		layers[-1].add_alpha()
-		layers[-1].fill(TRANSPARENT_FILL)
-		draw_rects.append(layers[-1].get_pixel_rgn(0, 0, img_size[0], img_size[1], True, False))
-
-		f_points = svg_image[idx].get_filtered_points()
-		for point in f_points:
-			draw_rects[idx][int(point[0]), int(point[1])] = "0000"
-
-		layers[idx].flush()
-		img.add_layer(layers[idx])
-
-	gimp.Display(img)
-	gimp.displays_flush()
-
-	return img
-
-
-def display_fit_curves(svg_image, img_size):
-	# img_size = [img_size[0], img_size[1]]
-	img = create_img_white_bckg(img_size)
-	layers = []
-	draw_rects = []
-	for idx in range(len(svg_image)):
-		layers.append(gimp.Layer(img, "Points " + str(idx), img_size[0], img_size[1], RGB_IMAGE, 100, NORMAL_MODE))
-		layers[-1].add_alpha()
-		layers[-1].fill(TRANSPARENT_FILL)
-		draw_rects.append(layers[-1].get_pixel_rgn(0, 0, img_size[0], img_size[1], True, False))
-
-		points = svg_image[idx].get_fit_curves()
-		for point in points:
-			if int(point[0]) >= img_size[0]-1 or int(point[1]) >= img_size[1]-1 or point[0] < 0 or point[1] < 0:
-				continue
-			try:
-				draw_rects[idx][int(point[0]), int(point[1])] = "0000"
-			except Exception as e:
-				str_to_print = str(e) + "\n" + str(draw_rects[idx].w) + " " + str(draw_rects[idx].h) + " " + str(point[0]) + " " + str(point[1])
-				raise IndexError(str_to_print)
-
-		layers[idx].flush()
-		img.add_layer(layers[idx])
-
-	gimp.Display(img)
-	gimp.displays_flush()
-
-
-def add_corners_to_image(img, svg_image):
-	pass
-
-
-def hello_world(image, cthreshold):
-
-	svg_image = []
-	cont_det = ContourDetector(image, threshold=cthreshold)
-	cont_det.read_image()
-	result, contours, hierarchy = cont_det.detect_contours()
-	for contour in contours:
-		tmp_list = []
-		for point in contour:
-			tmp_list.append(point[0])
-		svg_image.append(SVGElement(raw_data=tmp_list))
-
-	for idx in range(len(svg_image)):
-		svg_image[idx].filter_points()
-		svg_image[idx].find_corners()
-		svg_image[idx].fit_curves()
-
-	img_size = cont_det.get_image_size()
-	img_size = [img_size[1], img_size[0]]
-	display_filtered_points(svg_image, img_size)
-	display_fit_curves(svg_image, img_size)
-
-	# dest_drawable = gimp.Layer(img, "Contours", img_size[0], img_size[1], RGB_IMAGE, 100, NORMAL_MODE)
-	#
-	# dstRgn = dest_drawable.get_pixel_rgn(0, 0, img_size[0], img_size[1], True, False)
-	#
-	# # set everythin to black
-	# dest_pixels = array("B", "\xFF" * img_size[0] * img_size[1] * dstRgn.bpp)
-	# dstRgn[0:img_size[0], 0:img_size[1]] = dest_pixels.tostring()
-	#
-	# for idx in range(len(svg_image)):
-	# 	f_points = svg_image[idx].get_filtered_points()
-	# 	for point in f_points:
-	# 		dstRgn[int(point[0]), int(point[1])] = '000'
-	#
-	# 	corners = svg_image[idx].get_corners()
-	# 	for corner in corners:
-	# 		point = svg_image[idx].get_coord_of_corner(corner)
-	# 		# pdb.gimp_drawable_set_pixel(dstRgn, int(point[0]), int(point[1]), 4, (0xFF, 0x00, 0x00, 0xFF))
-	# dest_drawable.flush()
-	# # dest_drawable.merge_shadow(True)
-	# img.add_layer(dest_drawable)
-	# gimp.Display(img)
-	# gimp.displays_flush()
 
 
 class Vectrabool(gtk.Window):
@@ -369,13 +268,10 @@ class Vectrabool(gtk.Window):
 			for point in f_points:
 				if point[0] >= img_size[0] or point[1] >= img_size[1] or point[0] < 0 or point[1] < 0:
 					continue
-
 				new_x, new_y = coordinate_map(point[0], point[1], 200, 200, img_size[0], img_size[1])
 				new_x, new_y = int(new_x), int(new_y)
 				black_pixel.copy_area(0, 0, 1, 1, img_pixbuf, new_x, new_y)
 			self.img_contours.set_from_pixbuf(img_pixbuf)
-
-		#
 
 		corn_img_pixbuf = self.img_corners.get_pixbuf()
 		corn_img_pixbuf.fill(0xffffffff)
@@ -386,11 +282,11 @@ class Vectrabool(gtk.Window):
 
 		for idx in range(len(self.svg_image)):
 			pdb.gimp_message("Finding corners of " + str(idx))
-			self.svg_image[idx].find_corners(float(self.corn_cluster_thresh)/100.0,
-											float(self.corn_corner_thresh)/100.0,
-											self.corn_block_size,
-											self.corn_kernel_size,
-											float(self.corn_kfree)/100.0)
+			self.svg_image[idx].find_corners(float(self.corn_cluster_thresh) / 100.0,
+																			float(self.corn_corner_thresh) / 100.0,
+																			self.corn_block_size,
+																			self.corn_kernel_size,
+																			float(self.corn_kfree) / 100.0)
 
 			for corner in self.svg_image[idx].get_corners():
 				point = self.svg_image[idx].get_coord_of_corner(corner)
@@ -403,9 +299,7 @@ class Vectrabool(gtk.Window):
 			self.img_corners.set_from_pixbuf(corn_img_pixbuf)
 
 		pdb.gimp_message("Everything is done")
-		#
-		# for idx in range(len(self.svg_image)):
-		# 	self.svg_image[idx].fit_curves()
+
 
 	def update(self, *args):
 		timeout_add(100, self.update, self)
@@ -413,39 +307,27 @@ class Vectrabool(gtk.Window):
 
 def coordinate_map(x, y, w1, h1, w2, h2):
 	return x * (float(w1) / float(w2)), y * (float(h1) / float(h2))
-	# return x, y
+
+
+# return x, y
 
 
 def user_defined_parameters(image, layer):
 	vec_bool = Vectrabool(image)
 	gtk.main()
 
-register(
-		"vecbool_interactive",
-		"Draw an arrow following the selection (interactive)",
-		"Draw an arrow following the current selection, updating as the selection changes",
-		"Akkana Peck", "Akkana Peck",
-		"2010",
-		"<Image>/Filters/VUI...",
-		"*",
-		[],
-		[],
-		user_defined_parameters)
 
 register(
-	"python_fu_hello_world",
-	"Hello world image",
-	"Create a new image with your text string",
-	"Akkana Peck",
-	"Akkana Peck",
+	"vecbool_interactive",
+	"Draw an arrow following the selection (interactive)",
+	"Draw an arrow following the current selection, updating as the selection changes",
+	"Akkana Peck", "Akkana Peck",
 	"2010",
-	"Hello world (Py)...",
-	"",      # Create a new image, don't work on an existing one
-	[
-		(PF_FILE, "image", "Image file", ""),
-		(PF_SLIDER, "cthreshold",  "Opacity", 100, (0, 100, 1))
-	],
+	"<Image>/Filters/VUI...",
+	"*",
 	[],
-	hello_world, menu="<Image>/File/Create")
+	[],
+	user_defined_parameters)
+
 
 main()
