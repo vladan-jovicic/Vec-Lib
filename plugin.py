@@ -241,11 +241,12 @@ class Vectrabool(gtk.Window):
 		pdb.gimp_message('Apply clicked')
 		self.svg_image = []
 		path = gimp.image_list()[0].filename
+		pdb.gimp_message('Apply clicked')
 		cont_det = ContourDetector(path, self.c_threshold)
 		cont_det.read_image()
-		result, contours, hierarchy = cont_det.detect_contours()
-
-		for contour in contours:
+		contours = cont_det.detect_contours()
+		pdb.gimp_message('Apply clicked')
+		for contour in (contours[0] if len(contours) == 2 else contours[1]):
 			tmp_list = []
 			for point in contour:
 				tmp_list.append(point[0])
