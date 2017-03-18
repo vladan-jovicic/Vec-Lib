@@ -5,7 +5,7 @@ import numpy as np
 class ContourDetector:
 	def __init__(self, filename, threshold=0):
 		self.filename = filename
-		self.threshold = 70  # = low_thresh
+		self.threshold = threshold  # = low_thresh
 		self.edge_thresh, self.max_low_thresh = 1, 100
 		self.ratio, self.kernel_size, self.sigma = 3, 3, 1.4
 		self.scale, self.delta = 1, 0

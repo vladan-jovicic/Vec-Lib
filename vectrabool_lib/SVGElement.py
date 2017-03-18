@@ -48,8 +48,9 @@ class SVGElement:
 	def get_filtered_points(self):
 		return self._filtered_points
 
-	def find_corners(self):
-		self._corners += [0] + HarrisCornerDetector(self._filtered_points).get_corners() + [len(self._filtered_points) - 1]
+	def find_corners(self, cl_threshold, corn_threshold, block_size, kernel_size, kfree):
+		self._corners += [0] + HarrisCornerDetector(self._filtered_points, cl_threshold, corn_threshold,
+						block_size, kernel_size, kfree).get_corners() + [len(self._filtered_points) - 1]
 
 	def get_corners(self):
 		return self._corners

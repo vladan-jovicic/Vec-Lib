@@ -130,9 +130,14 @@ def hello_world(image, cthreshold):
 	# gimp.Display(img)
 	# gimp.displays_flush()
 
+
 class Vectrabool(gtk.Window):
 	def __init__(self, img, *args):
 		self.img = img
+
+		self.svg_image = []
+
+		# contour thresholds
 		self.c_threshold = 50
 
 		# corner detection arguments
@@ -148,6 +153,7 @@ class Vectrabool(gtk.Window):
 
 		# make user interface
 		self.set_border_width(10)
+
 		vbox = gtk.VBox(spacing=10, homogeneous=False)
 		self.add(vbox)
 		label = gtk.Label("Vectrabool")
@@ -252,29 +258,35 @@ class Vectrabool(gtk.Window):
 		# some color detection parameters
 
 		# display preview
-		img_contours = gtk.Image()
+		self.img_contours = gtk.Image()
 		contours_pixbf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 200, 200)
-		contours_pixbf.fill(0x00000000)
-		img_contours.set_from_pixbuf(contours_pixbf)
-		img_contours.show()
+		contours_pixbf.fill(0xffffffff)
+		self.img_contours.set_from_pixbuf(contours_pixbf)
+		self.img_contours.show()
 
-		img_corners = gtk.Image()
-		img_corners.set_from_pixbuf(contours_pixbf)
-		img_corners.show()
+		contours_pixbf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 200, 200)
+		contours_pixbf.fill(0xffffffff)
+		self.img_corners = gtk.Image()
+		self.img_corners.set_from_pixbuf(contours_pixbf)
+		self.img_corners.show()
 
-		img_curve_fit = gtk.Image()
-		img_curve_fit.set_from_pixbuf(contours_pixbf)
-		img_curve_fit.show()
+		contours_pixbf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 200, 200)
+		contours_pixbf.fill(0xffffffff)
+		self.img_curve_fit = gtk.Image()
+		self.img_curve_fit.set_from_pixbuf(contours_pixbf)
+		self.img_curve_fit.show()
 
-		img_color = gtk.Image()
-		img_color.set_from_pixbuf(contours_pixbf)
-		img_color.show()
+		contours_pixbf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 200, 200)
+		contours_pixbf.fill(0xffffffff)
+		self.img_color = gtk.Image()
+		self.img_color.set_from_pixbuf(contours_pixbf)
+		self.img_color.show()
 
 		# add images
-		table.attach(img_contours, 0, 2, 5, 6)
-		table.attach(img_corners, 2, 4, 5, 6)
-		table.attach(img_curve_fit, 4, 6, 5, 6)
-		table.attach(img_color, 6, 8, 5, 6)
+		table.attach(self.img_contours, 0, 2, 5, 6)
+		table.attach(self.img_corners, 2, 4, 5, 6)
+		table.attach(self.img_curve_fit, 4, 6, 5, 6)
+		table.attach(self.img_color, 6, 8, 5, 6)
 		# table.attach(img_corners, 0, 2, 5, 6)
 		# table.attach(img_curve_fit, 0, 2, 5, 6)
 		# table.attach(img_color, 0, 2, 5, 6)
@@ -282,15 +294,15 @@ class Vectrabool(gtk.Window):
 		# make buttons
 		hbox = gtk.HBox(spacing=20)
 
-		btn = gtk.Button("Apply")
-		hbox.add(btn)
-		btn.show()
-		btn.connect("clicked", self.update)
-
 		btn = gtk.Button("Close")
 		hbox.add(btn)
 		btn.show()
 		btn.connect("clicked", gtk.main_quit)
+
+		btn1 = gtk.Button("Apply")
+		hbox.add(btn1)
+		btn1.show()
+		btn1.connect("pressed", self.apply_values)
 
 		table.attach(hbox, 0, 10, 6, 7)
 
@@ -298,7 +310,8 @@ class Vectrabool(gtk.Window):
 		vbox.show()
 		hbox.show()
 		self.show()
-		timeout_add(300, self.update, self)
+		pdb.gimp_message('This is displayed as a message')
+		timeout_add(100, self.update, self)
 
 	def c_threshold_changed(self, val):
 		self.c_threshold = val.value
@@ -324,8 +337,83 @@ class Vectrabool(gtk.Window):
 	def cf_line_err_ch(self, val):
 		self.cf_line_err = val.value
 
+	def apply_values(self, widget):
+		# run this shit
+		pdb.gimp_message('Apply clicked')
+		self.svg_image = []
+		path = gimp.image_list()[0].filename
+		cont_det = ContourDetector(path, self.c_threshold)
+		cont_det.read_image()
+		result, contours, hierarchy = cont_det.detect_contours()
+
+		for contour in contours:
+			tmp_list = []
+			for point in contour:
+				tmp_list.append(point[0])
+			self.svg_image.append(SVGElement(raw_data=tmp_list))
+
+		img_size = cont_det.get_image_size()
+
+		img_pixbuf = self.img_contours.get_pixbuf()
+		img_pixbuf.fill(0xffffffff)
+		self.img_contours.set_from_pixbuf(img_pixbuf)
+
+		# hackic
+		black_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 1, 1)
+		black_pixel.fill(0x00000000)
+
+		for idx in range(len(self.svg_image)):
+			self.svg_image[idx].filter_points()
+			f_points = self.svg_image[idx].get_filtered_points()
+
+			for point in f_points:
+				if point[0] >= img_size[0] or point[1] >= img_size[1] or point[0] < 0 or point[1] < 0:
+					continue
+
+				new_x, new_y = coordinate_map(point[0], point[1], 200, 200, img_size[0], img_size[1])
+				new_x, new_y = int(new_x), int(new_y)
+				black_pixel.copy_area(0, 0, 1, 1, img_pixbuf, new_x, new_y)
+			self.img_contours.set_from_pixbuf(img_pixbuf)
+
+		#
+
+		corn_img_pixbuf = self.img_corners.get_pixbuf()
+		corn_img_pixbuf.fill(0xffffffff)
+		self.img_contours.get_pixbuf().copy_area(0, 0, 200, 200, corn_img_pixbuf, 0, 0)
+
+		red_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 1, 1)
+		red_pixel.fill(0xff000000)
+
+		for idx in range(len(self.svg_image)):
+			pdb.gimp_message("Finding corners of " + str(idx))
+			self.svg_image[idx].find_corners(float(self.corn_cluster_thresh)/100.0,
+											float(self.corn_corner_thresh)/100.0,
+											self.corn_block_size,
+											self.corn_kernel_size,
+											float(self.corn_kfree)/100.0)
+
+			for corner in self.svg_image[idx].get_corners():
+				point = self.svg_image[idx].get_coord_of_corner(corner)
+				if point[0] >= img_size[0] or point[1] >= img_size[1] or point[0] < 0 or point[1] < 0:
+					continue
+				new_x, new_y = coordinate_map(point[0], point[1], 200, 200, img_size[0], img_size[1])
+				new_x, new_y = int(new_x), int(new_y)
+				red_pixel.copy_area(0, 0, 1, 1, corn_img_pixbuf, new_x, new_y)
+
+			self.img_corners.set_from_pixbuf(corn_img_pixbuf)
+
+		pdb.gimp_message("Everything is done")
+		#
+		# for idx in range(len(self.svg_image)):
+		# 	self.svg_image[idx].fit_curves()
+
 	def update(self, *args):
-		pass
+		timeout_add(100, self.update, self)
+
+
+def coordinate_map(x, y, w1, h1, w2, h2):
+	return x * (float(w1) / float(w2)), y * (float(h1) / float(h2))
+	# return x, y
 
 
 def user_defined_parameters(image, layer):
@@ -340,8 +428,7 @@ register(
 		"2010",
 		"<Image>/Filters/VUI...",
 		"*",
-		[
-		],
+		[],
 		[],
 		user_defined_parameters)
 
