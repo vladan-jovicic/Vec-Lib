@@ -253,6 +253,18 @@ class Vectrabool(gtk.Window):
 
 		img_size = cont_det.get_image_size()
 
+		self.update_contours_image(img_size)
+
+		# update corners image
+		self.update_corners_image(img_size)
+
+		pdb.gimp_message("Everything is done")
+
+	def update(self, *args):
+		timeout_add(100, self.update, self)
+
+	def update_contours_image(self, img_size):
+		# reset pixel buffer
 		img_pixbuf = self.img_contours.get_pixbuf()
 		img_pixbuf.fill(0xffffffff)
 		self.img_contours.set_from_pixbuf(img_pixbuf)
@@ -266,50 +278,60 @@ class Vectrabool(gtk.Window):
 			f_points = self.svg_image[idx].get_filtered_points()
 
 			for point in f_points:
-				if point[0] >= img_size[0] or point[1] >= img_size[1] or point[0] < 0 or point[1] < 0:
+				if point[0] >= img_size[0] or point[1] >= img_size[1]:
 					continue
-				new_x, new_y = coordinate_map(point[0], point[1], 200, 200, img_size[0], img_size[1])
+				if point[0] < 0 or point[1] < 0:
+					continue
+
+				new_x, new_y = coordinate_map(
+					point[0], point[1],
+					200, 200, img_size[0], img_size[1])
+
 				new_x, new_y = int(new_x), int(new_y)
 				black_pixel.copy_area(0, 0, 1, 1, img_pixbuf, new_x, new_y)
-			self.img_contours.set_from_pixbuf(img_pixbuf)
 
+		self.img_contours.set_from_pixbuf(img_pixbuf)
+
+	def update_corners_image(self, img_size):
+		# reset pixel buffer
 		corn_img_pixbuf = self.img_corners.get_pixbuf()
 		corn_img_pixbuf.fill(0xffffffff)
 		self.img_contours.get_pixbuf().copy_area(0, 0, 200, 200, corn_img_pixbuf, 0, 0)
 
+		# create red pixel
 		red_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 1, 1)
 		red_pixel.fill(0xff000000)
 
 		for idx in range(len(self.svg_image)):
+			# find corners
 			pdb.gimp_message("Finding corners of " + str(idx))
-			self.svg_image[idx].find_corners(float(self.corn_cluster_thresh) / 100.0,
-																			float(self.corn_corner_thresh) / 100.0,
-																			self.corn_block_size,
-																			self.corn_kernel_size,
-																			float(self.corn_kfree) / 100.0)
+			self.svg_image[idx].find_corners(
+				float(self.corn_cluster_thresh) / 100.0,
+				float(self.corn_corner_thresh) / 100.0,
+				self.corn_block_size,
+				self.corn_kernel_size,
+				float(self.corn_kfree) / 100.0)
 
+			# update image with found corners
 			for corner in self.svg_image[idx].get_corners():
 				point = self.svg_image[idx].get_coord_of_corner(corner)
-				if point[0] >= img_size[0] or point[1] >= img_size[1] or point[0] < 0 or point[1] < 0:
+				if point[0] >= img_size[0] or point[1] >= img_size[1]:
 					continue
-				new_x, new_y = coordinate_map(point[0], point[1], 200, 200, img_size[0], img_size[1])
+				if point[0] < 0 or point[1] < 0:
+					continue
+
+				new_x, new_y = coordinate_map(
+					point[0], point[1],
+					200, 200, img_size[0], img_size[1])
+
 				new_x, new_y = int(new_x), int(new_y)
 				red_pixel.copy_area(0, 0, 1, 1, corn_img_pixbuf, new_x, new_y)
 
 			self.img_corners.set_from_pixbuf(corn_img_pixbuf)
 
-		pdb.gimp_message("Everything is done")
-
-
-	def update(self, *args):
-		timeout_add(100, self.update, self)
-
 
 def coordinate_map(x, y, w1, h1, w2, h2):
 	return x * (float(w1) / float(w2)), y * (float(h1) / float(h2))
-
-
-# return x, y
 
 
 def user_defined_parameters(image, layer):
@@ -328,6 +350,5 @@ register(
 	[],
 	[],
 	user_defined_parameters)
-
 
 main()
