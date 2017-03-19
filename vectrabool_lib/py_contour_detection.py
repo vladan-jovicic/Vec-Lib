@@ -61,5 +61,3 @@ class ContourDetector:
 
     def get_image_size(self):
         return self.src.shape
-
-

@@ -337,7 +337,6 @@ class Vectrabool(gtk.Window):
 
         self.img_corners.set_from_pixbuf(corn_img_pixbuf)
 
-
 def coordinate_map(x, y, w1, h1, w2, h2):
     return x * (float(w1) / float(w2)), y * (float(h1) / float(h2))
 
