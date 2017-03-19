@@ -1,23 +1,11 @@
 import numpy as np
-
-# import other packages
+import math
 
 from vectrabool_lib.BezierCurve import *
 
-"""
-This is a Curve fitting algorithm. The implementation is based on the
-graphic gems book
-
-We need the following functions
-
-
-FitCurve()
-
-"""
-
 
 class CurveFitGG:
-    def __init__(self, d, error):
+    def __init__(self, d, error, norm="linf"):
         # i will assume that this is a list of tuples
         self._dpoints = []
         for point in d:
@@ -25,6 +13,7 @@ class CurveFitGG:
         self._error = error
         self._reparam_max_iter = 4
         self._debug = True
+        self.norm = norm
 
     def fit_curve(self):
         """This method is called to fit curve after an initialization
@@ -136,12 +125,13 @@ class CurveFitGG:
             matrix_C[1, 0] = matrix_C[0, 1]
             matrix_C[1, 1] += np.dot(matrix_A[i][1], matrix_A[i][1])
 
-            tmp = self._dpoints[first + i] - (b_curve.bezier_multiplier(u_prime[i], 0) * self._dpoints[first] +
-                                              (b_curve.bezier_multiplier(u_prime[i], 1) * self._dpoints[first] +
-                                               (
-                                                   b_curve.bezier_multiplier(u_prime[i], 2) * self._dpoints[last] +
-                                                   b_curve.bezier_multiplier(u_prime[i], 3) * self._dpoints[last]
-                                               )))
+            tmp = self._dpoints[first + i] - \
+                (b_curve.bezier_multiplier(u_prime[i], 0) * self._dpoints[first] +
+                (b_curve.bezier_multiplier(u_prime[i], 1) * self._dpoints[first] +
+                (
+                    b_curve.bezier_multiplier(u_prime[i], 2) * self._dpoints[last] +
+                    b_curve.bezier_multiplier(u_prime[i], 3) * self._dpoints[last]
+                )))
 
             matrix_X[0] += np.dot(matrix_A[i][0], tmp)
             matrix_X[1] += np.dot(matrix_A[i][1], tmp)
@@ -213,9 +203,51 @@ class CurveFitGG:
 
         return t_hat_center
 
-    def compute_max_error(self, first, last, b_curve, u):  # use different error, this one is bullshit
-        """Given a set of digitalized points and its parametrization,
-        compute the maximum distance over the points"""
+    def compute_max_error(self, first, last, b_curve, u):
+        """
+        Computes error of fitting
+        It uses either l1, l2, or linf norm
+        """
+        if self.norm == "l1":
+            return self.compute_l1_max_error(first, last, b_curve, u)
+        elif self.norm == "l2":
+            return self.compute_l2_max_error(first, last, b_curve, u)
+        else:
+            return self.compute_linf_max_error(first, last, b_curve, u)
+
+    def compute_l1_max_error(self, first, last, b_curve, u):
+        error = 0.0
+        split_point = (last - first + 1) // 2
+
+        for i in range(first + 1, last):
+            pt_p = b_curve.get_value(u[i - first])
+            pt_v = np.array(pt_p) - self._dpoints[i]
+            dist = math.fabs(pt_v[0]) + math.fabs(pt_v[1])
+
+            if dist >= error:
+                error = dist
+                split_point = i
+
+        return error, split_point
+
+    def compute_l2_max_error(self, first, last, b_curve, u):
+        """Computes average error"""
+        total_err, max_dist = 0.0, 0.0
+        split_point = (last - first + 1) // 2
+
+        for i in range(first + 1, last):
+            pt_p = b_curve.get_value(u[i - first])
+            pt_v = np.array(pt_p) - self._dpoints[i]
+            dist = math.sqrt(pt_v[0] ** 2 + pt_v[1] ** 2)
+            total_err += dist
+
+            if dist >= max_dist:
+                max_dist = dist
+                split_point = i
+
+        return float(total_err)/float(last - first + 1), split_point
+
+    def compute_linf_max_error(self, first, last, b_curve, u):
         max_err, max_dist = 0.0, 0.0
         split_point = (last - first + 1) // 2
 
@@ -229,3 +261,20 @@ class CurveFitGG:
                 split_point = i
 
         return max_dist, split_point
+
+    # def compute_max_error(self, first, last, b_curve, u):  # use different error, this one is bullshit
+    #     """Given a set of digitalized points and its parametrization,
+    #     compute the maximum distance over the points"""
+    #     max_err, max_dist = 0.0, 0.0
+    #     split_point = (last - first + 1) // 2
+    #
+    #     for i in range(first + 1, last):
+    #         pt_p = b_curve.get_value(u[i - first])
+    #         pt_v = np.array(pt_p) - self._dpoints[i]
+    #         dist = pt_v[0] ** 2 + pt_v[1] ** 2
+    #
+    #         if dist >= max_dist:
+    #             max_dist = dist
+    #             split_point = i
+    #
+    #     return max_dist, split_point

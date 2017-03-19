@@ -1,5 +1,4 @@
 import cv2
-import sys
 import numpy as np
 
 
@@ -33,6 +32,7 @@ class HarrisCornerDetector:
             end_point = (int(self.points[i][0]), int(self.points[i][1]))
             cv2.line(image, start_point, end_point, 155, 1)  # bilo 200
 
+        # pdb.gimp_message("corner detection with block size %d, kernel size %d" % (self.block_size, self.kernel_size))
         dst = cv2.cornerHarris(image, self.block_size, self.kernel_size, self.kfree)
         dst = cv2.dilate(dst, None)
         corners_in_image = np.argwhere(dst > self.corner_threshold * dst.max())  # coordinates with respect to image

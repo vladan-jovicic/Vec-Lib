@@ -20,7 +20,16 @@ class SVGElement:
         self._raw_data = raw_data
         self._transformed = True
         self._filtered_points, self._corners = [], []
+
+        # curve fitting params
         self._line_threshold, self._circle_threshold, self._b_threshold = 2, 0, 4
+        self.cf_error_metric = "linf"
+
+        # corner params
+        self.cluster_threshold, self.corner_threshold = 1.5, 0.45
+        self.harris_block_size, self.harris_kernel_size = 2, 7
+        self.harris_k_free = 0.01
+
         if self._raw_data is not None:
             # in this case run the transforming
             self._transformed = False
@@ -52,18 +61,37 @@ class SVGElement:
         return self._filtered_points
 
     def find_corners(self, cl_threshold, corn_threshold, block_size, kernel_size, kfree):
+        self.cluster_threshold, self.corner_threshold = cl_threshold, corn_threshold
+        self.harris_block_size, self.harris_kernel_size = block_size, kernel_size
+        self.harris_k_free = kfree
         self.filter_points()
-        self._corners += [0] + HarrisCornerDetector(self._filtered_points, cl_threshold, corn_threshold,
-                        block_size, kernel_size, kfree).get_corners() + [len(self._filtered_points) - 1]
+        self._corners += [0] + HarrisCornerDetector(self._filtered_points, self.cluster_threshold,
+                        self.corner_threshold, self.harris_block_size, self.harris_kernel_size,
+                        self.harris_k_free).get_corners() + [len(self._filtered_points) - 1]
 
     def get_corners(self):
         if len(self._corners) == 0:
-            self.find_corners()
+            self.find_corners(self.cluster_threshold, self.corner_threshold, self.harris_block_size,
+                              self.harris_kernel_size, self.harris_k_free)
         return self._corners
 
     def get_coord_of_corner(self, index):
         #  return self._filtered_points[index]
         return self._filtered_points[index]
+
+    def set_bezier_threshold(self, threshold):
+        self._b_threshold = threshold
+
+    def set_line_threshold(self, threshold):
+        self._line_threshold = threshold
+
+    def set_curve_fitting_error_metric(self, metric):
+        if "l1" in metric:
+            self.cf_error_metric = "l1"
+        elif "l2" in metric:
+            self.cf_error_metric = "l2"
+        else:
+            self.cf_error_metric = "linf"
 
     def fit_curves(self):
         for i in range(1, len(self._corners)):
@@ -76,9 +104,11 @@ class SVGElement:
                 self._line_segments.append(line)
                 continue
 
-            self._bezier_curves += CurveFitGG(temp_points, self._b_threshold).fit_curve()
+            self._bezier_curves += CurveFitGG(temp_points, self._b_threshold, self.cf_error_metric).fit_curve()
 
     def get_fit_curves(self):
+        if len(self._line_segments) + len(self._bezier_curves) == 0:
+            self.fit_curves()
         ret_points = []
         for idx in range(len(self._line_segments)):
             ret_points = ret_points + self._line_segments[idx].get_points_for_plot()

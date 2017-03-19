@@ -46,7 +46,9 @@ class Vectrabool(gtk.Window):
         self.corn_block_size, self.corn_kernel_size, self.corn_kfree = 2, 7, 1
 
         # curve fitting arguments
+        self.cf_labels = ["l inf", "l1 norm", "l2 norm"]
         self.cf_error, self.cf_line_err = 3, 2
+        self.cf_metric = 0
 
         # create dialog
         win = gtk.Window.__init__(self, *args)
@@ -124,7 +126,7 @@ class Vectrabool(gtk.Window):
         label = gtk.Label("Harris kernel size")
         table.attach(label, 2, 3, 3, 4)
         label.show()
-        adj = gtk.Adjustment(self.corn_kernel_size, 3, 7, 2)
+        adj = gtk.Adjustment(self.corn_kernel_size, 1, 7, 2.0)
         adj.connect("value_changed", self.corn_kernel_size_ch)
         scale = gtk.HScale(adj)
         scale.set_digits(0)
@@ -165,6 +167,15 @@ class Vectrabool(gtk.Window):
         table.attach(scale, 5, 6, 1, 2)
         scale.show()
 
+
+        btn = None
+        for i in range(3):
+            btn = gtk.RadioButton(btn, self.cf_labels[i])
+            if i == 0:
+                btn.set_active(True)
+            btn.connect("toggled", self.cf_metric_ch, i)
+            table.attach(btn, 4, 6, 2+i, 3+i)
+            btn.show()
         # some color detection parameters
 
         # display preview
@@ -238,13 +249,16 @@ class Vectrabool(gtk.Window):
         self.corn_corner_thresh = val.value
 
     def corn_block_size_ch(self, val):
-        self.corn_block_size = val
+        self.corn_block_size = val.value
 
     def corn_kernel_size_ch(self, val):
         self.corn_kernel_size = val.value
 
     def corn_kfree_ch(self, val):
         self.corn_kfree = val.value
+
+    def cf_metric_ch(self, widget, data=None):
+        self.cf_metric = data
 
     def cf_error_ch(self, val):
         self.cf_error = val.value
@@ -260,7 +274,10 @@ class Vectrabool(gtk.Window):
         self.update_contours_image()
 
         # update corners image
-        self.update_corners_image(self.preview_size)
+        self.update_corners_image()
+
+        # update curve fit image
+        self.update_curve_fit_image()
 
         pdb.gimp_message("Everything is done")
 
@@ -297,14 +314,14 @@ class Vectrabool(gtk.Window):
         # update the contour image in gtk
         self.img_contours.set_from_pixbuf(img_pixbuf)
 
-    def update_corners_image(self, img_size):
+    def update_corners_image(self):
 
         # in case the svg image doesn't exist or is outdated we update it
         self.update_svg_image()
 
         # reset pixel buffer
         corn_img_pixbuf = self.img_corners.get_pixbuf()
-        corn_img_pixbuf.fill(0xffffffff)
+        # corn_img_pixbuf.fill(0xffffffff)
         self.img_contours.get_pixbuf().copy_area(0, 0, self.preview_size[0], self.preview_size[1], corn_img_pixbuf, 0, 0)
 
         # create red pixel
@@ -312,17 +329,20 @@ class Vectrabool(gtk.Window):
         red_pixel.fill(0xff000000)
 
         # corners computation and display
+
+        # pdb.gimp_message("block size: %d, kernel size: %d" % (self.corn_block_size, self.corn_kernel_size))
+
         for idx in range(len(self.svg_image)):
             # find corners
-            pdb.gimp_message("Finding corners of " + str(idx))
+            # pdb.gimp_message("Finding corners of " + str(idx))
 
             elem = self.svg_image[idx]
 
             elem.find_corners(
                 float(self.corn_cluster_thresh) / 100.0,
                 float(self.corn_corner_thresh) / 100.0,
-                self.corn_block_size,
-                self.corn_kernel_size,
+                int(self.corn_block_size),
+                int(self.corn_kernel_size),
                 float(self.corn_kfree) / 100.0)
 
             for corner in elem.get_corners():
@@ -336,6 +356,43 @@ class Vectrabool(gtk.Window):
                 red_pixel.copy_area(0, 0, 1, 1, corn_img_pixbuf, x, y)
 
         self.img_corners.set_from_pixbuf(corn_img_pixbuf)
+
+    def update_curve_fit_image(self):
+
+        self.update_svg_image()
+
+        self.update_corners_image()  # this is because the whole image is restarted
+
+        try:
+            curve_fit_pixbuf = self.img_curve_fit.get_pixbuf()
+
+            self.img_contours.get_pixbuf().copy_area(0, 0, self.preview_size[0], self.preview_size[1], curve_fit_pixbuf, 0, 0)
+            curve_fit_pixbuf.fill(0x00000000)
+            # pdb.gimp_message(str(curve_fit_pixbuf.get_pixels_array()))
+
+            white_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 1, 1)
+            white_pixel.fill(0xffffffff)
+
+            for idx in range(len(self.svg_image)):
+
+                self.svg_image[idx].set_curve_fitting_error_metric(self.cf_labels[self.cf_metric])
+                self.svg_image[idx].set_line_threshold(self.cf_error)
+                self.svg_image[idx].set_bezier_threshold(self.cf_line_err)
+                self.svg_image[idx].fit_curves()
+                points = self.svg_image[idx].get_fit_curves()
+
+                for point in points:
+                    x, y = int(point[0]), int(point[1])
+                    if x >= self.preview_size[0] or y >= self.preview_size[1]:
+                        continue
+                    if x < 0 or y < 0:
+                        continue
+                    white_pixel.copy_area(0, 0, 1, 1, curve_fit_pixbuf, x, y)
+
+            self.img_curve_fit.set_from_pixbuf(curve_fit_pixbuf)
+        except Exception as e:
+            pdb.gimp_message(str(e))
+
 
 def coordinate_map(x, y, w1, h1, w2, h2):
     return x * (float(w1) / float(w2)), y * (float(h1) / float(h2))
