@@ -43,19 +43,26 @@ class SVGElement:
         raise Exception("Not implemented")
 
     def filter_points(self):
-        self._filtered_points = SimplePolyFilter(self._raw_data).remove_same()
+        #  self._filtered_points = SimplePolyFilter(self._raw_data).remove_same()
+        self._filtered_points = self._raw_data
 
     def get_filtered_points(self):
+        if len(self._filtered_points) == 0:
+            self.filter_points()
         return self._filtered_points
 
     def find_corners(self, cl_threshold, corn_threshold, block_size, kernel_size, kfree):
+        self.filter_points()
         self._corners += [0] + HarrisCornerDetector(self._filtered_points, cl_threshold, corn_threshold,
                         block_size, kernel_size, kfree).get_corners() + [len(self._filtered_points) - 1]
 
     def get_corners(self):
+        if len(self._corners) == 0:
+            self.find_corners()
         return self._corners
 
     def get_coord_of_corner(self, index):
+        #  return self._filtered_points[index]
         return self._filtered_points[index]
 
     def fit_curves(self):
