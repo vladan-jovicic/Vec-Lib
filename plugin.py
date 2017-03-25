@@ -286,12 +286,12 @@ class Vectrabool(gtk.Window):
 
     def update_svg_image(self):
 
-        # in case the contours image is outdated or doesn't exist (it shoudl always exist) we update it
+        # in case the contours image is outdated or doesn't exist (it should always exist) we update it
         self.update_contours_image()
         self.svg_image = []
 
         # get contours
-        contours = self.cont_det.get_filtered_contours()
+        contours = self.cont_det.get_polygonized_contours()
 
         # svg image creation
         for contour in contours:
@@ -304,9 +304,6 @@ class Vectrabool(gtk.Window):
 
         # update threshold value
         self.cont_det.set_threshold(self.c_threshold)
-
-        # contour detection
-        self.cont_det.detect_contours()
 
         # create a pixel buffer from the output image
         img_pixbuf = gtk.gdk.pixbuf_new_from_array(np.dstack([self.cont_det.get_contour_img()] * 3), gtk.gdk.COLORSPACE_RGB, 8)
