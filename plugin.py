@@ -36,12 +36,14 @@ class Vectrabool(gtk.Window):
         self.img = img
         self.img_size = 0
 
-        self.svg_image = []
+        self.svg_image_polygonized = []
+        self.svg_image_full = []
 
         # contour thresholds
         self.c_threshold = 50
 
         # corner detection arguments
+        self.polygonization_distance = 3
         self.corn_cluster_thresh, self.corn_corner_thresh = 150, 45
         self.corn_block_size, self.corn_kernel_size, self.corn_kfree = 2, 7, 1
 
@@ -98,6 +100,17 @@ class Vectrabool(gtk.Window):
         scale = gtk.HScale(adj)
         scale.set_digits(0)
         table.attach(scale, 3, 4, 0, 1)
+        scale.show()
+
+        # polygonization distance
+        label = gtk.Label("Polygonization distance")
+        table.attach(label, 0, 1, 1, 2)
+        label.show()
+        adj = gtk.Adjustment(self.polygonization_distance, 0, 50, 1)
+        adj.connect("value_changed", self.polygonization_distance_ch)
+        scale = gtk.HScale(adj)
+        scale.set_digits(0)
+        table.attach(scale, 1, 2, 1, 2)
         scale.show()
 
         # corner threshold
@@ -245,6 +258,9 @@ class Vectrabool(gtk.Window):
     def corn_cluster_thresh_ch(self, val):
         self.corn_cluster_thresh = val.value
 
+    def polygonization_distance_ch(self, val):
+        self.polygonization_distance = val.value
+
     def corn_corn_thresh_ch(self, val):
         self.corn_corner_thresh = val.value
 
@@ -270,14 +286,16 @@ class Vectrabool(gtk.Window):
         # run this shit
         pdb.gimp_message('Apply clicked')
 
-        # update contour detection
-        self.update_contours_image()
+        try:# update contour detection
+            self.update_contours_image()
 
-        # update corners image
-        self.update_corners_image()
+            # update corners image
+            self.update_corners_image()
 
-        # update curve fit image
-        self.update_curve_fit_image()
+            # update curve fit image
+            self.update_curve_fit_image()
+        except Exception as e:
+            pdb.gimp_message(str(e))
 
         pdb.gimp_message("Everything is done")
 
@@ -288,17 +306,27 @@ class Vectrabool(gtk.Window):
 
         # in case the contours image is outdated or doesn't exist (it should always exist) we update it
         self.update_contours_image()
-        self.svg_image = []
+        self.svg_image_full = []
+        self.svg_image_polygonized = []
 
         # get contours
-        contours = self.cont_det.get_polygonized_contours()
+        pdb.gimp_message(self.polygonization_distance)
+        contours_polygonized = self.cont_det.get_polygonized_contours(self.polygonization_distance)
+        contours_full = self.cont_det.get_full_contours()
 
         # svg image creation
-        for contour in contours:
+        for contour in contours_polygonized:
             tmp_list = []
             for point in contour:
                 tmp_list.append(point[0])
-            self.svg_image.append(SVGElement(raw_data=tmp_list))
+            self.svg_image_polygonized.append(SVGElement(raw_data=tmp_list))
+
+        for contour in contours_full:
+            tmp_list = []
+            for point in contour:
+                tmp_list.append(point[0])
+            pdb.gimp_message(tmp_list)
+            self.svg_image_full.append(SVGElement(raw_data=tmp_list))
 
     def update_contours_image(self):
 
@@ -322,18 +350,20 @@ class Vectrabool(gtk.Window):
         self.img_contours.get_pixbuf().copy_area(0, 0, self.preview_size[0], self.preview_size[1], corn_img_pixbuf, 0, 0)
 
         # create red pixel
-        red_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 1, 1)
+        red_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 2, 2)
         red_pixel.fill(0xff000000)
 
         # corners computation and display
 
         # pdb.gimp_message("block size: %d, kernel size: %d" % (self.corn_block_size, self.corn_kernel_size))
 
-        for idx in range(len(self.svg_image)):
+        svg_image = self.svg_image_polygonized
+
+        for idx in range(len(svg_image)):
             # find corners
             # pdb.gimp_message("Finding corners of " + str(idx))
 
-            elem = self.svg_image[idx]
+            elem = svg_image[idx]
 
             elem.find_corners(
                 float(self.corn_cluster_thresh) / 100.0,
@@ -356,8 +386,6 @@ class Vectrabool(gtk.Window):
 
     def update_curve_fit_image(self):
 
-        self.update_svg_image()
-
         self.update_corners_image()  # this is because the whole image is restarted
 
         try:
@@ -370,13 +398,15 @@ class Vectrabool(gtk.Window):
             white_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 1, 1)
             white_pixel.fill(0xffffffff)
 
-            for idx in range(len(self.svg_image)):
+            svg_image = self.svg_image_full
 
-                self.svg_image[idx].set_curve_fitting_error_metric(self.cf_labels[self.cf_metric])
-                self.svg_image[idx].set_line_threshold(self.cf_error)
-                self.svg_image[idx].set_bezier_threshold(self.cf_line_err)
-                self.svg_image[idx].fit_curves()
-                points = self.svg_image[idx].get_fit_curves()
+            for idx in range(len(svg_image)):
+
+                svg_image[idx].set_curve_fitting_error_metric(self.cf_labels[self.cf_metric])
+                svg_image[idx].set_line_threshold(self.cf_error)
+                svg_image[idx].set_bezier_threshold(self.cf_line_err)
+                svg_image[idx].fit_curves()
+                points = svg_image[idx].get_fit_curves()
 
                 for point in points:
                     x, y = int(point[0]), int(point[1])

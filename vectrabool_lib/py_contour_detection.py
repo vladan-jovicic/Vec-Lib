@@ -37,6 +37,12 @@ class ContourDetector:
 
         return self.polygonized_contours
 
+    def get_full_contours(self):
+        if self.deprecated or self.full_contours is None:
+            self.detect_contours()
+
+        return self.full_contours
+
     def get_filtered_contours(self):
         if self.contours is None or self.filtered_contours is None:
             self.detect_contours()
