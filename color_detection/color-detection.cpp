@@ -26,21 +26,14 @@ bool fstcheckfct(Point2f p, std:vector<Point2f> contour)
  * pt is the point to check
  *
  */
-int main()
+
+void readinput(std::vector<std::vector<Point2f>> vec2,std::vector<array<int[4]>> hierarchy;,int* number_of_contour)
 {
-	std::vector<Point2f> vec;	// vec is a contour, a vector of points
-	std::vector<vector<Point2f>> vec2; // vec2 is a vector of contours
-	std::vector<array<int,4>> hierarchy;
-	
-	FILE *fout=fopen("colors.txt","w");
-	
-	bool doubleSharp=false, endContour=false;
-	double res, ey, ex, sy, sx, ry, rx, alpha=1, x, y;			//result
-	//ha: first step: we need to have an array contour filled with the contour according to the drawing on my feuille.
-	int*** contour, character, N;
-	int number_of_contour=0;
-	//TODO
-	while(!doubleSharp)
+  char character;
+  bool endContour = false;
+  bool doubleSharp = false;
+  std::vector<Point2f> vec;	// vec is a contour, a vector of points
+  while(!doubleSharp)
 	{
 		while(!endContour)
 		{
@@ -60,6 +53,7 @@ int main()
 			}
 		}
 		vec2.push_back(vec);
+		*number_of_contour ++;
 		endContour=false;
 		vec.clear();
 	}
@@ -67,12 +61,27 @@ int main()
 	for(int i=0;i<N;i++)
 	{
 		std::array<int,4> a;
-		for(int(j=0;j<4;j++))
+		for(int j = 0;j < 4;j++)
 			scanf("%d",&(a[j]));
 		hierarchy.push_back(a);
 	} /* hierarchy is read */
+	return (vec2, hierarchy);
+}
 
-	//ha: end of first step: contour is filled with the data.
+int main()
+{
+	std::vector<vector<Point2f>> vec2; // vec2 is a vector of contours
+	std::vector<array<int[4]>> hierarchy;
+	
+	FILE *fout=fopen("colors.txt","w");
+	double res, ey, ex, sy, sx, ry, rx, alpha=1, x, y;			//result
+	//first step: we need to have an array contour filled with the contour according to the drawing on my feuille.
+	int*** contour;
+	int number_of_contour=0;
+	//TODO
+	
+	readinput(vec2, hierarchy, &number_of_contour);
+	//end of first step: contour is filled with the data.
 
 
 	//TODO
