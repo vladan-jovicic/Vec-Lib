@@ -325,7 +325,6 @@ class Vectrabool(gtk.Window):
             tmp_list = []
             for point in contour:
                 tmp_list.append(point[0])
-            pdb.gimp_message(tmp_list)
             self.svg_image_full.append(SVGElement(raw_data=tmp_list))
 
     def update_contours_image(self):
