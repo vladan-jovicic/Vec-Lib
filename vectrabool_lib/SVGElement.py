@@ -43,12 +43,33 @@ class SVGElement:
     def add_circle(self, circle):
         self._circles.append(circle)
 
-    def export_to_svg(self, file_name):
-        """
-        writes bezier curves to string file
-        :return:
-        """
-        raise Exception("Not implemented")
+    def export_to_svg(self):
+		bool_first = True
+		width = 0
+		height = 0
+		svg = ""
+		
+        for idx, b_curve in enumerate(self._bezier_curves):
+			if(bool_first):
+				svg = svg + '<path d="M' + str(b_curve.controlPoints[0][0]) + ',' + str(
+				b_curve.controlPoints[0][1])
+				bool_first = False
+			else:
+				if(svg.element._bezier_curves[idx-1].controlPoints[3] != b_curve.controlPoint[0]):
+					svg = svg + ' L' + str(b_curve.controlPoint[0][0]) + ',' str(b_curve.controlPoints[0][1])
+				
+			svg = svg + ' C' + str(b_curve.controlPoints[1][0]) + ',' + str(
+				b_curve.controlPoints[1][1]) + ' ' + str(b_curve.controlPoints[2][0]) + ',' + str(
+				b_curve.controlPoints[2][1]) + ' ' + str(b_curve.controlPoints[3][0]) + ',' + str(
+				b_curve.controlPoints[3][1])
+			width = max(width, b_curve.controlPoints[0][0], b_curve.controlPoints[1][0],
+						b_curve.controlPoints[2][0], b_curve.controlPoints[3][0])
+			height = max(height, b_curve.controlPoints[0][1], b_curve.controlPoints[1][1],
+						 b_curve.controlPoints[2][1], b_curve.controlPoints[3][1])
+						 
+		if(bool_first == False):
+			svg = svg + '" fill="rgb(' + ','.join(map(str,self.color)) + ')"/>\n'
+        return svg, height, width
 
     def filter_points(self):
         #  self._filtered_points = SimplePolyFilter(self._raw_data).remove_same()

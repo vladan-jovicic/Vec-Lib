@@ -35,6 +35,23 @@ class SVGImage:
         f = open(filename.split('.')[0] + ".svg", "w")
         f.write(svg)
 
+	def export_to_file_2(self,filename):
+		all_curves = []
+        height, width, svg = 0, 0, ""
+        for svg_elem in self.elements:
+            s_aux, h_aux, w_aux = svg_elem.export_to_svg()
+			svg = svg + s_aux
+			height = max(height,h_aux)
+			width = max(width,w_aux)
+        height += 10
+        width += 10
+        svg = '<?xml version="1.0" encoding="utf-8"?>\n' + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + str(
+            width) + '" height="' + str(height) + '">\n' + svg + "</svg>"
+        # print svg
+        f = open(filename.split('.')[0] + ".svg", "w")
+        f.write(svg)
+
+		
     def export(self, filename):
         dwg = Drawing(filename)
         for svg_elem in self.elements:
@@ -49,6 +66,30 @@ class SVGImage:
                 for pt in ct_point:
                     points_as_string += " " + str(int(pt[0])) + " " + str(int(pt[1]))
                 path.push("C" + points_as_string)
+            dwg.add(path)
+        dwg.save()
+	
+	def export_2(self, filename, width_v, height_v):
+        dwg = Drawing(filename, width = width_v, height = height_v)
+        for svg_elem in self.elements:
+            all_b_curves = svg_elem.get_bezier_curves()
+            # move to the first control point
+            ct_point = all_b_curves[0].get_control_points()
+			cursor = ct_point[0]
+            path = Path(d="M " + str(int(ct_point[0][0])) + " " + str(int(ct_point[0][1])) + " ")
+            for b_curve in all_b_curves:
+                ct_point = b_curve.get_control_points()
+				
+				correcting_line = ""
+				if(cursor != ct_point[0]):
+					correcting_line = "L " + str(int(ct_point[0][0])) + " " + str(int(ct_point[0][1]))
+                points_as_string = ""
+                for pt in ct_point[1:]:
+                    points_as_string += " " + str(int(pt[0])) + " " + str(int(pt[1]))
+                path.push(correcting_line + "C" + points_as_string)
+				
+			r,g,b = svg_elem.get_color()
+			path.fill(color=svgwrite.rgb(r,g,b))
             dwg.add(path)
         dwg.save()
 
