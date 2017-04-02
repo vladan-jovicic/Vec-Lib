@@ -1,17 +1,8 @@
 # this file contains class SVGElement representing a particular element for outputting to svg
 # it consists of basic elements: Circles, LineSegments and Bezier curves
 # if it is region, it also contains a definition of coloring
-import sys
-import matplotlib.pyplot as plt
-from vectrabool_lib.BezierCurve import *
-from vectrabool_lib.Circle import *
-from vectrabool_lib.LineSegment import *
-
-from vectrabool_lib.HarrisCornerDetector import *
+from vectrabool_lib.SSCornerDetector import *
 from vectrabool_lib.CurveFitGG import *
-from vectrabool_lib.CircleFit import *
-from vectrabool_lib.LineFit import *
-from vectrabool_lib.PolyLineFilter import *
 
 
 class SVGElement:
@@ -26,6 +17,10 @@ class SVGElement:
         self.cf_error_metric = "linf"
 
         # corner params
+        self.corn_line_thresh = 0.98
+        self.corn_straw_window = 3
+        self.corn_median_thresh = 0.95
+
         self.cluster_threshold, self.corner_threshold = 1.5, 0.45
         self.harris_block_size, self.harris_kernel_size = 2, 7
         self.harris_k_free = 0.01
@@ -48,7 +43,11 @@ class SVGElement:
     def add_circle(self, circle):
         self._circles.append(circle)
 
-    def export_to_svg(self):
+    def export_to_svg(self, file_name):
+        """
+        writes bezier curves to string file
+        :return:
+        """
         raise Exception("Not implemented")
 
     def filter_points(self):
@@ -60,19 +59,15 @@ class SVGElement:
             self.filter_points()
         return self._filtered_points
 
-    def find_corners(self, cl_threshold, corn_threshold, block_size, kernel_size, kfree):
-        self.cluster_threshold, self.corner_threshold = cl_threshold, corn_threshold
-        self.harris_block_size, self.harris_kernel_size = block_size, kernel_size
-        self.harris_k_free = kfree
-        self.filter_points()
-        self._corners += [0] + HarrisCornerDetector(self._filtered_points, self.cluster_threshold,
-                        self.corner_threshold, self.harris_block_size, self.harris_kernel_size,
-                        self.harris_k_free).get_corners() + [len(self._filtered_points) - 1]
+    def find_corners(self, straw_window, median_thresh, line_thresh):
+        self.corn_line_thresh, self.corn_straw_window, self.corn_median_thresh = straw_window, median_thresh, line_thresh
+        if len(self._filtered_points) == 0:
+            self.filter_points()
+        self._corners = SSCornerDetector(self._filtered_points).get_corners()
 
     def get_corners(self):
         if len(self._corners) == 0:
-            self.find_corners(self.cluster_threshold, self.corner_threshold, self.harris_block_size,
-                              self.harris_kernel_size, self.harris_k_free)
+            self.find_corners(self.corn_straw_window, self.corn_median_thresh, self.corn_line_thresh)
         return self._corners
 
     def get_coord_of_corner(self, index):
@@ -85,26 +80,16 @@ class SVGElement:
     def set_line_threshold(self, threshold):
         self._line_threshold = threshold
 
-    def set_curve_fitting_error_metric(self, metric):
-        if "l1" in metric:
-            self.cf_error_metric = "l1"
-        elif "l2" in metric:
-            self.cf_error_metric = "l2"
-        else:
-            self.cf_error_metric = "linf"
-
     def fit_curves(self):
+        self._bezier_curves = []
         for i in range(1, len(self._corners)):
             if self._corners[i] == self._corners[i-1]:
                 continue
-
             temp_points = self._filtered_points[self._corners[i-1]:self._corners[i]+1]
-            line, error = LineFit(temp_points).fit_line()
-            if error < self._line_threshold:
-                self._line_segments.append(line)
-                continue
-
-            self._bezier_curves += CurveFitGG(temp_points, self._b_threshold, self.cf_error_metric).fit_curve()
+            # try to fit with ellipse
+            # pdb.gimp_message("before curve fit")
+            self._bezier_curves += CurveFitGG(temp_points, self._b_threshold).fit_curve()
+            # pdb.gimp_message("after curve fit")
 
     def get_fit_curves(self):
         if len(self._line_segments) + len(self._bezier_curves) == 0:
@@ -112,9 +97,13 @@ class SVGElement:
         ret_points = []
         for idx in range(len(self._line_segments)):
             ret_points = ret_points + self._line_segments[idx].get_points_for_plot()
-
+        # pdb.gimp_message("getting points to draw")
         for idx in range(len(self._bezier_curves)):
-            ret_points = ret_points + self._bezier_curves[idx].get_points_to_draw()
+            # pdb.gimp_message(str(self._bezier_curves[idx].get_control_points()))
+            points_to_draw = self._bezier_curves[idx].get_points_to_draw()
+            ret_points = ret_points + points_to_draw
+
+        # spdb.gimp_message(str(ret_points))
 
         return ret_points
 
@@ -123,83 +112,6 @@ class SVGElement:
 
     def get_bezier_curves(self):
         return self._bezier_curves
-
-    # PART USED FOR DEBUGING
-    # SHOULD BE REMOVED IN FINAL REALEASE
-    def draw_elements(self):
-        """This method draws all basic shapes"""
-        # draw lines
-        for line in self._line_segments:
-            line.plot()
-        for circle in self._circles:
-            circle.plot()
-        for b_curve in self._bezier_curves:
-            b_curve.draw_by_vladan()
-
-    def plot_corners(self, corners=False):
-        """Plot corners
-        This also includes plotting lines
-        """
-        x_axis, y_axis = [], []
-        for point in self._raw_data:
-            x_axis.append(point[0])
-            y_axis.append(point[1])
-        plt.plot(x_axis, y_axis)
-        if not corners:
-            return
-        for corner in self.corners:
-            plt.plot(corner[0], corner[1], 'ro', marker='*')
-
-    def plot_filtered_points(self):
-        x_axis, y_axis = [], []
-        for point in self.filtered_points:
-            x_axis.append(point[0])
-            y_axis.append(point[1])
-        plt.plot(x_axis, y_axis)
-
-    def transform_from_raw_data(self):
-        if self._transformed:
-            return self._transformed
-
-        # firstly we filter points
-        curr_points = self.filtered_points = SimplePolyFilter(self._raw_data).remove_same()
-
-        if len(curr_points) < 2:
-            raise Exception("Contour is not valid")
-
-        # corr_poly = PolyLine(filtered_points)
-
-        # firstly detect corners and say that the first and last points are corners
-        corners = [0] + HarrisCornerDetector(curr_points).get_corners() + [len(curr_points)-1]
-
-        # split current points based on corners
-        # we have at least two points
-        for i in range(1, len(corners)):
-            if corners[i] == corners[i-1]:  # to avoid errors
-                continue
-
-            # debuging part
-            self.corners.append(curr_points[corners[i-1]])
-
-            temp_points = curr_points[corners[i-1]:corners[i]+1]
-            # fit with line
-            line, error = LineFit(temp_points).fit_line()
-            if error <= self._line_threshold:
-                self._line_segments.append(line)
-                continue
-
-            # fit with circle
-            circle, error = CircleFit(temp_points).fit_circle()
-            print("Error when fitting %d points with circle %d" % (error, len(temp_points)))
-            if error <= self._circle_threshold:
-                # here we should check if it is just an arc
-                self._circles.append(circle)
-                continue
-
-            # fit with bezier
-            self._bezier_curves += CurveFitGG(temp_points, self._b_threshold).fit_curve()
-
-        self._transformed = True
 
 
 
