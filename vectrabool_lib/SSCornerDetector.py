@@ -8,17 +8,25 @@ from vectrabool_lib.PolyLine import *
 
 
 class SSCornerDetector:
-    def __init__(self, line):
-        self.line = line
+    def __init__(self, points):
+        self.points = points
         self.straw_window = 3  # parameter
         self.median_treshold = 0.95
         self.line_treshold = 0.98
 
+    def set_straw_window(self, straw_window):
+        self.straw_window = straw_window
+
+    def set_median_threshold(self, m_thres):
+        self.median_treshold = m_thres
+
+    def set_line_threshold(self, l_thres):
+        self.line_treshold = l_thres
+
     def get_corners(self):
 
         # filtering the polylin
-        line_filter = PolyLineFilter(self.line)
-        points = line_filter.resample_filter()
+        points = self.points
         # points = self.line.get_points()
         # for debug
         # new_line = PolyLine(points)
@@ -30,12 +38,12 @@ class SSCornerDetector:
         straws = np.array([])
 
         if len(points) < self.straw_window:  # nothing to compute
-            return points, corners
+            return corners
 
         # compute distances between corresponding points
         for i in range(self.straw_window, len(points) - self.straw_window):
-            point1 = np.array(points[i - self.straw_window])
-            point2 = np.array(points[i + self.straw_window])
+            point1 = points[i - self.straw_window]
+            point2 = points[i + self.straw_window]
             straws = np.append(straws, np.linalg.norm(point1 - point2))
 
         # compute median of straws
@@ -92,7 +100,7 @@ class SSCornerDetector:
 
             idx += 1
 
-        return points, corners
+        return corners
 
     def is_line(self, points, corner1, corner2):
         pt_distance = np.linalg.norm(np.array(points[corner1]) - np.array(points[corner2]))

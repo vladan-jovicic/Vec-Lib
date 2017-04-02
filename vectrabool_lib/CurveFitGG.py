@@ -1,15 +1,57 @@
 import numpy as np
 import math
+from gimpfu import *
 
 from vectrabool_lib.BezierCurve import *
+
+
+def generate_line_points(pt1, pt2, num):
+    num = max(num, 2)
+    points = np.array([])
+    if math.fabs(pt1[0] - pt2[0]) < 0.00001:
+        y = np.linspace(pt1[1], pt2[1], num)
+        for i in range(num):
+            points = np.append(points, [pt1[0], y[i]])
+
+        return points.reshape((num, 2))
+
+    def f(x):
+        k = float(pt2[1] - pt1[1])/float(pt2[0] - pt1[0])
+        return k * float(x - pt1[0]) + pt1[1]
+
+    x_pts = np.linspace(pt1[0], pt2[0], num)
+    y_pts = np.array([f(x) for x in x_pts])
+    for i in range(num):
+        points = np.append(points, [x_pts[i], y_pts[i]])
+    return points.reshape((num, 2))
+
+
+def regenerate_points(points):
+    new_pts = np.array([])
+    for idx in range(1, len(points)):
+        pt1, pt2 = points[idx-1], points[idx]
+        dist = np.linalg.norm(pt1 - pt2)
+        last_size = new_pts.shape[0]
+        if dist > 3.0:
+            # generate some new points
+            num_points = int(dist / 3.0)
+            r_points = generate_line_points(pt1, pt2, num_points)
+            new_pts = np.append(new_pts, r_points)
+            new_pts = new_pts.reshape((last_size+r_points.shape[0], 2))
+        else:
+            new_pts = np.append(new_pts, pt1)
+            new_pts = new_pts.reshape((last_size+1, 2))
+    last_size = new_pts.shape[0]
+    new_pts = np.append(new_pts, points[len(points)-1])
+    new_pts = new_pts.reshape((last_size+1, 2))
+    return new_pts
 
 
 class CurveFitGG:
     def __init__(self, d, error, norm="linf"):
         # i will assume that this is a list of tuples
-        self._dpoints = []
-        for point in d:
-            self._dpoints.append(np.array([point[0], point[1]]))
+        # firstly interpolate this using given points and regenerate it
+        self._dpoints = regenerate_points(d)
         self._error = error
         self._reparam_max_iter = 4
         self._debug = True
@@ -20,7 +62,6 @@ class CurveFitGG:
         of an object"""
         n_pts = len(self._dpoints)
         t_hat1 = self.compute_left_tangent(0)
-
         t_hat2 = self.compute_right_tangent(n_pts - 1)
         b_curve = self.fit_cubic(0, len(self._dpoints) - 1, t_hat1, t_hat2)
         return b_curve
@@ -40,7 +81,6 @@ class CurveFitGG:
 
         u = self.chord_length_parametrize(first, last)
         b_curve = self.generate_bezier_curve(first, last, u, t_hat1, t_hat2)
-
         max_error, split_point = self.compute_max_error(first, last, b_curve, u)
 
         # print("Max error %f" % max_error)
@@ -48,6 +88,7 @@ class CurveFitGG:
             return [b_curve]
 
         iteration_error = self._error ** 2
+
         if max_error < iteration_error:
             for i in range(self._reparam_max_iter):
                 u_prime = self.reparametrize(first, last, u, b_curve)
@@ -203,51 +244,9 @@ class CurveFitGG:
 
         return t_hat_center
 
-    def compute_max_error(self, first, last, b_curve, u):
-        """
-        Computes error of fitting
-        It uses either l1, l2, or linf norm
-        """
-        if self.norm == "l1":
-            return self.compute_l1_max_error(first, last, b_curve, u)
-        elif self.norm == "l2":
-            return self.compute_l2_max_error(first, last, b_curve, u)
-        else:
-            return self.compute_linf_max_error(first, last, b_curve, u)
-
-    def compute_l1_max_error(self, first, last, b_curve, u):
-        error = 0.0
-        split_point = (last - first + 1) // 2
-
-        for i in range(first + 1, last):
-            pt_p = b_curve.get_value(u[i - first])
-            pt_v = np.array(pt_p) - self._dpoints[i]
-            dist = math.fabs(pt_v[0]) + math.fabs(pt_v[1])
-
-            if dist >= error:
-                error = dist
-                split_point = i
-
-        return error, split_point
-
-    def compute_l2_max_error(self, first, last, b_curve, u):
-        """Computes average error"""
-        total_err, max_dist = 0.0, 0.0
-        split_point = (last - first + 1) // 2
-
-        for i in range(first + 1, last):
-            pt_p = b_curve.get_value(u[i - first])
-            pt_v = np.array(pt_p) - self._dpoints[i]
-            dist = math.sqrt(pt_v[0] ** 2 + pt_v[1] ** 2)
-            total_err += dist
-
-            if dist >= max_dist:
-                max_dist = dist
-                split_point = i
-
-        return float(total_err)/float(last - first + 1), split_point
-
-    def compute_linf_max_error(self, first, last, b_curve, u):
+    def compute_max_error(self, first, last, b_curve, u):  # use different error, this one is bullshit
+        """Given a set of digitalized points and its parametrization,
+        compute the maximum distance over the points"""
         max_err, max_dist = 0.0, 0.0
         split_point = (last - first + 1) // 2
 
@@ -261,20 +260,3 @@ class CurveFitGG:
                 split_point = i
 
         return max_dist, split_point
-
-    # def compute_max_error(self, first, last, b_curve, u):  # use different error, this one is bullshit
-    #     """Given a set of digitalized points and its parametrization,
-    #     compute the maximum distance over the points"""
-    #     max_err, max_dist = 0.0, 0.0
-    #     split_point = (last - first + 1) // 2
-    #
-    #     for i in range(first + 1, last):
-    #         pt_p = b_curve.get_value(u[i - first])
-    #         pt_v = np.array(pt_p) - self._dpoints[i]
-    #         dist = pt_v[0] ** 2 + pt_v[1] ** 2
-    #
-    #         if dist >= max_dist:
-    #             max_dist = dist
-    #             split_point = i
-    #
-    #     return max_dist, split_point

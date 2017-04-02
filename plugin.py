@@ -9,27 +9,25 @@ import gtk
 from gobject import timeout_add
 import traceback
 
+from vectrabool_lib.SVGImage import *
 from vectrabool_lib.py_contour_detection import *
-from vectrabool_lib.PolyLineFilter import *
-from vectrabool_lib.SVGElement import *
 from vectrabool_lib.CurveFitGG import *
 from vectrabool_lib.SVGElement import *
 
 
-def create_img_white_bckg(img_size):
-    img = gimp.Image(img_size[0], img_size[1], RGB)
-
-    background = gimp.Layer(img, "Background", img_size[0], img_size[1], RGB_IMAGE, 100, NORMAL_MODE)
-
-    pixel_region = background.get_pixel_rgn(0, 0, img_size[0], img_size[1], True, False)
-
-    back_color = array("B", '\xFF' * img_size[0] * img_size[1] * pixel_region.bpp)
-
-    pixel_region[0:img_size[0], 0:img_size[1]] = back_color.tostring()
-    background.flush()
-    img.add_layer(background)
-    return img
-
+# def create_img_white_bckg(img_size):
+#     img = gimp.Image(img_size[0], img_size[1], RGB)
+#
+#     background = gimp.Layer(img, "Background", img_size[0], img_size[1], RGB_IMAGE, 100, NORMAL_MODE)
+#
+#     pixel_region = background.get_pixel_rgn(0, 0, img_size[0], img_size[1], True, False)
+#
+#     back_color = array("B", '\xFF' * img_size[0] * img_size[1] * pixel_region.bpp)
+#
+#     pixel_region[0:img_size[0], 0:img_size[1]] = back_color.tostring()
+#     background.flush()
+#     img.add_layer(background)
+#     return img
 
 class Vectrabool(gtk.Window):
     def __init__(self, img, *args):
@@ -44,6 +42,8 @@ class Vectrabool(gtk.Window):
 
         # corner detection arguments
         self.polygonization_distance = 3
+
+        self.corn_straw_window, self.corn_median_thresh, self.corn_line_thresh = 3, 95, 98
         self.corn_cluster_thresh, self.corn_corner_thresh = 150, 45
         self.corn_block_size, self.corn_kernel_size, self.corn_kfree = 2, 7, 1
 
@@ -51,6 +51,9 @@ class Vectrabool(gtk.Window):
         self.cf_labels = ["l inf", "l1 norm", "l2 norm"]
         self.cf_error, self.cf_line_err = 3, 2
         self.cf_metric = 0
+
+        # final result
+        self.svg_final_image = None
 
         # create dialog
         win = gtk.Window.__init__(self, *args)
@@ -92,21 +95,21 @@ class Vectrabool(gtk.Window):
 
         # now corner detection
         # cluster threshold
-        label = gtk.Label("Cluster threshold")
-        table.attach(label, 2, 3, 0, 1)
-        label.show()
-        adj = gtk.Adjustment(self.corn_cluster_thresh, 100, 200, 1)
-        adj.connect("value_changed", self.corn_cluster_thresh_ch)
-        scale = gtk.HScale(adj)
-        scale.set_digits(0)
-        table.attach(scale, 3, 4, 0, 1)
-        scale.show()
+        # label = gtk.Label("Cluster threshold")
+        # table.attach(label, 2, 3, 0, 1)
+        # label.show()
+        # adj = gtk.Adjustment(self.corn_cluster_thresh, 100, 200, 1)
+        # adj.connect("value_changed", self.corn_cluster_thresh_ch)
+        # scale = gtk.HScale(adj)
+        # scale.set_digits(0)
+        # table.attach(scale, 3, 4, 0, 1)
+        # scale.show()
 
         # polygonization distance
         label = gtk.Label("Polygonization distance")
         table.attach(label, 0, 1, 1, 2)
         label.show()
-        adj = gtk.Adjustment(self.polygonization_distance, 0, 50, 1)
+        adj = gtk.Adjustment(self.polygonization_distance, 1, 10, 1)
         adj.connect("value_changed", self.polygonization_distance_ch)
         scale = gtk.HScale(adj)
         scale.set_digits(0)
@@ -114,48 +117,48 @@ class Vectrabool(gtk.Window):
         scale.show()
 
         # corner threshold
-        label = gtk.Label("Corner threshold")
+        label = gtk.Label("Straw window size")
         table.attach(label, 2, 3, 1, 2)
         label.show()
-        adj = gtk.Adjustment(self.corn_corner_thresh, 0, 100, 1)
-        adj.connect("value_changed", self.corn_corn_thresh_ch)
+        adj = gtk.Adjustment(self.corn_straw_window, 3, 10, 1)
+        adj.connect("value_changed", self.corn_straw_window_ch)
         scale = gtk.HScale(adj)
         scale.set_digits(0)
         table.attach(scale, 3, 4, 1, 2)
         scale.show()
 
         # corner block size
-        label = gtk.Label("Harris block size")
+        label = gtk.Label("Median threshold")
         table.attach(label, 2, 3, 2, 3)
         label.show()
-        adj = gtk.Adjustment(self.corn_block_size, 2, 9, 1)
-        adj.connect("value_changed", self.corn_block_size_ch)
+        adj = gtk.Adjustment(self.corn_median_thresh, 10, 100, 1)
+        adj.connect("value_changed", self.corn_median_thresh_ch)
         scale = gtk.HScale(adj)
         scale.set_digits(0)
         table.attach(scale, 3, 4, 2, 3)
         scale.show()
 
         # corner kernel size
-        label = gtk.Label("Harris kernel size")
+        label = gtk.Label("Line threshold")
         table.attach(label, 2, 3, 3, 4)
         label.show()
-        adj = gtk.Adjustment(self.corn_kernel_size, 1, 7, 2.0)
-        adj.connect("value_changed", self.corn_kernel_size_ch)
+        adj = gtk.Adjustment(self.corn_line_thresh, 10, 100, 1)
+        adj.connect("value_changed", self.corn_line_thresh_ch)
         scale = gtk.HScale(adj)
         scale.set_digits(0)
         table.attach(scale, 3, 4, 3, 4)
         scale.show()
 
-        # corner kfree
-        label = gtk.Label("Harris kfree parameter")
-        table.attach(label, 2, 3, 4, 5)
-        label.show()
-        adj = gtk.Adjustment(self.corn_kfree, 1, 10, 1)
-        adj.connect("value_changed", self.corn_kfree_ch)
-        scale = gtk.HScale(adj)
-        scale.set_digits(0)
-        table.attach(scale, 3, 4, 4, 5)
-        scale.show()
+        # # corner kfree
+        # label = gtk.Label("Harris kfree parameter")
+        # table.attach(label, 2, 3, 4, 5)
+        # label.show()
+        # adj = gtk.Adjustment(self.corn_kfree, 1, 10, 1)
+        # adj.connect("value_changed", self.corn_kfree_ch)
+        # scale = gtk.HScale(adj)
+        # scale.set_digits(0)
+        # table.attach(scale, 3, 4, 4, 5)
+        # scale.show()
 
         # boring
         # curve fitting
@@ -180,15 +183,14 @@ class Vectrabool(gtk.Window):
         table.attach(scale, 5, 6, 1, 2)
         scale.show()
 
-
-        btn = None
-        for i in range(3):
-            btn = gtk.RadioButton(btn, self.cf_labels[i])
-            if i == 0:
-                btn.set_active(True)
-            btn.connect("toggled", self.cf_metric_ch, i)
-            table.attach(btn, 4, 6, 2+i, 3+i)
-            btn.show()
+        # btn = None
+        # for i in range(3):
+        #     btn = gtk.RadioButton(btn, self.cf_labels[i])
+        #     if i == 0:
+        #         btn.set_active(True)
+        #     btn.connect("toggled", self.cf_metric_ch, i)
+        #     table.attach(btn, 4, 6, 2+i, 3+i)
+        #     btn.show()
         # some color detection parameters
 
         # display preview
@@ -261,17 +263,14 @@ class Vectrabool(gtk.Window):
     def polygonization_distance_ch(self, val):
         self.polygonization_distance = val.value
 
-    def corn_corn_thresh_ch(self, val):
-        self.corn_corner_thresh = val.value
+    def corn_straw_window_ch(self, val):
+        self.corn_straw_window = val.value
 
-    def corn_block_size_ch(self, val):
-        self.corn_block_size = val.value
+    def corn_median_thresh_ch(self, val):
+        self.corn_median_thresh = val.value
 
-    def corn_kernel_size_ch(self, val):
-        self.corn_kernel_size = val.value
-
-    def corn_kfree_ch(self, val):
-        self.corn_kfree = val.value
+    def corn_line_thresh_ch(self, val):
+        self.corn_line_thresh = val.value
 
     def cf_metric_ch(self, widget, data=None):
         self.cf_metric = data
@@ -286,7 +285,7 @@ class Vectrabool(gtk.Window):
         # run this shit
         pdb.gimp_message('Apply clicked')
 
-        try:# update contour detection
+        try:  # update contour detection
             self.update_contours_image()
 
             # update corners image
@@ -325,7 +324,7 @@ class Vectrabool(gtk.Window):
             tmp_list = []
             for point in contour:
                 tmp_list.append(point[0])
-            pdb.gimp_message(tmp_list)
+            # pdb.gimp_message(tmp_list)
             self.svg_image_full.append(SVGElement(raw_data=tmp_list))
 
     def update_contours_image(self):
@@ -346,7 +345,7 @@ class Vectrabool(gtk.Window):
 
         # reset pixel buffer
         corn_img_pixbuf = self.img_corners.get_pixbuf()
-        # corn_img_pixbuf.fill(0xffffffff)
+        corn_img_pixbuf.fill(0xffffffff)
         self.img_contours.get_pixbuf().copy_area(0, 0, self.preview_size[0], self.preview_size[1], corn_img_pixbuf, 0, 0)
 
         # create red pixel
@@ -361,16 +360,13 @@ class Vectrabool(gtk.Window):
 
         for idx in range(len(svg_image)):
             # find corners
-            # pdb.gimp_message("Finding corners of " + str(idx))
 
             elem = svg_image[idx]
 
             elem.find_corners(
-                float(self.corn_cluster_thresh) / 100.0,
-                float(self.corn_corner_thresh) / 100.0,
-                int(self.corn_block_size),
-                int(self.corn_kernel_size),
-                float(self.corn_kfree) / 100.0)
+                self.corn_straw_window,
+                float(self.corn_median_thresh) / 100.0,
+                float(self.corn_line_thresh) / 100.0)
 
             for corner in elem.get_corners():
                 point = elem.get_coord_of_corner(corner)
@@ -392,33 +388,70 @@ class Vectrabool(gtk.Window):
             curve_fit_pixbuf = self.img_curve_fit.get_pixbuf()
 
             self.img_contours.get_pixbuf().copy_area(0, 0, self.preview_size[0], self.preview_size[1], curve_fit_pixbuf, 0, 0)
-            curve_fit_pixbuf.fill(0x00000000)
+            curve_fit_pixbuf.fill(0x000000ff)
             # pdb.gimp_message(str(curve_fit_pixbuf.get_pixels_array()))
 
             white_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 1, 1)
             white_pixel.fill(0xffffffff)
+            red_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 1, 1)
+            red_pixel.fill(0xff0000ff)
+            green_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 1, 1)
+            green_pixel.fill(0x00ff00ff)
+            blue_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 1, 1)
+            blue_pixel.fill(0x0000ffff)
 
-            svg_image = self.svg_image_full
+            defined_colors = [white_pixel, red_pixel, green_pixel, blue_pixel]
+            color_cnt = 0
 
+            svg_image = self.svg_image_polygonized
+            # pdb.gimp_message("Num of elements: " + str(len(svg_image)))
             for idx in range(len(svg_image)):
-
-                svg_image[idx].set_curve_fitting_error_metric(self.cf_labels[self.cf_metric])
-                svg_image[idx].set_line_threshold(self.cf_error)
+                pdb.gimp_message(str(idx))
+                # pdb.gimp_message(str(svg_image[idx].get_filtered_points()))
                 svg_image[idx].set_bezier_threshold(self.cf_line_err)
+                # pdb.gimp_message("fitting " + str(idx))
                 svg_image[idx].fit_curves()
+                # pdb.gimp_message("after fitting " + str(idx))
                 points = svg_image[idx].get_fit_curves()
-
+                # pdb.gimp_message("after get curves, before loop")
                 for point in points:
-                    x, y = int(point[0]), int(point[1])
+                    if math.isnan(point[0]) or math.isnan(point[1]):
+                        continue
+
+                    # pdb.gimp_message("Point: " + str(point))
+                    x, y = int(point[0]), int(point[1])  # why do I get negative values? why is there Nan value
+
                     if x >= self.preview_size[0] or y >= self.preview_size[1]:
                         continue
                     if x < 0 or y < 0:
                         continue
-                    white_pixel.copy_area(0, 0, 1, 1, curve_fit_pixbuf, x, y)
-
+                    # pdb.gimp_message("before copy area")
+                    defined_colors[color_cnt].copy_area(0, 0, 1, 1, curve_fit_pixbuf, x, y)
+                    # pdb.gimp_message("after copy area")
+                color_cnt = (color_cnt + 1) % 4
+                # pdb.gimp_message("after loop")
+                # filter_points = svg_image[idx].get_filtered_points()
+                # for point in filter_points:
+                #     x, y = int(point[0]), int(point[1])
+                #     if x >= self.preview_size[0] or y >= self.preview_size[1]:
+                #         continue
+                #     if x < 0 or y < 0:
+                #         continue
+                #
+                #     defined_colors[color_cnt].copy_area(0, 0, 1, 1, curve_fit_pixbuf, x, y)
+                # color_cnt = (color_cnt + 1) % 4
+            # pdb.gimp_message("before copying")
             self.img_curve_fit.set_from_pixbuf(curve_fit_pixbuf)
+            # pdb.gimp_message("after copying")
+            # SVGImage(svg_image).export("output")
+            # pdb.gimp_message("after output")
+            self.export_to_svg(svg_image)
         except Exception as e:
             pdb.gimp_message(str(e))
+
+    def export_to_svg(self, svg_image):
+        self.svg_final_image = SVGImage(svg_image)
+        self.svg_final_image.export_to_file("output")
 
 
 def coordinate_map(x, y, w1, h1, w2, h2):
