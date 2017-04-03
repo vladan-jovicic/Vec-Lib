@@ -27,7 +27,7 @@ class SVGElement:
         # self.harris_k_free = 0.01
 
         # color detection part
-        self.color = (0, 0, 0)
+        self.color = (100, 0, 0)
 
     def get_raw_data(self):
         return self._raw_data
@@ -53,8 +53,8 @@ class SVGElement:
                       ',' + str(b_curve.controlPoints[0][1])
                 bool_first = False
             else:
-                if self._bezier_curves[idx-1].controlPoints[3] != b_curve.controlPoint[0] :
-                    svg = svg + ' L' + str(b_curve.controlPoint[0][0]) + \
+                if self._bezier_curves[idx-1].controlPoints[3] != b_curve.controlPoints[0]:
+                    svg = svg + ' L' + str(b_curve.controlPoints[0][0]) + \
                           ',' + str(b_curve.controlPoints[0][1])
 
             svg += ' C' + str(b_curve.controlPoints[1][0]) + ',' + \
@@ -110,6 +110,8 @@ class SVGElement:
             if self._corners[i] == self._corners[i-1]:
                 continue
             temp_points = self._filtered_points[self._corners[i-1]:self._corners[i]+1]
+            if len(temp_points) <= 1:
+                continue
             # try to fit with ellipse
             # pdb.gimp_message("before curve fit")
             self._bezier_curves += CurveFitGG(temp_points, self._b_threshold).fit_curve()
