@@ -31,11 +31,8 @@ class ContourDetector:
         return self.simple_contours
 
     def get_polygonized_contours(self, distance):
-        if self.deprecated:
-            self.detect_contours()
-
-        if self.polygonized_contours is None and self.current_poly_distance != distance:
-            self.polygonized_contours = [cv2.approxPolyDP(cnt, distance, True) for cnt in self.simple_contours]
+        pdb.gimp_message("Polygonization")
+        self.polygonized_contours = [cv2.approxPolyDP(cnt, distance, True) for cnt in self.simple_contours]
 
         # return ContoursFilter(self.polygonized_contours).get_filtered_contour()
 
@@ -48,30 +45,25 @@ class ContourDetector:
         return self.full_contours
 
     def get_hierarchy(self):
-        if self.hierarchy is None or self.deprecated:
-            self.detect_contours()
         return self.hierarchy
 
     def get_contour_img(self):
-        if self.contours_img is None or self.deprecated:
-            self.detect_contours()
         return self.contours_img
 
     def detect_contours(self):
-        if self.full_contours is None or self.simple_contours is None or self.deprecated:
-            blurred = cv2.GaussianBlur(self.src, (self.kernel_size, self.kernel_size), self.sigma)
+        pdb.gimp_message("detecting contours")
+        blurred = cv2.GaussianBlur(self.src, (self.kernel_size, self.kernel_size), self.sigma)
 
-            # apply canny detector
-            detected_edges = cv2.Canny(blurred, self.threshold, self.threshold * self.ratio, apertureSize=self.apertureSize, L2gradient=True)
+        # apply canny detector
+        detected_edges = cv2.Canny(blurred, self.threshold, self.threshold * self.ratio, apertureSize=self.apertureSize, L2gradient=True)
 
-            if self.use_dilate:
-                element = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3), (1, 1))
-                detected_edges = cv2.dilate(detected_edges, element)
+        if self.use_dilate:
+            element = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3), (1, 1))
+            detected_edges = cv2.dilate(detected_edges, element)
 
-            self.contours_img, self.simple_contours, self.hierarchy = cv2.findContours(detected_edges.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_TC89_KCOS)
-            # pdb.gimp_message(self.hierarchy)
-            _, self.full_contours, _ = cv2.findContours(detected_edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-            self.deprecated = False
+        self.contours_img, self.simple_contours, self.hierarchy = cv2.findContours(detected_edges.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_TC89_KCOS)
+        # pdb.gimp_message(self.hierarchy)
+        _, self.full_contours, _ = cv2.findContours(detected_edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
     def read_image(self, preview_size):
         try:
@@ -79,6 +71,14 @@ class ContourDetector:
             self.contours_img = np.zeros(self.src.shape, dtype=self.src.dtype)
         except IOError as e:
             print(str(e))
+
+    def get_image(self):
+        return self.src
+
+    def reset(self):
+        self.full_contours = None
+        self.simple_contours = None
+        self.deprecated = True
 
     # don't use
     def get_image_size(self):

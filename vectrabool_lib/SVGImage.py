@@ -2,14 +2,35 @@
 from vectrabool_lib.SVGElement import *
 from svgwrite import Drawing
 from svgwrite.path import Path
+import cv2
 
+from gimpfu import *
 
 class SVGImage:
-    def __init__(self, elements=None):
+    def __init__(self, elements=None, hierarchy=None):
         self.elements = elements
+        self.contours_hierarchy = hierarchy
 
     def create_from_elements(self, elements):
         self.elements = elements
+
+    def set_hierarchy(self, hierarchy):
+        self.contours_hierarchy = hierarchy
+
+    def get_order_of_output(self):
+        order = []
+        for idx in range(len(self.elements)):
+            if self.contours_hierarchy[0][idx][3] != -1:
+                continue
+            # take contours that do not have parents
+            order.append((self.contours_hierarchy[0][idx][0], idx))
+
+        oreder = sorted(order)
+
+        return order
+
+        # check the last one
+        # if self.contours_hierarchy[0][len(self.elements)][3] != -1 &&
 
     def export_to_file(self, filename):
         all_curves = []
@@ -38,11 +59,17 @@ class SVGImage:
     def export_to_file_2(self, filename):
         all_curves = []
         height, width, svg = 0, 0, ""
-        for svg_elem in self.elements:
+        for idx in range(len(self.elements)-1, 0, -1):
+            svg_elem = self.elements[idx]
+            # if cv2.contourArea(np.array(svg_elem.get_filtered_points()), True) < 0 and self.contours_hierarchy[0][idx][2] != -1:
+            #     continue
+            if self.contours_hierarchy[0][idx][3] != -1:
+                continue
+            # pdb.gimp_message("Printing element " + str(idx) + " with color " + str(svg_elem.get_color()))
             s_aux, h_aux, w_aux = svg_elem.export_to_svg()
             svg = svg + s_aux
-            height = max(height,h_aux)
-            width = max(width,w_aux)
+            height = max(height, h_aux)
+            width = max(width, w_aux)
         height += 10
         width += 10
         svg = '<?xml version="1.0" encoding="utf-8"?>\n' + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + str(

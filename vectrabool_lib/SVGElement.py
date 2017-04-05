@@ -139,6 +139,9 @@ class SVGElement:
     def get_bezier_curves(self):
         return self._bezier_curves
 
+    def set_color(self, color):
+        self.color = color
+
     def get_color(self):
         return self.color
 
