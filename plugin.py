@@ -6,6 +6,7 @@ import numpy as np
 from gimpfu import *
 from array import array
 import gtk
+import traceback
 from gobject import timeout_add
 import traceback
 
@@ -351,7 +352,12 @@ class Vectrabool(gtk.Window):
     def update_contours_image(self):
 
         # update threshold value
-        img_pixbuf = gtk.gdk.pixbuf_new_from_array(np.dstack([self.cont_det.get_contour_img()] * 3), gtk.gdk.COLORSPACE_RGB, 8)
+        img_size = self.cont_det.get_image_size()
+        pdb.gimp_message(str(img_size))
+        scaled_image = scale_image(self.cont_det.get_contour_img(), img_size[0], img_size[1],
+                                   self.preview_size[0], self.preview_size[1])
+        scaled_contour_image = np.dstack([scaled_image] * 3)
+        img_pixbuf = gtk.gdk.pixbuf_new_from_array(scaled_contour_image, gtk.gdk.COLORSPACE_RGB, 8)
 
         # update the contour image in gtk
         self.img_contours.set_from_pixbuf(img_pixbuf)
@@ -376,6 +382,8 @@ class Vectrabool(gtk.Window):
 
         svg_image = self.svg_image_polygonized
 
+        img_size = self.cont_det.get_image_size()
+
         for idx in range(len(svg_image)):
             # find corners
 
@@ -388,7 +396,8 @@ class Vectrabool(gtk.Window):
 
             for corner in elem.get_corners():
                 point = elem.get_coord_of_corner(corner)
-                x, y = point[0], point[1]
+                # transform coords
+                x, y = transform_single_point(point, img_size[0], img_size[1], self.preview_size[0], self.preview_size[0])
                 if x >= self.preview_size[0] or y >= self.preview_size[1]:
                     continue
                 if x < 0 or y < 0:
@@ -425,6 +434,7 @@ class Vectrabool(gtk.Window):
             color_cnt = 0
 
             svg_image = self.svg_image_polygonized
+            img_size = self.cont_det.get_image_size()
             # pdb.gimp_message(str(self.contours_hierarchy))
             # pdb.gimp_message("Num of elements: " + str(len(svg_image)))
             for idx in range(len(svg_image)):
@@ -446,7 +456,9 @@ class Vectrabool(gtk.Window):
                         continue
 
                     # pdb.gimp_message("Point: " + str(point))
-                    x, y = int(point[0]), int(point[1])  # why do I get negative values? why is there Nan value
+                    x, y = rotate_and_mirror(point, img_size[0], img_size[1], self.preview_size[0],
+                                             self.preview_size[1])
+                    # x, y = int(point[0]), int(point[1])  # why do I get negative values? why is there Nan value
 
                     if x >= self.preview_size[0] or y >= self.preview_size[1]:
                         continue
@@ -459,7 +471,8 @@ class Vectrabool(gtk.Window):
                 # pdb.gimp_message("after loop")
                 filter_points = svg_image[idx].get_filtered_points()
                 for point in filter_points:
-                    x, y = int(point[0]), int(point[1])
+                    x, y = transform_single_point(point, img_size[0], img_size[1], self.preview_size[0],
+                                                  self.preview_size[1])
                     if x >= self.preview_size[0] or y >= self.preview_size[1]:
                         continue
                     if x < 0 or y < 0:
@@ -497,6 +510,22 @@ def coordinate_map(x, y, w1, h1, w2, h2):
 def user_defined_parameters(image, layer):
     vec_bool = Vectrabool(image)
     gtk.main()
+
+
+def scale_image(image, c_width, c_height, d_width, d_height, rotate=1):
+    return cv2.resize(image, (d_width, d_height))
+
+
+def transform_single_point(point, c_width, c_height, d_width, d_height, rotate=1):
+    c_width, c_height = c_height, c_width
+    return int(float(point[0]) * float(d_width) / float(c_width)), \
+           int(float(point[1]) * float(d_height) / float(c_height))
+
+
+def rotate_and_mirror(point, c_width, c_height, d_width, d_height, rotate=1):
+    y, x = point
+    x, y = transform_single_point((x, y), c_width, c_height, d_width, d_height, rotate)
+    return x, y
 
 
 register(

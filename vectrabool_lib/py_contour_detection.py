@@ -67,7 +67,7 @@ class ContourDetector:
 
     def read_image(self, preview_size):
         try:
-            self.src = cv2.resize(cv2.imread(self.path), preview_size)
+            self.src = cv2.imread(self.path)
             self.contours_img = np.zeros(self.src.shape, dtype=self.src.dtype)
         except IOError as e:
             print(str(e))
