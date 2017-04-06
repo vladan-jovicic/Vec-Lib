@@ -239,13 +239,12 @@ class Vectrabool(gtk.Window):
 
     def c_threshold_changed(self, val):
         self.c_threshold = val.value
-        self.update_contours_image()
 
     def corn_cluster_thresh_ch(self, val):
         self.corn_cluster_thresh = val.value
 
     def polygonization_distance_ch(self, val):
-        self.polygonization_distance = float(val.value) / 10.0
+        self.polygonization_distance = val.value
 
     def corn_straw_window_ch(self, val):
         self.corn_straw_window = val.value
@@ -260,7 +259,7 @@ class Vectrabool(gtk.Window):
         self.cf_metric = data
 
     def cf_error_ch(self, val):
-        self.cf_error = float(val.value) / 10.0
+        self.cf_error = val.value
 
     def cf_line_err_ch(self, val):
         self.cf_line_err = val.value
@@ -396,8 +395,6 @@ class Vectrabool(gtk.Window):
             filter_pts_pixbuf.fill(0x000000ff)
             self.img_color.set_from_pixbuf(filter_pts_pixbuf)
 
-            # self.img_contours.get_pixbuf().copy_area(0, 0, self.preview_size[0], self.preview_size[1], curve_fit_pixbuf, 0, 0)
-
             curve_fit_pixbuf.fill(0x000000ff)
             self.img_curve_fit.set_from_pixbuf(curve_fit_pixbuf)
             # pdb.gimp_message(str(curve_fit_pixbuf.get_pixels_array()))
@@ -416,13 +413,8 @@ class Vectrabool(gtk.Window):
 
             svg_image = self.svg_image_polygonized
             img_size = self.cont_det.get_image_size()
-            # pdb.gimp_message(str(self.contours_hierarchy))
-            # pdb.gimp_message("Num of elements: " + str(len(svg_image)))
+
             for idx in range(len(svg_image)):
-                # pdb.gimp_message(str(idx))
-                # pdb.gimp_message(str(svg_image[idx].get_filtered_points()))
-                # if cv2.contourArea(np.array(svg_image[idx].get_filtered_points()), True) < 0 and self.contours_hierarchy[0][idx][1] != -1:
-                #     continue
 
                 if self.contours_hierarchy[0][idx][3] != -1:
                     continue
@@ -464,17 +456,12 @@ class Vectrabool(gtk.Window):
             # pdb.gimp_message("before copying")
             self.img_curve_fit.set_from_pixbuf(curve_fit_pixbuf)
             self.img_color.set_from_pixbuf(filter_pts_pixbuf)
-            # pdb.gimp_message("after copying")
-            # SVGImage(svg_image).export("output")
-            # pdb.gimp_message("after output")
 
         except Exception as e:
             pdb.gimp_message(str(e))
 
     def update_colors(self):
         colors = ColorDetetction(self.cont_det.get_image(), self.svg_image_polygonized).find_colors()
-        # pdb.gimp_message("len contours: " + str(len(self.svg_image_polygonized)))
-        # pdb.gimp_message("len colors: " + str(len(colors)))
         for idx in range(len(self.svg_image_polygonized)):
             self.svg_image_polygonized[idx].set_color(colors[idx])
 

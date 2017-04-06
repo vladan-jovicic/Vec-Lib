@@ -1,10 +1,5 @@
-
-from vectrabool_lib.SVGElement import *
-from svgwrite import Drawing
-from svgwrite.path import Path
-import cv2
-
 from gimpfu import *
+
 
 class SVGImage:
     def __init__(self, elements=None, hierarchy=None):
@@ -63,44 +58,4 @@ class SVGImage:
         f = open(filename.split('.')[0] + ".svg", "w")
         f.write(svg)
 
-    def export(self, filename):
-        dwg = Drawing(filename)
-        for svg_elem in self.elements:
-            all_b_curves = svg_elem.get_bezier_curves()
-            # move to the first control point
-            ct_point = all_b_curves[0].get_control_points()
-            path = Path(d="M " + str(int(ct_point[0][0])) + " " + str(int(ct_point[0][1])) + " ")
-            for b_curve in all_b_curves:
-                # take only first three points
-                ct_point = b_curve.get_control_points()[:-1]
-                points_as_string = ""
-                for pt in ct_point:
-                    points_as_string += " " + str(int(pt[0])) + " " + str(int(pt[1]))
-                path.push("C" + points_as_string)
-            dwg.add(path)
-        dwg.save()
-
-    def export_2(self, filename, width_v, height_v):
-        dwg = Drawing(filename, width=width_v, height=height_v)
-        for svg_elem in self.elements:
-            all_b_curves = svg_elem.get_bezier_curves()
-            # move to the first control point
-            ct_point = all_b_curves[0].get_control_points()
-            cursor = ct_point[0]
-            path = Path(d="M " + str(int(ct_point[0][0])) + " " + str(int(ct_point[0][1])) + " ")
-            for b_curve in all_b_curves:
-                ct_point = b_curve.get_control_points()
-
-                correcting_line = ""
-                if cursor != ct_point[0]:
-                    correcting_line = "L " + str(int(ct_point[0][0])) + " " + str(int(ct_point[0][1]))
-                points_as_string = ""
-                for pt in ct_point[1:]:
-                    points_as_string += " " + str(int(pt[0])) + " " + str(int(pt[1]))
-                path.push(correcting_line + "C" + points_as_string)
-
-            r, g, b = svg_elem.get_color()
-            path.fill(color=svgwrite.rgb(r, g, b))
-            dwg.add(path)
-        dwg.save()
 
