@@ -2,12 +2,6 @@ import numpy as np
 import cv2
 from gimpfu import *
 import sys
-from collections import namedtuple
-
-
-Pt = namedtuple('Pt', 'x, y')               # Point
-Edge = namedtuple('Edge', 'a, b')           # Polygon edge from a to b
-Poly = namedtuple('Poly', 'name, edges')
 
 
 class ColorDetetction:
@@ -76,55 +70,3 @@ class ColorDetetction:
     def get_colors(self):
         return self.colors
 
-    def ray_intersect_seg(self, p, edge):
-        p1, p2 = edge[0], edge[1]
-        if p1[1] > p2[1]:
-            # a, b = b, a
-            p1, p2 = p2, p1
-        if p[1] == p1[1] or p[1] == p2[1]:
-            p = [p[0], p[1] + self._eps]
-
-        intersect = False
-
-        if (p[1] > p2[1] or p[1] < p1[1]) or (
-                p[0] > max(p1[0], p2[0])):
-            return False
-
-        if p[0] < min(p1[0], p2[0]):
-            intersect = True
-        else:
-            if abs(p1[0] - p2[0]) > self._tiny:
-                m_red = (p2[1] - p1[1]) / float(p2[0] - p1[0])
-            else:
-                m_red = self._huge
-            if abs(p1[0] - p[0]) > self._tiny:
-                m_blue = (p[1] - p1[1]) / float(p[0] - p1[0])
-            else:
-                m_blue = self._huge
-            intersect = m_blue >= m_red
-        return intersect
-
-    def is_point_inside(self, p, idx):
-        # ln = len(poly)
-        num_of_inters = 0
-        n = len(self.contours[idx])
-        for i in range(len(self.contours[idx])):
-            num_of_inters += int(self.ray_intersect_seg(p, [self.contours[idx][i % n], self.contours[idx][(i+1) % n]]))
-
-        return _odd(num_of_inters)
-
-
-def _odd(x):
-    return x % 2 == 1
-
-
-def determine_direction(point):
-    x, y = point[0], point[1]
-    if x >= 0 and y >= 0:
-        return 1
-    elif x < 0 and y >= 0:
-        return 4
-    elif x >=0 and y < 0:
-        return 2
-    else:
-        return 3
