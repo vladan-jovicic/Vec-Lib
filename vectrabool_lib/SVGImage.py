@@ -1,7 +1,7 @@
 
 from vectrabool_lib.SVGElement import *
-from svgwrite import Drawing
-from svgwrite.path import Path
+#from svgwrite import Drawing
+#from svgwrite.path import Path
 
 
 class SVGImage:

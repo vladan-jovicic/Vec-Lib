@@ -109,7 +109,7 @@ class Vectrabool(gtk.Window):
         label = gtk.Label("Polygonization distance")
         table.attach(label, 0, 1, 1, 2)
         label.show()
-        adj = gtk.Adjustment(self.polygonization_distance, 1, 10, 1)
+        adj = gtk.Adjustment(self.polygonization_distance, 0, 10, 1)
         adj.connect("value_changed", self.polygonization_distance_ch)
         scale = gtk.HScale(adj)
         scale.set_digits(0)
@@ -331,9 +331,12 @@ class Vectrabool(gtk.Window):
 
         # update threshold value
         self.cont_det.set_threshold(self.c_threshold)
-
-        # create a pixel buffer from the output image
-        img_pixbuf = gtk.gdk.pixbuf_new_from_array(np.dstack([self.cont_det.get_contour_img()] * 3), gtk.gdk.COLORSPACE_RGB, 8)
+        try:
+            #pdb.gimp_message(self.cont_det.get_full_contours())
+            # create a pixel buffer from the output image
+            img_pixbuf = gtk.gdk.pixbuf_new_from_array(np.dstack([self.cont_det.get_contour_img()] * 3), gtk.gdk.COLORSPACE_RGB, 8)
+        except Exception as e:
+            pdb.gimp_message(str(e))
 
         # update the contour image in gtk
         self.img_contours.set_from_pixbuf(img_pixbuf)

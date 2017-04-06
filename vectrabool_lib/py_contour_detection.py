@@ -14,7 +14,7 @@ class ContourDetector:
         self.src, self.contours_img = None, None
 
         # contours
-        self.simple_contours, self.full_contours, self.polygonized_contours, self.hierarchy = None, None, None, None
+        self.simple_contours, self.full_contours, self.polygonized_contours, self.hierarchy = [], [], [], None
 
         self.deprecated = True
         self.current_poly_distance = -1
@@ -32,8 +32,8 @@ class ContourDetector:
         if self.deprecated:
             self.detect_contours()
 
-        if self.polygonized_contours is None and self.current_poly_distance != distance:
-            self.polygonized_contours = [cv2.approxPolyDP(cnt, distance, True) for cnt in self.simple_contours]
+        if self.polygonized_contours is None or self.current_poly_distance != distance:
+            self.polygonized_contours = [cv2.approxPolyDP(cnt, distance, False) for cnt in self.simple_contours]
 
         return self.polygonized_contours
 
@@ -66,23 +66,54 @@ class ContourDetector:
 
     def detect_contours(self):
         if self.full_contours is None or self.simple_contours is None or self.deprecated:
-            blurred = cv2.GaussianBlur(self.src, (self.kernel_size, self.kernel_size), self.sigma)
+            #blurred = cv2.GaussianBlur(self.src, (self.kernel_size, self.kernel_size), self.sigma)
+            blurred = cv2.bilateralFilter(self.src, self.kernel_size, 5, 5)
 
             # apply canny detector
             detected_edges = cv2.Canny(blurred, self.threshold, self.threshold * self.ratio, apertureSize=self.apertureSize, L2gradient=True)
+            #blurred = cv2.cvtColor(blurred.copy(), cv2.COLOR_BGR2GRAY)
+            #detected_edges = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 3, 0)
 
-            if self.use_dilate:
+            if False:#self.use_dilate:
                 element = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3), (1, 1))
-                detected_edges = cv2.dilate(self.detected_edges, element)
+                detected_edges1 = cv2.erode(detected_edges, element)
 
-            self.contours_img, self.simple_contours, self.hierarchy = cv2.findContours(detected_edges.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-            _, self.full_contours, _ = cv2.findContours(detected_edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+            self.contours_img, self.simple_contours, hierarchy = cv2.findContours(detected_edges.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)
+            self.full_contours = self.simple_contours
+            """
+            for i in range(0, len(contours) - 1):
+                parent = hierarchy[0][i][2]
+                if(parent < 0):
+                    self.simple_contours.append(contours[i])
+
+            _, contours, self.hierarchy = cv2.findContours(detected_edges.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+
+
+            for i in range(0, len(contours) - 1):
+                parent = self.hierarchy[0][i][2]
+                if(parent < 0):
+                    self.full_contours.append(contours[i])
+            """
+
+            self.contours_img = np.zeros(self.contours_img.shape, dtype=self.contours_img.dtype)
+            cv2.drawContours(self.contours_img, [cv2.approxPolyDP(cnt, 0.5, True) for cnt in self.simple_contours], -1, (128, 255, 255),
+                             hierarchy=hierarchy, maxLevel=1)
+
+            """self.contours_img, self.simple_contours, hierarchy = cv2.findContours(self.contours_img, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+            _, self.full_contours, _ = cv2.findContours(self.contours_img, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+            self.contours_img = np.zeros(self.contours_img.shape, dtype=self.contours_img.dtype)
+            cv2.drawContours(self.contours_img, [cv2.approxPolyDP(cnt, 0, False) for cnt in self.simple_contours], -1,
+                             (128, 255, 255))"""
+
+
+
+
             self.deprecated = False
 
     def read_image(self, preview_size):
         try:
             self.src = cv2.resize(cv2.imread(self.path), preview_size)
-            self.contours_img = np.zeros(self.src.shape, dtype=self.src.dtype)
+            #self.contours_img = np.zeros(self.src.shape, dtype=self.src.dtype)
         except IOError as e:
             print(str(e))
 
