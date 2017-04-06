@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from vectrabool_lib.ContoursFilter import *
 from gimpfu import *
 
 
