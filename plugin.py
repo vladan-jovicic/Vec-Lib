@@ -294,7 +294,7 @@ class Vectrabool(gtk.Window):
             # update curve fit image
             self.update_curve_fit_image()
         except Exception as e:
-            pdb.gimp_message(str(e))
+            pdb.gimp_message(traceback.format_exc())
 
         pdb.gimp_message("Everything is done")
 
@@ -312,20 +312,22 @@ class Vectrabool(gtk.Window):
         pdb.gimp_message(self.polygonization_distance)
         contours_polygonized = self.cont_det.get_polygonized_contours(self.polygonization_distance)
         contours_full = self.cont_det.get_full_contours()
+        hierarchy = self.cont_det.get_hierarchy()
 
         # svg image creation
-        for contour in contours_polygonized:
+        for i in range(len(contours_polygonized)):
             tmp_list = []
-            for point in contour:
-                tmp_list.append(point[0])
-            self.svg_image_polygonized.append(SVGElement(raw_data=tmp_list))
+            if hierarchy[0][i][2] != -1:
+                for point in contours_polygonized[i]:
+                    tmp_list.append(point[0])
+                self.svg_image_polygonized.append(SVGElement(raw_data=tmp_list))
 
-        for contour in contours_full:
+        for i in range(len(contours_full)):
             tmp_list = []
-            for point in contour:
-                tmp_list.append(point[0])
-
-            self.svg_image_full.append(SVGElement(raw_data=tmp_list))
+            if hierarchy[0][i][2] != -1:
+                for point in contours_full[i]:
+                    tmp_list.append(point[0])
+                self.svg_image_full.append(SVGElement(raw_data=tmp_list))
 
     def update_contours_image(self):
 
@@ -336,7 +338,7 @@ class Vectrabool(gtk.Window):
             # create a pixel buffer from the output image
             img_pixbuf = gtk.gdk.pixbuf_new_from_array(np.dstack([self.cont_det.get_contour_img()] * 3), gtk.gdk.COLORSPACE_RGB, 8)
         except Exception as e:
-            pdb.gimp_message(str(e))
+            pdb.gimp_message(traceback.format_exc())
 
         # update the contour image in gtk
         self.img_contours.set_from_pixbuf(img_pixbuf)
@@ -450,7 +452,7 @@ class Vectrabool(gtk.Window):
             # pdb.gimp_message("after output")
             self.export_to_svg(svg_image)
         except Exception as e:
-            pdb.gimp_message(str(e))
+            pdb.gimp_message(traceback.format_exc())
 
     def export_to_svg(self, svg_image):
         self.svg_final_image = SVGImage(svg_image)

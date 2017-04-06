@@ -66,19 +66,19 @@ class ContourDetector:
 
     def detect_contours(self):
         if self.full_contours is None or self.simple_contours is None or self.deprecated:
-            #blurred = cv2.GaussianBlur(self.src, (self.kernel_size, self.kernel_size), self.sigma)
-            blurred = cv2.bilateralFilter(self.src, self.kernel_size, 5, 5)
+            blurred = cv2.GaussianBlur(self.src, (self.kernel_size, self.kernel_size), self.sigma)
+            #blurred = cv2.bilateralFilter(self.src, self.kernel_size, 5, 5)
 
             # apply canny detector
             detected_edges = cv2.Canny(blurred, self.threshold, self.threshold * self.ratio, apertureSize=self.apertureSize, L2gradient=True)
             #blurred = cv2.cvtColor(blurred.copy(), cv2.COLOR_BGR2GRAY)
             #detected_edges = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 3, 0)
 
-            if False:#self.use_dilate:
+            if True:#self.use_dilate:
                 element = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3), (1, 1))
-                detected_edges1 = cv2.erode(detected_edges, element)
+                detected_edges = cv2.dilate(detected_edges, element)
 
-            self.contours_img, self.simple_contours, hierarchy = cv2.findContours(detected_edges.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)
+            self.contours_img, self.simple_contours, self.hierarchy = cv2.findContours(detected_edges.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_TC89_KCOS)
             self.full_contours = self.simple_contours
             """
             for i in range(0, len(contours) - 1):
@@ -96,8 +96,9 @@ class ContourDetector:
             """
 
             self.contours_img = np.zeros(self.contours_img.shape, dtype=self.contours_img.dtype)
-            cv2.drawContours(self.contours_img, [cv2.approxPolyDP(cnt, 0.5, True) for cnt in self.simple_contours], -1, (128, 255, 255),
-                             hierarchy=hierarchy, maxLevel=1)
+            cv2.drawContours(self.contours_img, [cv2.approxPolyDP(cnt, 0, True) for cnt in self.simple_contours], -1, (128, 255, 255),
+                             thickness=0,
+                             hierarchy=self.hierarchy, maxLevel=3)
 
             """self.contours_img, self.simple_contours, hierarchy = cv2.findContours(self.contours_img, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
             _, self.full_contours, _ = cv2.findContours(self.contours_img, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
