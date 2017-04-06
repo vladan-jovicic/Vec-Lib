@@ -1,35 +1,16 @@
 #!/usr/bin/env python
 
-# Hello World in GIMP Python
 import sys
 import numpy as np
 from gimpfu import *
-from array import array
 import gtk
-import traceback
 from gobject import timeout_add
-import traceback
 
 from vectrabool_lib.SVGImage import *
 from vectrabool_lib.py_contour_detection import *
-from vectrabool_lib.CurveFitGG import *
 from vectrabool_lib.SVGElement import *
 from vectrabool_lib.ColorDetection import *
 
-
-# def create_img_white_bckg(img_size):
-#     img = gimp.Image(img_size[0], img_size[1], RGB)
-#
-#     background = gimp.Layer(img, "Background", img_size[0], img_size[1], RGB_IMAGE, 100, NORMAL_MODE)
-#
-#     pixel_region = background.get_pixel_rgn(0, 0, img_size[0], img_size[1], True, False)
-#
-#     back_color = array("B", '\xFF' * img_size[0] * img_size[1] * pixel_region.bpp)
-#
-#     pixel_region[0:img_size[0], 0:img_size[1]] = back_color.tostring()
-#     background.flush()
-#     img.add_layer(background)
-#     return img
 
 class Vectrabool(gtk.Window):
     def __init__(self, img, *args):
