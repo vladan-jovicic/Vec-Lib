@@ -6,6 +6,7 @@ import numpy as np
 from gimpfu import *
 from array import array
 import gtk
+import traceback
 from gobject import timeout_add
 import traceback
 
@@ -13,6 +14,7 @@ from vectrabool_lib.SVGImage import *
 from vectrabool_lib.py_contour_detection import *
 from vectrabool_lib.CurveFitGG import *
 from vectrabool_lib.SVGElement import *
+from vectrabool_lib.ColorDetection import *
 
 
 # def create_img_white_bckg(img_size):
@@ -36,12 +38,13 @@ class Vectrabool(gtk.Window):
 
         self.svg_image_polygonized = []
         self.svg_image_full = []
+        self.contours_hierarchy = []
 
         # contour thresholds
         self.c_threshold = 50
 
         # corner detection arguments
-        self.polygonization_distance = 3
+        self.polygonization_distance = 5
 
         self.corn_straw_window, self.corn_median_thresh, self.corn_line_thresh = 3, 95, 98
         self.corn_cluster_thresh, self.corn_corner_thresh = 150, 45
@@ -49,7 +52,7 @@ class Vectrabool(gtk.Window):
 
         # curve fitting arguments
         self.cf_labels = ["l inf", "l1 norm", "l2 norm"]
-        self.cf_error, self.cf_line_err = 3, 2
+        self.cf_error, self.cf_line_err = 9, 2
         self.cf_metric = 0
 
         # final result
@@ -109,7 +112,7 @@ class Vectrabool(gtk.Window):
         label = gtk.Label("Polygonization distance")
         table.attach(label, 0, 1, 1, 2)
         label.show()
-        adj = gtk.Adjustment(self.polygonization_distance, 1, 10, 1)
+        adj = gtk.Adjustment(int(self.polygonization_distance), 1, 30, 1)
         adj.connect("value_changed", self.polygonization_distance_ch)
         scale = gtk.HScale(adj)
         scale.set_digits(0)
@@ -165,7 +168,7 @@ class Vectrabool(gtk.Window):
         label = gtk.Label("Bezier curve max error")
         table.attach(label, 4, 5, 0, 1)
         label.show()
-        adj = gtk.Adjustment(self.cf_error, 1, 10, 1)
+        adj = gtk.Adjustment(int(self.cf_error), 1, 30, 1)
         adj.connect("value_changed", self.cf_error_ch)
         scale = gtk.HScale(adj)
         scale.set_digits(0)
@@ -200,22 +203,22 @@ class Vectrabool(gtk.Window):
         self.img_contours.set_from_pixbuf(contours_pixbf)
         self.img_contours.show()
 
-        contours_pixbf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, self.preview_size[0], self.preview_size[1])
-        contours_pixbf.fill(0xffffffff)
+        corners_pixbf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, self.preview_size[0], self.preview_size[1])
+        corners_pixbf.fill(0xffffffff)
         self.img_corners = gtk.Image()
-        self.img_corners.set_from_pixbuf(contours_pixbf)
+        self.img_corners.set_from_pixbuf(corners_pixbf)
         self.img_corners.show()
 
-        contours_pixbf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, self.preview_size[0], self.preview_size[1])
-        contours_pixbf.fill(0xffffffff)
+        curve_fit_pixbf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, self.preview_size[0], self.preview_size[1])
+        curve_fit_pixbf.fill(0xffffffff)
         self.img_curve_fit = gtk.Image()
-        self.img_curve_fit.set_from_pixbuf(contours_pixbf)
+        self.img_curve_fit.set_from_pixbuf(curve_fit_pixbf)
         self.img_curve_fit.show()
 
-        contours_pixbf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, self.preview_size[0], self.preview_size[1])
-        contours_pixbf.fill(0xffffffff)
+        color_pixbf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, self.preview_size[0], self.preview_size[1])
+        color_pixbf.fill(0xffffffff)
         self.img_color = gtk.Image()
-        self.img_color.set_from_pixbuf(contours_pixbf)
+        self.img_color.set_from_pixbuf(color_pixbf)
         self.img_color.show()
 
         # add images
@@ -248,7 +251,7 @@ class Vectrabool(gtk.Window):
         self.show()
 
         # This permits to already have a contour image displayed
-        self.update_contours_image()
+        # self.update_svg_image()
 
         pdb.gimp_message('This is displayed as a message')
         timeout_add(100, self.update, self)
@@ -261,7 +264,7 @@ class Vectrabool(gtk.Window):
         self.corn_cluster_thresh = val.value
 
     def polygonization_distance_ch(self, val):
-        self.polygonization_distance = val.value
+        self.polygonization_distance = float(val.value) / 10.0
 
     def corn_straw_window_ch(self, val):
         self.corn_straw_window = val.value
@@ -276,23 +279,38 @@ class Vectrabool(gtk.Window):
         self.cf_metric = data
 
     def cf_error_ch(self, val):
-        self.cf_error = val.value
+        self.cf_error = float(val.value) / 10.0
 
     def cf_line_err_ch(self, val):
         self.cf_line_err = val.value
 
     def apply_values(self, widget):
         # run this shit
-        pdb.gimp_message('Apply clicked')
 
         try:  # update contour detection
+            pdb.gimp_message("update svg image")
+            self.update_svg_image()
+
+            # update contours
+            pdb.gimp_message("update contours image")
             self.update_contours_image()
 
             # update corners image
+            pdb.gimp_message("update corners image")
             self.update_corners_image()
 
             # update curve fit image
+            pdb.gimp_message("update curve fit image")
             self.update_curve_fit_image()
+
+            # self.svg_final_image = SVGImage(self.svg_image_polygonized)
+
+            # update colors
+            pdb.gimp_message("update colors")
+            self.update_colors()
+
+            # output
+            self.export_to_svg(self.svg_image_polygonized)
         except Exception as e:
             pdb.gimp_message(str(e))
 
@@ -304,14 +322,18 @@ class Vectrabool(gtk.Window):
     def update_svg_image(self):
 
         # in case the contours image is outdated or doesn't exist (it should always exist) we update it
-        self.update_contours_image()
-        self.svg_image_full = []
+        # self.update_contours_image()
+        # self.svg_image_full = []
         self.svg_image_polygonized = []
 
+        self.cont_det.reset()
+        self.cont_det.set_threshold(self.c_threshold)
+        self.cont_det.detect_contours()
+
         # get contours
-        pdb.gimp_message(self.polygonization_distance)
-        contours_polygonized = self.cont_det.get_polygonized_contours(self.polygonization_distance)
-        contours_full = self.cont_det.get_full_contours()
+        contours_polygonized = self.cont_det.get_polygonized_contours(float(self.polygonization_distance) / 10.0)
+        # contours_full = self.cont_det.get_full_contours()
+        self.contours_hierarchy = self.cont_det.get_hierarchy()
 
         # svg image creation
         for contour in contours_polygonized:
@@ -320,20 +342,22 @@ class Vectrabool(gtk.Window):
                 tmp_list.append(point[0])
             self.svg_image_polygonized.append(SVGElement(raw_data=tmp_list))
 
-        for contour in contours_full:
-            tmp_list = []
-            for point in contour:
-                tmp_list.append(point[0])
-
-            self.svg_image_full.append(SVGElement(raw_data=tmp_list))
+        # for contour in contours_full:
+        #     tmp_list = []
+        #     for point in contour:
+        #         tmp_list.append(point[0])
+        #     # pdb.gimp_message(tmp_list)
+        #     self.svg_image_full.append(SVGElement(raw_data=tmp_list))
 
     def update_contours_image(self):
 
         # update threshold value
-        self.cont_det.set_threshold(self.c_threshold)
-
-        # create a pixel buffer from the output image
-        img_pixbuf = gtk.gdk.pixbuf_new_from_array(np.dstack([self.cont_det.get_contour_img()] * 3), gtk.gdk.COLORSPACE_RGB, 8)
+        img_size = self.cont_det.get_image_size()
+        pdb.gimp_message(str(img_size))
+        scaled_image = scale_image(self.cont_det.get_contour_img(), img_size[0], img_size[1],
+                                   self.preview_size[0], self.preview_size[1])
+        scaled_contour_image = np.dstack([scaled_image] * 3)
+        img_pixbuf = gtk.gdk.pixbuf_new_from_array(scaled_contour_image, gtk.gdk.COLORSPACE_RGB, 8)
 
         # update the contour image in gtk
         self.img_contours.set_from_pixbuf(img_pixbuf)
@@ -341,7 +365,7 @@ class Vectrabool(gtk.Window):
     def update_corners_image(self):
 
         # in case the svg image doesn't exist or is outdated we update it
-        self.update_svg_image()
+        # self.update_svg_image()
 
         # reset pixel buffer
         corn_img_pixbuf = self.img_corners.get_pixbuf()
@@ -358,6 +382,8 @@ class Vectrabool(gtk.Window):
 
         svg_image = self.svg_image_polygonized
 
+        img_size = self.cont_det.get_image_size()
+
         for idx in range(len(svg_image)):
             # find corners
 
@@ -370,7 +396,8 @@ class Vectrabool(gtk.Window):
 
             for corner in elem.get_corners():
                 point = elem.get_coord_of_corner(corner)
-                x, y = point[0], point[1]
+                # transform coords
+                x, y = transform_single_point(point, img_size[0], img_size[1], self.preview_size[0], self.preview_size[0])
                 if x >= self.preview_size[0] or y >= self.preview_size[1]:
                     continue
                 if x < 0 or y < 0:
@@ -382,13 +409,16 @@ class Vectrabool(gtk.Window):
 
     def update_curve_fit_image(self):
 
-        self.update_corners_image()  # this is because the whole image is restarted
-
         try:
             curve_fit_pixbuf = self.img_curve_fit.get_pixbuf()
+            filter_pts_pixbuf = self.img_color.get_pixbuf()
+            filter_pts_pixbuf.fill(0x000000ff)
+            self.img_color.set_from_pixbuf(filter_pts_pixbuf)
 
-            self.img_contours.get_pixbuf().copy_area(0, 0, self.preview_size[0], self.preview_size[1], curve_fit_pixbuf, 0, 0)
+            # self.img_contours.get_pixbuf().copy_area(0, 0, self.preview_size[0], self.preview_size[1], curve_fit_pixbuf, 0, 0)
+
             curve_fit_pixbuf.fill(0x000000ff)
+            self.img_curve_fit.set_from_pixbuf(curve_fit_pixbuf)
             # pdb.gimp_message(str(curve_fit_pixbuf.get_pixels_array()))
 
             white_pixel = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, 1, 1)
@@ -404,10 +434,17 @@ class Vectrabool(gtk.Window):
             color_cnt = 0
 
             svg_image = self.svg_image_polygonized
+            img_size = self.cont_det.get_image_size()
+            # pdb.gimp_message(str(self.contours_hierarchy))
             # pdb.gimp_message("Num of elements: " + str(len(svg_image)))
             for idx in range(len(svg_image)):
-                pdb.gimp_message(str(idx))
+                # pdb.gimp_message(str(idx))
                 # pdb.gimp_message(str(svg_image[idx].get_filtered_points()))
+                # if cv2.contourArea(np.array(svg_image[idx].get_filtered_points()), True) < 0 and self.contours_hierarchy[0][idx][1] != -1:
+                #     continue
+
+                if self.contours_hierarchy[0][idx][3] != -1:
+                    continue
                 svg_image[idx].set_bezier_threshold(self.cf_line_err)
                 # pdb.gimp_message("fitting " + str(idx))
                 svg_image[idx].fit_curves()
@@ -419,7 +456,9 @@ class Vectrabool(gtk.Window):
                         continue
 
                     # pdb.gimp_message("Point: " + str(point))
-                    x, y = int(point[0]), int(point[1])  # why do I get negative values? why is there Nan value
+                    x, y = rotate_and_mirror(point, img_size[0], img_size[1], self.preview_size[0],
+                                             self.preview_size[1])
+                    # x, y = int(point[0]), int(point[1])  # why do I get negative values? why is there Nan value
 
                     if x >= self.preview_size[0] or y >= self.preview_size[1]:
                         continue
@@ -428,30 +467,40 @@ class Vectrabool(gtk.Window):
                     # pdb.gimp_message("before copy area")
                     defined_colors[color_cnt].copy_area(0, 0, 1, 1, curve_fit_pixbuf, x, y)
                     # pdb.gimp_message("after copy area")
-                color_cnt = (color_cnt + 1) % 4
-                # pdb.gimp_message("after loop")
-                # filter_points = svg_image[idx].get_filtered_points()
-                # for point in filter_points:
-                #     x, y = int(point[0]), int(point[1])
-                #     if x >= self.preview_size[0] or y >= self.preview_size[1]:
-                #         continue
-                #     if x < 0 or y < 0:
-                #         continue
-                #
-                #     defined_colors[color_cnt].copy_area(0, 0, 1, 1, curve_fit_pixbuf, x, y)
                 # color_cnt = (color_cnt + 1) % 4
+                # pdb.gimp_message("after loop")
+                filter_points = svg_image[idx].get_filtered_points()
+                for point in filter_points:
+                    x, y = transform_single_point(point, img_size[0], img_size[1], self.preview_size[0],
+                                                  self.preview_size[1])
+                    if x >= self.preview_size[0] or y >= self.preview_size[1]:
+                        continue
+                    if x < 0 or y < 0:
+                        continue
+
+                    defined_colors[color_cnt].copy_area(0, 0, 1, 1, filter_pts_pixbuf, x, y)
+                color_cnt = (color_cnt + 1) % 4
             # pdb.gimp_message("before copying")
             self.img_curve_fit.set_from_pixbuf(curve_fit_pixbuf)
+            self.img_color.set_from_pixbuf(filter_pts_pixbuf)
             # pdb.gimp_message("after copying")
             # SVGImage(svg_image).export("output")
             # pdb.gimp_message("after output")
-            self.export_to_svg(svg_image)
+
         except Exception as e:
             pdb.gimp_message(str(e))
 
+    def update_colors(self):
+        colors = ColorDetetction(self.cont_det.get_image(), self.svg_image_polygonized).find_colors()
+        # pdb.gimp_message("len contours: " + str(len(self.svg_image_polygonized)))
+        # pdb.gimp_message("len colors: " + str(len(colors)))
+        for idx in range(len(self.svg_image_polygonized)):
+            self.svg_image_polygonized[idx].set_color(colors[idx])
+
     def export_to_svg(self, svg_image):
-        self.svg_final_image = SVGImage(svg_image)
-        self.svg_final_image.export_to_file("output")
+        self.svg_final_image = SVGImage(svg_image, hierarchy=self.contours_hierarchy)
+        self.svg_final_image.export_to_file_2("output")
+        self.svg_final_image.export_to_file("output_stroke")
 
 
 def coordinate_map(x, y, w1, h1, w2, h2):
@@ -461,6 +510,22 @@ def coordinate_map(x, y, w1, h1, w2, h2):
 def user_defined_parameters(image, layer):
     vec_bool = Vectrabool(image)
     gtk.main()
+
+
+def scale_image(image, c_width, c_height, d_width, d_height, rotate=1):
+    return cv2.resize(image, (d_width, d_height))
+
+
+def transform_single_point(point, c_width, c_height, d_width, d_height, rotate=1):
+    c_width, c_height = c_height, c_width
+    return int(float(point[0]) * float(d_width) / float(c_width)), \
+           int(float(point[1]) * float(d_height) / float(c_height))
+
+
+def rotate_and_mirror(point, c_width, c_height, d_width, d_height, rotate=1):
+    y, x = point
+    x, y = transform_single_point((x, y), c_width, c_height, d_width, d_height, rotate)
+    return x, y
 
 
 register(

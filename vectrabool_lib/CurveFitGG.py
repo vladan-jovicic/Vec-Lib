@@ -32,9 +32,9 @@ def regenerate_points(points):
         pt1, pt2 = points[idx-1], points[idx]
         dist = np.linalg.norm(pt1 - pt2)
         last_size = new_pts.shape[0]
-        if dist > 3.0:
+        if dist > 4.0:
             # generate some new points
-            num_points = int(dist / 3.0)
+            num_points = int(dist / 4.0)
             r_points = generate_line_points(pt1, pt2, num_points)
             new_pts = np.append(new_pts, r_points)
             new_pts = new_pts.reshape((last_size+r_points.shape[0], 2))

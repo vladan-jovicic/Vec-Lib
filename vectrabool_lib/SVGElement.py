@@ -21,15 +21,13 @@ class SVGElement:
         self.corn_straw_window = 3
         self.corn_median_thresh = 0.95
 
-        self.cluster_threshold, self.corner_threshold = 1.5, 0.45
-        self.harris_block_size, self.harris_kernel_size = 2, 7
-        self.harris_k_free = 0.01
 
-        if self._raw_data is not None:
-            # in this case run the transforming
-            self._transformed = False
+        # self.cluster_threshold, self.corner_threshold = 1.5, 0.45
+        # self.harris_block_size, self.harris_kernel_size = 2, 7
+        # self.harris_k_free = 0.01
 
-        # debuging part
+        # color detection part
+        self.color = (100, 0, 0)
 
     def get_raw_data(self):
         return self._raw_data
@@ -43,12 +41,38 @@ class SVGElement:
     def add_circle(self, circle):
         self._circles.append(circle)
 
-    def export_to_svg(self, file_name):
-        """
-        writes bezier curves to string file
-        :return:
-        """
-        raise Exception("Not implemented")
+    def export_to_svg(self):
+        bool_first = True
+        width = 0
+        height = 0
+        svg = ""
+
+        for idx, b_curve in enumerate(self._bezier_curves):
+            if bool_first:
+                svg = svg + '<path d="M' + str(b_curve.controlPoints[0][0]) + \
+                      ',' + str(b_curve.controlPoints[0][1])
+                bool_first = False
+            else:
+                if self._bezier_curves[idx-1].controlPoints[3] != b_curve.controlPoints[0]:
+                    svg = svg + ' L' + str(b_curve.controlPoints[0][0]) + \
+                          ',' + str(b_curve.controlPoints[0][1])
+
+            svg += ' C' + str(b_curve.controlPoints[1][0]) + ',' + \
+                    str(b_curve.controlPoints[1][1]) + ' ' + \
+                    str(b_curve.controlPoints[2][0]) + ',' + \
+                    str(b_curve.controlPoints[2][1]) + ' ' + \
+                    str(b_curve.controlPoints[3][0]) + ',' + \
+                    str(b_curve.controlPoints[3][1])
+
+            width = max(width, b_curve.controlPoints[0][0], b_curve.controlPoints[1][0],
+                        b_curve.controlPoints[2][0], b_curve.controlPoints[3][0])
+
+            height = max(height, b_curve.controlPoints[0][1], b_curve.controlPoints[1][1],
+                         b_curve.controlPoints[2][1], b_curve.controlPoints[3][1])
+
+        if bool_first is False:
+            svg = svg + '" fill="rgb(' + ','.join(map(str, self.color)) + ')"/>\n'
+        return svg, height, width
 
     def filter_points(self):
         #  self._filtered_points = SimplePolyFilter(self._raw_data).remove_same()
@@ -86,6 +110,8 @@ class SVGElement:
             if self._corners[i] == self._corners[i-1]:
                 continue
             temp_points = self._filtered_points[self._corners[i-1]:self._corners[i]+1]
+            if len(temp_points) <= 1:
+                continue
             # try to fit with ellipse
             # pdb.gimp_message("before curve fit")
             self._bezier_curves += CurveFitGG(temp_points, self._b_threshold).fit_curve()
@@ -112,6 +138,13 @@ class SVGElement:
 
     def get_bezier_curves(self):
         return self._bezier_curves
+
+    def set_color(self, color):
+        self.color = color
+
+    def get_color(self):
+        return self.color
+
 
 
 
