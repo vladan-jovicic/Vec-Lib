@@ -9,7 +9,7 @@ class ContourDetector:
         self.threshold = threshold
         self.ratio, self.kernel_size, self.sigma = 3, 3, 1.4
         self.apertureSize = 3  # aperture size for the Sobel operator.
-        self.use_dilate = False
+        self.use_dilate = True
 
         #  images
         self.src, self.contours_img = None, None
@@ -57,8 +57,10 @@ class ContourDetector:
         detected_edges = cv2.Canny(blurred, self.threshold, self.threshold * self.ratio, apertureSize=self.apertureSize, L2gradient=True)
 
         if self.use_dilate:
-            element = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3), (1, 1))
-            detected_edges = cv2.dilate(detected_edges, element)
+            kernel = np.ones((3, 3), np.uint8)
+            #element = cv2.getStructuringElement(cv2.MORPH_CIRCLE, (3, 3), (1, 1))
+            #detected_edges = cv2.dilate(detected_edges, element)
+            detected_edges = cv2.morphologyEx(detected_edges, cv2.MORPH_CLOSE, kernel)
 
         self.contours_img, self.simple_contours, self.hierarchy = cv2.findContours(detected_edges.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_TC89_KCOS)
         # pdb.gimp_message(self.hierarchy)

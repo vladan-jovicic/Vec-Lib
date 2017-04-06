@@ -416,7 +416,7 @@ class Vectrabool(gtk.Window):
 
             for idx in range(len(svg_image)):
 
-                if self.contours_hierarchy[0][idx][3] != -1:
+                if self.contours_hierarchy[0][idx][2] != -1:
                     continue
                 svg_image[idx].set_bezier_threshold(self.cf_line_err)
                 # pdb.gimp_message("fitting " + str(idx))

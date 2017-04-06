@@ -41,7 +41,7 @@ class SVGImage:
         height, width, svg = 0, 0, ""
         for idx in range(len(self.elements)-1, 0, -1):
             svg_elem = self.elements[idx]
-            if self.contours_hierarchy[0][idx][3] != -1:
+            if self.contours_hierarchy[0][idx][2] != -1:
                 continue
 
             s_aux, h_aux, w_aux = svg_elem.export_to_svg()
