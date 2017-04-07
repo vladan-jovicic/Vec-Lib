@@ -8,7 +8,7 @@ This is the about section, still to be done.
 
 The members of this project are :
 
-* Vladan Jovicic *project leader* [mailto:vladan.jovicic@ens-lyon.fr](contact)
+* Vladan Jovicic *project leader* [contact](mailto:vladan.jovicic@ens-lyon.fr)
 * Rémy Cerda
 * Rémi Coudert
 * Etienne Desbois
