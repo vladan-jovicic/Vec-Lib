@@ -3,7 +3,7 @@
 title: Vectrabool
 
 description: > 
-  This is the page for Vectrabool, an image vectorization library done for Integrated Project at ENS Lyon. The website aims to be a mean for our group to have a spotlight and a way to present our project easier. Contact the team leader [here](mailto:vladan.jovicic@ens-lyon.fr)
+  This is the page for Vectrabool, an image vectorization library done for Integrated Project at ENS Lyon. The website aims to be a mean for our group to have a spotlight and a way to present our project easier.
 
 baseurl: "/Vec-Lib" # subpath
 url: ""
