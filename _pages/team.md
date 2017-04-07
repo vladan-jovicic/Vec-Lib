@@ -10,7 +10,7 @@ The members of this project are :
 
 * Vladan Jovicic *project leader* [contact](mailto:vladan.jovicic@ens-lyon.fr)
 * Rémy Cerda
-* Rémi Coudert
+* Rémi Coudert [contact](remi.coudert@epfl.ch)
 * Etienne Desbois
 * Quentin Guilmant
 * Emirhan Gürpinar
