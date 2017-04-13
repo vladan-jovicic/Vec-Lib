@@ -1,8 +1,8 @@
 # this file contains class SVGElement representing a particular element for outputting to svg
 # it consists of basic elements: Circles, LineSegments and Bezier curves
 # if it is region, it also contains a definition of coloring
-from vectrabool_lib.SSCornerDetector import *
-from vectrabool_lib.CurveFitGG import *
+from SSCornerDetector import *
+from CurveFitGG import *
 
 
 class SVGElement:

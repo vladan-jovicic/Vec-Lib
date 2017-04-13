@@ -3,8 +3,8 @@ import numpy as np
 
 # import other packages
 
-from vectrabool_lib.PolyLineFilter import *
-from vectrabool_lib.PolyLine import *
+from PolyLineFilter import *
+from PolyLine import *
 
 
 class SSCornerDetector:

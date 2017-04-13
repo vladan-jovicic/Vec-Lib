@@ -1,13 +1,12 @@
 import numpy as np
 import cv2
-from gimpfu import *
 import sys
 
 
-class ColorDetetction:
+class ColorDetection:
 
-    def __init__(self, image, contours, hierarchy=None, eps=1.0):
-        self.contours = [element.get_filtered_points() for element in contours]
+    def __init__(self, image, contour, hierarchy=None, eps=1.0):
+        self.contour = contour
         # pdb.gimp_message(str(self.contours))
         self.image = image
         self.hierarchy = hierarchy
@@ -17,16 +16,16 @@ class ColorDetetction:
 
         self.colors = []  # array containing colors
 
-    def find_colors(self):
-        for idx in range(len(self.contours)):
-            color = self.find_color_index(idx)
-            # pdb.gimp_message("Return color: " + str(color))
-            self.colors.append(color)
+    # def find_colors(self):
+    #     for idx in range(len(self.contours)):
+    #         color = self.find_color_index(idx)
+    #         # pdb.gimp_message("Return color: " + str(color))
+    #         self.colors.append(color)
+    #
+    #     return self.colors
 
-        return self.colors
-
-    def find_color_index(self, index):
-        contour = np.array(self.contours[index])
+    def find_color(self):
+        contour = np.array(self.contour)
         # pdb.gimp_message(str(contour))
         if len(contour) <= 1:
             return 0, 0, 0

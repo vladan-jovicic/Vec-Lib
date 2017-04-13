@@ -5,7 +5,10 @@ from scipy.special import binom
 import numpy as np
 
 
-class BezierCurve():
+class BezierCurve:
+    """
+    A class containing description of Bezier curve
+    """
     def __init__(self, control_points=[]):
         # List of the control points
         self.controlPoints = control_points
@@ -15,7 +18,6 @@ class BezierCurve():
 
     def sample(self, N=100):
         """Compute N points of the Bezier curve. Returns two lists, containing the x and y coordinates."""
-
         def p(t, coord):
             n = len(coord)
             res = 0
@@ -28,9 +30,15 @@ class BezierCurve():
         return x, y
 
     def get_num_of_cpts(self):
+        """
+        :return: Number of control points
+        """
         return len(self.controlPoints)
 
     def get_control_points(self):
+        """
+        :return: control points of the curve
+        """
         return self.controlPoints
 
     def print_control_points(self):
@@ -38,7 +46,10 @@ class BezierCurve():
             print(pt)
 
     def get_value(self, t):
-        """Evaluates a Bezier curve at parameter t"""
+        """
+        :param t: value between 0 and 1
+        :return: value of the curve at point t
+        """
         c_pts_temp = self.controlPoints[:]
 
         degree = len(self.controlPoints) - 1
@@ -53,7 +64,11 @@ class BezierCurve():
         return c_pts_temp[0]
 
     def get_point_cubic(self, t):
+        """
 
+        :param t:
+        :return:
+        """
         pt = [0.0, 0.0]
         for i, c_pt in enumerate(self.controlPoints):
             tmp_pt = [self.bezier_multiplier(t, 3 - i) * c_pt[0], self.bezier_multiplier(t, 3 - i) * c_pt[1]]

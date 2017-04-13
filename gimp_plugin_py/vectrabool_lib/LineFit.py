@@ -1,6 +1,6 @@
 import sys
 
-from vectrabool_lib.LineSegment import *
+from LineSegment import *
 
 
 class LineFit:

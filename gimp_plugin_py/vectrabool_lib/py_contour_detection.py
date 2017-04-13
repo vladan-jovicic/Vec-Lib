@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from gimpfu import *
 
 
 class ContourDetector:
@@ -30,7 +29,6 @@ class ContourDetector:
         return self.simple_contours
 
     def get_polygonized_contours(self, distance):
-        pdb.gimp_message("Polygonization")
         self.polygonized_contours = [cv2.approxPolyDP(cnt, distance, True) for cnt in self.simple_contours]
 
         # return ContoursFilter(self.polygonized_contours).get_filtered_contour()
@@ -50,7 +48,6 @@ class ContourDetector:
         return self.contours_img
 
     def detect_contours(self):
-        pdb.gimp_message("detecting contours")
         blurred = cv2.GaussianBlur(self.src, (self.kernel_size, self.kernel_size), self.sigma)
 
         # apply canny detector
@@ -58,15 +55,13 @@ class ContourDetector:
 
         if self.use_dilate:
             kernel = np.ones((3, 3), np.uint8)
-            #element = cv2.getStructuringElement(cv2.MORPH_CIRCLE, (3, 3), (1, 1))
-            #detected_edges = cv2.dilate(detected_edges, element)
             detected_edges = cv2.morphologyEx(detected_edges, cv2.MORPH_CLOSE, kernel)
 
         self.contours_img, self.simple_contours, self.hierarchy = cv2.findContours(detected_edges.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_TC89_KCOS)
         # pdb.gimp_message(self.hierarchy)
         _, self.full_contours, _ = cv2.findContours(detected_edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
-    def read_image(self, preview_size):
+    def read_image(self):
         try:
             self.src = cv2.imread(self.path)
             self.contours_img = np.zeros(self.src.shape, dtype=self.src.dtype)
