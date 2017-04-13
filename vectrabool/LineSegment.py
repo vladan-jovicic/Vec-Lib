@@ -1,7 +1,6 @@
 # This file contains a class representing LineSegment
 import numpy as np
 import math
-import matplotlib.pyplot as plt
 
 
 class LineSegment:

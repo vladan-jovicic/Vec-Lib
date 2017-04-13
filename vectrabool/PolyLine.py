@@ -1,9 +1,7 @@
-#!/usr/bin/python3
-
-import matplotlib.pyplot as plt
+#!/usr/bin/python
 
 
-class PolyLine():
+class PolyLine:
     def __init__(self, points):
         # List of points, coded as tuples (x,y)
         self.points = points

@@ -1,5 +1,4 @@
 # this file contains a class representing circles
-import matplotlib.pyplot as plt
 
 
 class Circle:

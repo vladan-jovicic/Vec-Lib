@@ -8,8 +8,6 @@ For more information, please refer to <a href='https://vladan-jovicic.github.io/
 The following is required in order to compile the code:
 - OpenCV (for Python 2.7 and C++)
 - Numpy
-- Matplotlib
-- Argparse
 
 ## Installing Dependencies
 
@@ -30,83 +28,26 @@ and run the script again.
 pip install -r requirements.txt
 ```
 
-- You might prefer to install matplotlib using the package manager. To do so:
-```
-apt-get install python-matplotlib
-```
-Otherwise, you can install it using the pip:
-```
-pip install matplotlib
-```
-
-## Compilation
-
-1. Navigate to contour_detection folder and type:
-```
-make
-```
-
-if you get the error saying <i>'Package opencv was not found in the pkg-config search path'</i> install the package 'libopencv-dev'
-```
-sudo apt-get install libopencv-dev
-```
-and try to compile again.
-
-Everything is ready!
-
 ## Usage
 
-Currently, you will have to run two programs to obtain a result: contour detection algorithm and curve detection algorithm.
+You will find a few examples in folder <i>examples</i>
 
-- To obtain contours run the following:
-```
-./contourDetection image.jpg > contours.txt
-```
-
-- To fit contours with Bezier curves, navigate to <i>test</i>:
-```
-python main.py -f contours.txt
-```
-
-For the contour detection algorithm, you can specify additional arguments:
-- threshold: an optional argument for the lower threshold to use by the Canny algorithm, it must be an integer in between 0 and 100
-- dilatation: to use it, set -d
-
-For the curve fitting package, the following is optional:
-- --file: read contours from the file, otherwise from the stdin
-- --input_poly: the contours from the input will be displayed
-- --filtered_poly: the filtered contours will be displayed
-- --corners: the corners of the contours will be displayed
-- --output: svg format file outputed in the result folder
+You can also use it as a gimp plugin:
+- download files as a zip archieve
+- extract gimp_plugin and vectrabool folders
+- move vectrabool folder inside gimp_plugin
+- open Gimp and go to <i>Edit/Preferences/Folders/Plugins</i>
+- add path to the gimp_plugin folder
 
 ### Examples
 
-To set the lower threshold to 0 and use dilatation:
-```
-./contourDetection image.jpg 0 -d > contours.txt
-```
+This will be available soon
 
-To run the curve fitting package and to display only the final result, type:
-```
-python main.py -f contours.txt
-```
 
-If you want to see the immediate results, for example corners of contours:
-```
-python main.py -f contours.txt --corners True
-```
+## TODO
 
-Create a svg file:
-Have the output file from contourDetection in the test folder then,
-```
-python main.py -f contours.txt --output True 
-```
-it may not work in the same time that the instruction below (for giving a name to the svg file)
-
-Run contour detection and curve fitting without writing the contours to file:
-```
-./contourDetection image.jpg 0 -d | python main.py --filtered_poly True --corners True
-```
+- Improve color detection
+- Remove OpenCV
 
 ## History
 
