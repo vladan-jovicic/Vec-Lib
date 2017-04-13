@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-You will find a few examples in folder <i>examples</i>
+You will find a few examples in folder <i>code_examples</i>
 
 You can also use it as a gimp plugin:
 - download files as a zip archieve
