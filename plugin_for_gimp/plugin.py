@@ -5,7 +5,7 @@ from gimpfu import *
 import gtk, math
 from gobject import timeout_add
 
-from vectrabool_lib.Vectrabool import *
+from vectrabool.Vectrabool import *
 
 
 class Vectrabool(gtk.Window):
@@ -228,7 +228,7 @@ class Vectrabool(gtk.Window):
             self.update_svg_image()
 
             # update contours
-            pdb.gimp_message("update contours image")
+            pdb.gimp_mRessage("update contours image")
             self.update_contours_image()
 
             # update corners image
@@ -240,13 +240,7 @@ class Vectrabool(gtk.Window):
             self.update_curve_fit_image()
 
             # self.svg_final_image = SVGImage(self.svg_image_polygonized)
-
-            # update colors
-            pdb.gimp_message("update colors")
-            self.update_colors()
-
             # output
-            self.export_to_svg(self.svg_image_polygonized)
         except Exception as e:
             pdb.gimp_message(str(e))
 
