@@ -54,7 +54,9 @@ class SVGImage:
         self.contours_hierarchy = self.cont_det.get_hierarchy()
         self.elements = []
         contours = self.get_polygonized_contours()
-        for contour in contours:
+        for idx, contour in enumerate(contours):
+            if self.contours_hierarchy[0][idx][2] != -1:
+                continue
             tmp_list = []
             for point in contour:
                 tmp_list.append(point[0])

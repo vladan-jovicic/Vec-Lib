@@ -228,7 +228,7 @@ class Vectrabool(gtk.Window):
             self.update_svg_image()
 
             # update contours
-            pdb.gimp_mRessage("update contours image")
+            pdb.gimp_message("update contours image")
             self.update_contours_image()
 
             # update corners image
