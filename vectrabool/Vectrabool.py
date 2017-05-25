@@ -55,8 +55,6 @@ class SVGImage:
         self.elements = []
         contours = self.get_polygonized_contours()
         for idx, contour in enumerate(contours):
-            if self.contours_hierarchy[0][idx][2] != -1:
-                continue
             tmp_list = []
             for point in contour:
                 tmp_list.append(point[0])
@@ -138,7 +136,9 @@ class SVGImage:
 
     def export_stroke_to_file(self, filename):
         all_curves = []
-        for svg_elem in self.elements:
+        for idx, svg_elem in enumerate(self.elements):
+            if self.contours_hierarchy[0][idx][2] != -1:
+                continue
             all_curves += svg_elem.get_bezier_curves()
         height, width, svg = 0, 0, ""
         for idx, b_curve in enumerate(all_curves):
