@@ -1,43 +1,58 @@
-from py_contour_detection import *
-from SVGElement import *
-from ColorDetection import *
+import cv2
+
+from .py_contour_detection import *
+from .SVGElement import *
+from .ColorDetection import *
+from .config import VectraboolParams
 
 
 class SVGImage:
-    def __init__(self, path=None):
+    def __init__(self, params=None):
+        if params is None:
+            params = VectraboolParams()
+        else:
+            params.validate()
+
+        self.params = params
+
         self.elements = None
         self.contours_hierarchy = None
 
-        self.file_path = path
+        self.file_path = params.img_path
 
         # contour detection vars
-        self.cont_det, self.contours_polygonized, self.c_threshold = None, None, 50
-        self.polygonization_distance = 1
+        self.cont_det, self.contours_polygonized, self.c_threshold = None, None, params.contour_min_thresh
+        self.polygonization_distance = params.poly_distance
 
         # corner detection vars
-        self.corn_straw_window, self.corn_median_thresh = 3, 0.98
-        self.corn_line_thresh = 0.98
+        self.corn_straw_window, self.corn_median_thresh = params.straw_window_size, params.median_threshold
+        self.corn_line_thresh = params.line_threshold
 
         # curve fitting part
-        self.cf_bezier_thresh = 1
+        self.cf_bezier_thresh = params.curve_fit_merror
+
+        self.init()
 
     def create_from_elements(self, elements):
         self.elements = elements
 
-    def update_image(self):
+    def update_image(self, output=False):
         self.detect_contours()
         self.find_corners()
         self.fit_curves()
         self.detect_colors()
-        self.export_to_file("output.svg")
-        self.export_stroke_to_file("output_stroke.svg")
+
+        if output:
+            self.export_to_file(self.params.output_path)
+            self.export_stroke_to_file(self.params.output_path_stroke)
 
     def set_path(self, path):
         self.file_path = path
 
     def init(self):
-        self.cont_det = ContourDetector(self.file_path, self.c_threshold)
-        self.cont_det.read_image()
+        if self.params.img_src is None:
+            self.params.img_src = cv2.imread(self.params.img_path)
+        self.cont_det = ContourDetector(src_image=self.params.img_src, threshold=self.c_threshold)
 
     # ************CONTOUR DETECTION PART *******************
 
@@ -181,5 +196,52 @@ class SVGImage:
 
         f = open(filename.split('.')[0] + ".svg", "w")
         f.write(svg)
+
+    def get_svg_image(self):
+        self.update_image()
+        height, width, svg = 0, 0, ""
+        for idx in range(len(self.elements)-1, 0, -1):
+            svg_elem = self.elements[idx]
+            if self.contours_hierarchy[0][idx][2] != -1:
+                continue
+
+            s_aux, h_aux, w_aux = svg_elem.export_to_svg()
+            svg = svg + s_aux
+            height = max(height, h_aux)
+            width = max(width, w_aux)
+        height += 10
+        width += 10
+        svg = '<?xml version="1.0" encoding="utf-8"?>\n' + \
+              '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + \
+              str(width) + '" height="' + str(height) + '">\n' + svg + "</svg>"
+        return svg
+
+    def get_svg_stroke(self):
+        self.update_image()
+        all_curves = []
+        for idx, svg_elem in enumerate(self.elements):
+            if self.contours_hierarchy[0][idx][2] != -1:
+                continue
+            all_curves += svg_elem.get_bezier_curves()
+        height, width, svg = 0, 0, ""
+        for idx, b_curve in enumerate(all_curves):
+            svg = svg + '<path d="M' + str(b_curve.controlPoints[0][0]) + ',' + str(
+                b_curve.controlPoints[0][1]) + ' C' + str(b_curve.controlPoints[1][0]) + ',' + str(
+                b_curve.controlPoints[1][1]) + ' ' + str(b_curve.controlPoints[2][0]) + ',' + str(
+                b_curve.controlPoints[2][1]) + ' ' + str(b_curve.controlPoints[3][0]) + ',' + str(
+                b_curve.controlPoints[3][1]) + '" stroke="black" fill-opacity="0.0" stroke-width="0.1"/>\n'
+            width = max(width, b_curve.controlPoints[0][0], b_curve.controlPoints[1][0],
+                        b_curve.controlPoints[2][0], b_curve.controlPoints[3][0])
+            height = max(height, b_curve.controlPoints[0][1], b_curve.controlPoints[1][1],
+                         b_curve.controlPoints[2][1], b_curve.controlPoints[3][1])
+
+        height += 10
+        width += 10
+        svg = '<?xml version="1.0" encoding="utf-8"?>\n' + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + str(
+            width) + '" height="' + str(height) + '1000">\n' + svg + "</svg>"
+
+        return svg
+
+
 
 

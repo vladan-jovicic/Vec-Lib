@@ -3,15 +3,16 @@ import numpy as np
 
 
 class ContourDetector:
-    def __init__(self, path, threshold=0):
-        self.path = path
+    def __init__(self, src_image=None, threshold=0):
+        # self.path = path
         self.threshold = threshold
         self.ratio, self.kernel_size, self.sigma = 3, 3, 1.4
         self.apertureSize = 3  # aperture size for the Sobel operator.
         self.use_dilate = True
 
         #  images
-        self.src, self.contours_img = None, None
+        self.src = src_image
+        self.contours_img = np.zeros(self.src.shape, dtype=self.src.dtype)
 
         # contours
         self.simple_contours, self.full_contours, self.polygonized_contours, self.hierarchy = None, None, None, None
@@ -61,12 +62,12 @@ class ContourDetector:
         # pdb.gimp_message(self.hierarchy)
         _, self.full_contours, _ = cv2.findContours(detected_edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
-    def read_image(self):
-        try:
-            self.src = cv2.imread(self.path)
-            self.contours_img = np.zeros(self.src.shape, dtype=self.src.dtype)
-        except IOError as e:
-            print(str(e))
+    # def read_image(self):
+    #     try:
+    #         self.src = cv2.imread(self.path)
+    #         self.contours_img = np.zeros(self.src.shape, dtype=self.src.dtype)
+    #     except IOError as e:
+    #         print(str(e))
 
     def get_image(self):
         return self.src
