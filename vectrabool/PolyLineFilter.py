@@ -3,7 +3,7 @@ import numpy as np
 
 # import other packages
 
-from PolyLine import *
+from .PolyLine import *
 
 
 class PolyLineFilter:

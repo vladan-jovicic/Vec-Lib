@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-from BezierCurve import *
+from .BezierCurve import *
 
 
 def generate_line_points(pt1, pt2, num):

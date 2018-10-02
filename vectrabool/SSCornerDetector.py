@@ -3,8 +3,8 @@ import numpy as np
 
 # import other packages
 
-from PolyLineFilter import *
-from PolyLine import *
+from .PolyLineFilter import *
+from .PolyLine import *
 
 
 class SSCornerDetector:
