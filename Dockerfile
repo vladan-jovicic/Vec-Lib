@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTANER Vladan "admin@jovicic.cf"
+MAINTAINER Vladan "admin@jovicic.cf"
 
 RUN apt-get update -y && \
     apt-get install -y python-pip python-dev
@@ -16,4 +16,4 @@ COPY . /app
 
 ENTRYPOINT [ "python" ]
 
-CMD [ "app.py" ]
+CMD [ "server.py" ]
