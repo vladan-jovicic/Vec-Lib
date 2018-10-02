@@ -52,4 +52,41 @@ class VectraboolParams:
         if self.line_fit_merror < 0 or self.line_fit_merror > 10:
             raise ValueError("Invalid line fit maximum error %f" % self.line_fit_merror)
 
+    def parse_from_dict(self, params):
+        try:
+            self.img_src = params["img_src"]
+        except:
+            pass
+
+        try:
+            self.straw_window_size = params["straw_window_size"]
+        except:
+            pass
+
+        try:
+            self.curve_fit_merror = params["curve_fit_merror"]
+        except:
+            pass
+
+        try:
+            self.poly_distance = params["poly_distance"]
+        except:
+            pass
+
+        try:
+            self.median_threshold = params["median_threshold"]
+        except:
+            pass
+
+        try:
+            self.line_threshold = params["line_threshold"]
+        except:
+            pass
+
+        try:
+            self.line_fit_merror = params["line_fit_merror"]
+        except:
+            pass
+
+
 
