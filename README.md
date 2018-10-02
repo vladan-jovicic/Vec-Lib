@@ -5,53 +5,15 @@ For more information, please refer to <a href='https://vladan-jovicic.github.io/
 
 ## Dependencies
 
-The following is required in order to compile the code:
-- OpenCV (for Python 2.7 and C++)
-- Numpy
-
 ## Installing Dependencies
-
-- To install OpenCV, download <a href='https://drive.google.com/file/d/0B9EaSh0VvlsQOEN5bE5LU1U3b2s/view?usp=sharing'>script</a> and run the following commands:
-```
-chmod +x install_opencv.sh
-./install_opencv.sh
-```
-<b>Remarks:</b>
-- in the case that you get an error <i>Found unsuitable Qt version</i> run the following:
-```
-sudo apt-get install libqt4-dev pkg-config
-```
-and run the script again.
-
-- To install python modules, run the following:
+- To install dependencies, run the following:
 ```
 pip install -r requirements.txt
 ```
 
 ## Usage
 
-You will find a few examples in folder <i>code_examples</i>
-
-You can also use it as a gimp plugin:
-- download files as a zip archieve
-- extract gimp_plugin and vectrabool folders
-- move vectrabool folder inside gimp_plugin
-- open Gimp and go to <i>Edit/Preferences/Folders/Plugins</i>
-- add path to the gimp_plugin folder
-
-### Examples
-
-This will be available soon
-
-
-## TODO
-
-- Improve color detection
-- Remove OpenCV
-
-## History
-
-Update history
+Check out `test.py`
 
 ## Credits
 
