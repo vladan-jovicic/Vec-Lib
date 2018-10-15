@@ -4,6 +4,7 @@ from .py_contour_detection import *
 from .SVGElement import *
 from .ColorDetection import *
 from .config import VectraboolParams
+import math
 
 
 class SVGImage:
@@ -211,9 +212,13 @@ class SVGImage:
             width = max(width, w_aux)
         height += 10
         width += 10
-        svg = '<?xml version="1.0" encoding="utf-8"?>\n' + \
-              '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + \
-              str(width) + '" height="' + str(height) + '">\n' + svg + "</svg>"
+        # svg = '<?xml version="1.0" encoding="utf-8"?>\n' + \
+        width = int(width) + 1
+        height = int(height) + 1
+        svgHeader = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"' + \
+                'width="100%" height="100%" ' + \
+                ' viewBox="0 0 %s %s" >' % (str(width), str(height))
+        svg = svgHeader + svg + "</svg>"
         return svg
 
     def get_svg_stroke(self):

@@ -1,4 +1,6 @@
 import os
+import cv2
+
 
 class VectraboolParams:
     def __init__(
@@ -52,9 +54,13 @@ class VectraboolParams:
         if self.line_fit_merror < 0 or self.line_fit_merror > 10:
             raise ValueError("Invalid line fit maximum error %f" % self.line_fit_merror)
 
-    def parse_from_dict(self, params):
+    def parse_from_dict(self, params, image_type='string'):
         try:
             self.img_src = params["img_src"]
+            # if image_type == 'string':
+            #     self.img_src = cv2.imread('data/input.png')
+            # else:
+            #     self.img_src = cv2.imread('data/input.png')
         except:
             pass
 

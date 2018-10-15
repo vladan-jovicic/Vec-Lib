@@ -1,6 +1,7 @@
 from flask import Flask, request
 from vectrabool.config import VectraboolParams
 from vectrabool.Vectrabool import SVGImage
+from vbutils.web_utils import parse_img_from_base64_string
 # import requests
 
 app = Flask(__name__)
@@ -15,6 +16,7 @@ def hello():
 def get_svg_image():
     content = request.json
     params = VectraboolParams()
+    content["img_src"] = parse_img_from_base64_string(content["img_src"], content["img_width"], content["img_height"])
     params.parse_from_dict(content)
     svg_image = SVGImage(params)
     return svg_image.get_svg_image()
